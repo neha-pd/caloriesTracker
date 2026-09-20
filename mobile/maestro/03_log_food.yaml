@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 03 — Log Food (Text Search)
+#
+# Simulates tapping the + on Breakfast, searching for "egg", and adding it.
+# Covers: meal add button → log food screen → search → add item → back to dashboard
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Login
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+- tapOn: "Sign In"
+
+# Wait for dashboard
+- assertVisible: "Breakfast"
+
+# Tap + on Breakfast
+- tapOn:
+    id: "meal-add-breakfast"
+
+# ── Log Food Screen ──────────────────────────────────────────────────────────
+- assertVisible: "Add breakfast"
+- assertVisible: "AI Vision Scan"
+- assertVisible: "Find food or scan with AI"
+
+# Type in search box
+- tapOn:
+    text: "Search for any food..."
+- inputText: "boiled egg"
+- tapOn: "Search"
+
+# Wait for results and tap first item
+- assertVisible: "boiled egg"
+- tapOn:
+    text: "boiled egg"
+
+# Should remain on the log screen after adding food
+- assertVisible: "Add breakfast"
+- assertVisible: "Find food or scan with AI"

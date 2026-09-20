@@ -1,0 +1,67 @@
+{
+  "expo": {
+    "name": "FitLens",
+    "slug": "fitlens",
+    "version": "1.0.0",
+    "sdkVersion": "54.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#121212"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.fitlens.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "FitLens uses your camera to identify food and estimate portions.",
+        "NSPhotoLibraryUsageDescription": "FitLens accesses your photo library to log meals."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#121212"
+      },
+      "permissions": [
+        "CAMERA",
+        "READ_MEDIA_IMAGES"
+      ],
+      "package": "com.fitlens.app"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "FitLens uses your camera to identify food."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "FitLens accesses your photos to log meals."
+        }
+      ],
+      "expo-web-browser",
+      "@react-native-community/datetimepicker",
+      "expo-font"
+    ],
+    "scheme": "fitlens",
+    "extra": {
+      "eas": {
+        "projectId": "dea91dae-087c-48f6-b312-4adf62c191ca"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

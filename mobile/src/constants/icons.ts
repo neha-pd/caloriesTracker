@@ -1,0 +1,57 @@
+import type { ComponentProps } from 'react';
+import type { Ionicons } from '@expo/vector-icons';
+
+export type IconName = ComponentProps<typeof Ionicons>['name'];
+
+// Semantic icon map — the app's single icon vocabulary (Ionicons only, no emoji).
+export const Icons = {
+  meal: {
+    breakfast: 'sunny-outline' as IconName,
+    lunch: 'partly-sunny-outline' as IconName,
+    dinner: 'moon-outline' as IconName,
+    snack: 'nutrition-outline' as IconName,
+  },
+  water: 'water' as IconName,
+  waterOutline: 'water-outline' as IconName,
+  streak: 'flame' as IconName,
+  calories: 'flame-outline' as IconName,
+  trendingUp: 'trending-up' as IconName,
+  trendingDown: 'trending-down' as IconName,
+  calculator: 'calculator-outline' as IconName,
+  goal: 'golf-outline' as IconName,
+  protein: 'barbell-outline' as IconName,
+  carbs: 'leaf-outline' as IconName,
+  fat: 'water-outline' as IconName,
+  fiber: 'flower-outline' as IconName,
+  weight: 'scale-outline' as IconName,
+  height: 'resize-outline' as IconName,
+  activity: {
+    sedentary: 'bed-outline' as IconName,
+    light: 'walk-outline' as IconName,
+    moderate: 'walk' as IconName,
+    active: 'bicycle-outline' as IconName,
+    veryActive: 'flash-outline' as IconName,
+  },
+  edit: 'pencil' as IconName,
+  check: 'checkmark' as IconName,
+  checkCircle: 'checkmark-circle' as IconName,
+  chevronDown: 'chevron-down' as IconName,
+  chevronForward: 'chevron-forward' as IconName,
+  back: 'chevron-back' as IconName,
+  close: 'close' as IconName,
+  add: 'add' as IconName,
+  camera: 'camera' as IconName,
+  gallery: 'images-outline' as IconName,
+  search: 'search' as IconName,
+  person: 'person-outline' as IconName,
+  calendar: 'calendar-outline' as IconName,
+  gender: 'male-female-outline' as IconName,
+  male: 'male-outline' as IconName,
+  female: 'female-outline' as IconName,
+  help: 'help-circle-outline' as IconName,
+  logout: 'log-out-outline' as IconName,
+  mail: 'mail-outline' as IconName,
+  lock: 'lock-closed-outline' as IconName,
+  eye: 'eye-outline' as IconName,
+  eyeOff: 'eye-off-outline' as IconName,
+};

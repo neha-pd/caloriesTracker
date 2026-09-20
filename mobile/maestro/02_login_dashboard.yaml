@@ -1,0 +1,50 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 02 — Login & Dashboard Check
+#
+# Simulates an existing user logging in and verifying the dashboard loads.
+# Covers: login → see all 4 dashboard sections → macro rings → meal sections
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Land on Login screen
+- assertVisible: "Welcome back"
+
+# Fill credentials
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+
+- tapOn: "Sign In"
+
+# ── Dashboard assertions ─────────────────────────────────────────────────────
+
+# Hero card visible
+- assertVisible: "Calories"
+- assertVisible: "kcal"
+
+# Macro section visible
+- assertVisible: "Protein"
+- assertVisible: "Carbs"
+- assertVisible: "Fat"
+
+# Meal sections visible
+- assertVisible: "Breakfast"
+- assertVisible: "Lunch"
+- assertVisible: "Dinner"
+- assertVisible: "Snack"
+
+# Water tracker visible
+- assertVisible: "💧 Water"
+
+# Streak section visible
+- assertVisible: "🔥"

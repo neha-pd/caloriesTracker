@@ -1,0 +1,80 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 06 — Edit Goals: Auto-Calculate
+#
+# Goes to Edit Goals, switches goal types, uses Auto-Calculate, and saves.
+# Covers: goal type chips → auto-calc banner → calculate button → micronutrients → save
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Login
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+- tapOn: "Sign In"
+
+# Go to Profile tab → Edit Goals
+- tapOn:
+    text: "Profile"
+- tapOn: "✏️  Edit Goals"
+
+# ── Edit Goals Screen ────────────────────────────────────────────────────────
+- assertVisible: "Edit Goals"
+- assertVisible: "🔥 Lose Weight"
+- assertVisible: "⚖️ Maintain"
+- assertVisible: "💪 Gain Muscle"
+- assertVisible: "Daily Calories"
+
+# Switch goal type to Lose Weight
+- tapOn: "🔥 Lose Weight"
+
+# Enable Auto-Calculate
+- tapOn: "🧮 Auto-Calculate from Profile"
+
+# Tap Calculate button
+- tapOn: "Calculate"
+
+# Wait for calculation (network call)
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible: "kcal"
+    timeout: 5000
+
+# Verify macros populated
+- assertVisible: "Protein"
+- assertVisible: "Carbs"
+- assertVisible: "Fat"
+
+# Scroll down to see micronutrients section
+- scrollUntilVisible:
+    element:
+      text: "Micronutrient Targets"
+    direction: DOWN
+- assertVisible: "Fiber"
+- assertVisible: "Calcium"
+
+# Switch to Gain Muscle and verify recalculation
+- scrollUntilVisible:
+    element:
+      text: "💪 Gain Muscle"
+    direction: UP
+- tapOn: "💪 Gain Muscle"
+- waitForAnimationToEnd
+
+# Save goals
+- scrollUntilVisible:
+    element:
+      text: "Save Goals"
+    direction: DOWN
+- tapOn: "Save Goals"
+
+# Back on Profile
+- assertVisible: "Daily Goals"

@@ -1,0 +1,39 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 01 — Register New Account
+#
+# Simulates a brand new user opening the app and signing up.
+# Covers: launch → see login screen → tap Register → fill form → land on dashboard
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+# Launch the app
+- launchApp
+
+# Wait for the Login screen to appear
+- assertVisible: "Welcome back"
+- assertVisible: "Sign In"
+
+# Navigate to Register
+- tapOn: "Create Account"
+
+# Fill registration form
+- tapOn:
+    text: "Email"
+- inputText: "uitest_auto@fitlens.com"
+
+- tapOn:
+    text: "Display name"
+- inputText: "UI Tester"
+
+- tapOn:
+    text: "Password"
+- inputText: "TestPass123!"
+
+# Submit
+- tapOn: "Create Account"
+
+# Expect to land on Dashboard
+- assertVisible: "Calories"
+- assertVisible: "Today"

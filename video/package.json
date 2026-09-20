@@ -1,0 +1,24 @@
+{
+  "name": "video",
+  "version": "1.0.0",
+  "private": true,
+  "description": "FitLens promo videos — Remotion compositions with typed props",
+  "scripts": {
+    "studio": "remotion studio",
+    "render": "remotion render FitLensPromo out/promo.mp4",
+    "render:landscape": "remotion render FitLensPromoLandscape out/promo-landscape.mp4",
+    "still": "remotion still FitLensPromo out/frame.png"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.518",
+    "@remotion/zod-types": "4.0.518",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "remotion": "4.0.518",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.5.4"
+  }
+}

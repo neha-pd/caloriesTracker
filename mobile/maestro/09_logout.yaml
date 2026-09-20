@@ -1,0 +1,39 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 09 — Logout
+#
+# Logs out and verifies the user lands back on the Login screen.
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Login
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+- tapOn: "Sign In"
+
+# Go to Profile tab
+- tapOn:
+    text: "Profile"
+
+# Tap Sign Out
+- scrollUntilVisible:
+    element:
+      text: "Sign Out"
+    direction: DOWN
+- tapOn: "Sign Out"
+
+# Confirm dialog
+- tapOn: "Sign Out"
+
+# Should land back on Login
+- assertVisible: "Welcome back"
+- assertVisible: "Sign In"

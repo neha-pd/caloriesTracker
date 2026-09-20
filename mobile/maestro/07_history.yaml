@@ -1,0 +1,34 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 07 — History Screen
+#
+# Navigates to the History tab and verifies the 7-day chart and day cards render.
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Login
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+- tapOn: "Sign In"
+
+# Go to History tab
+- tapOn:
+    text: "History"
+
+# ── History Screen ───────────────────────────────────────────────────────────
+- assertVisible: "📈 Progress History"
+- assertVisible: "Last 7 days"
+- assertVisible: "Daily Calories"
+
+# Either shows day cards or empty state
+- assertTrue:
+    condition: ${visible("No logged days yet")} || ${visible("Protein")}

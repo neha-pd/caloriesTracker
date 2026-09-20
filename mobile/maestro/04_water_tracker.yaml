@@ -1,0 +1,49 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 04 — Water Tracker
+#
+# Taps +250ml twice, checks the value increments correctly.
+# Covers: +250ml button → optimistic update → percentage increase
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Login
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+- tapOn: "Sign In"
+
+# Wait for dashboard
+- assertVisible: "💧 Water"
+
+# Scroll down to water tracker if needed
+- scrollUntilVisible:
+    element:
+      text: "+250ml"
+    direction: DOWN
+
+# Tap +250ml once
+- tapOn: "+250ml"
+
+# Wait briefly for optimistic update
+- waitForAnimationToEnd
+
+# Tap +250ml again
+- tapOn: "+250ml"
+
+# Verify water shows at least 0.5L
+- assertVisible: "0.5 L"
+
+# Tap +500ml
+- tapOn: "+500ml"
+
+# Verify water shows at least 1.0L
+- assertVisible: "1.0 L"

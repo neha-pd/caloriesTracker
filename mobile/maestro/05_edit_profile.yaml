@@ -1,0 +1,83 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 05 — Edit Profile
+#
+# Navigates to Profile → Edit Profile, fills in physical stats, saves.
+# Covers: profile tab → edit profile screen → all fields → BMI indicator → save
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Login
+- tapOn:
+    text: "Email"
+- clearText
+- inputText: "uitest_auto@fitlens.com"
+- tapOn:
+    text: "Password"
+- clearText
+- inputText: "TestPass123!"
+- tapOn: "Sign In"
+
+# Go to Profile tab
+- tapOn:
+    text: "Profile"
+
+# Verify profile screen
+- assertVisible: "Daily Goals"
+- assertVisible: "Physical Profile"
+
+# Tap Edit Profile button
+- tapOn: "👤  Edit Profile"
+
+# ── Edit Profile Screen ──────────────────────────────────────────────────────
+- assertVisible: "Edit Profile"
+- assertVisible: "Basic Info"
+- assertVisible: "Body Measurements"
+- assertVisible: "Activity Level"
+
+# Fill Display Name
+- tapOn:
+    text: "Your name"
+- clearText
+- inputText: "Neha Desai"
+
+# Fill Age
+- tapOn:
+    text: "e.g. 28"
+- clearText
+- inputText: "27"
+
+# Select gender — Female
+- tapOn: "♀️"
+
+# Fill Height
+- tapOn:
+    text: "e.g. 165"
+- clearText
+- inputText: "163"
+
+# Fill Weight
+- tapOn:
+    text: "e.g. 65.5"
+- clearText
+- inputText: "57"
+
+# BMI indicator should appear (weight + height filled)
+- assertVisible: "BMI"
+
+# Select activity level — Moderately Active
+- tapOn: "Moderate"
+
+# Save
+- scrollUntilVisible:
+    element:
+      text: "Save Profile"
+    direction: DOWN
+- tapOn: "Save Profile"
+
+# Should return to Profile tab with updated info
+- assertVisible: "Physical Profile"
+- assertVisible: "163 cm"

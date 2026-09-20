@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Maestro Flow 08 — Edit Goals: Incomplete Profile Redirect
+#
+# Verifies that tapping Calculate when physical profile is missing
+# redirects to the Profile/Edit Profile screen instead of showing an error.
+# ─────────────────────────────────────────────────────────────────────────────
+
+appId: host.exp.Exponent
+---
+
+- launchApp
+
+# Register a fresh user with no physical profile
+- tapOn: "Create Account"
+- tapOn:
+    text: "Email"
+- inputText: "uitest_noprofile@fitlens.com"
+- tapOn:
+    text: "Display name"
+- inputText: "No Profile User"
+- tapOn:
+    text: "Password"
+- inputText: "TestPass123!"
+- tapOn: "Create Account"
+
+# Navigate to Edit Goals
+- tapOn:
+    text: "Profile"
+- tapOn: "✏️  Edit Goals"
+
+# Enable auto-calc
+- tapOn: "🧮 Auto-Calculate from Profile"
+
+# The banner should show the incomplete profile warning with a link
+- assertVisible: "tap to complete your profile"
+
+# Tap the incomplete profile link in the banner
+- tapOn: "tap to complete your profile →"
+
+# Should land on Edit Profile (not show an alert)
+- assertVisible: "Edit Profile"
+- assertVisible: "Body Measurements"
