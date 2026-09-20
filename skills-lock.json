@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "skills": {
+    "ad-creative-video": {
+      "source": "iart-ai/ad-video-skills",
+      "sourceType": "github",
+      "skillPath": "skills/ad-creative-video/SKILL.md",
+      "computedHash": "94c33e3435abd802773c4b7e6058f3d47456bc56354d87b1e6fc2b689757735d"
+    },
+    "after-effects": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/after-effects/SKILL.md",
+      "computedHash": "9db077d9664f5c45157c53b754d3c72bb346999a260c63d3d4892745a3eefd02"
+    },
+    "animate": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/animate/SKILL.md",
+      "computedHash": "609e30351bf518b21a8cfe87cd1111554855527075d6563605bafe61963252f7"
+    },
+    "animate-expo": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/animate-expo/SKILL.md",
+      "computedHash": "c9eaf6603b97ca61b05c7561e1045b2f58b6d84cdf8d67565bff23a9ff94ce8a"
+    },
+    "animation-principles": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/animation-principles/SKILL.md",
+      "computedHash": "140b00a44e08aa7649fb1cce1c48670ff2e76f3889fbac0b5311cc5bb818d7b7"
+    },
+    "animation-vocabulary": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/animation-vocabulary/SKILL.md",
+      "computedHash": "39319fc9a33c15be08666b3685f58666f042ff36bb902b7814c0834a5ba99df4"
+    },
+    "apple-design": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/apple-design/SKILL.md",
+      "computedHash": "8b94db67cb9edaad5f1501010804caa610131f1d2dfda0a27664b2e858deade3"
+    },
+    "ask-sonner": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/ask-sonner/SKILL.md",
+      "computedHash": "23f724e97247b2003ccc479f3a9b3af8e4191a0e133b94ee6b73f8405349687f"
+    },
+    "beat-sync-editing": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/beat-sync-editing/SKILL.md",
+      "computedHash": "4089a0b65782c529ebd4fe9a576588fb51cf716573b4d683b0494e6554e61e03"
+    },
+    "color-motion": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/color-motion/SKILL.md",
+      "computedHash": "7c05f7d35427d5fbe2fd1b5b6c0622252314a049797085fce085085cbf4c3e6e"
+    },
+    "emil-design-eng": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/emil-design-eng/SKILL.md",
+      "computedHash": "41b0a4dc1a27164fe297845a6c6850a39e9242c42c9be999967fcee9df2c5974"
+    },
+    "find-animation-opportunities": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/find-animation-opportunities/SKILL.md",
+      "computedHash": "8fb8492eb8fbed1313cb430b5831d925d9b8964ca24f3c41a6244cbd1fd98732"
+    },
+    "improve-animations": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/improve-animations/SKILL.md",
+      "computedHash": "eeb219a407e325b687af88db25771cc3018e3148245604112f5ac6990b6fd79c"
+    },
+    "launch-video": {
+      "source": "iart-ai/ad-video-skills",
+      "sourceType": "github",
+      "skillPath": "skills/launch-video/SKILL.md",
+      "computedHash": "a55b82d2ca76de5bb80a1217594b11d1bf1ae4485b487bcad7ab256e2f116790"
+    },
+    "logo-animation": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/logo-animation/SKILL.md",
+      "computedHash": "3bba34771ff84fa7e68dc8026e195aab411a82b01091c9427fc8f3c8e48e7d99"
+    },
+    "motion-art-direction": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/motion-art-direction/SKILL.md",
+      "computedHash": "bcba09b729fd3d99b3b1a388c3aaac655a3771b26dc3e8d077a110dfdd9e1631"
+    },
+    "motion-background": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/motion-background/SKILL.md",
+      "computedHash": "99a576ac6549791b410abbc48a18074fed9e7925cf3ee5392108c59ad9e25fa4"
+    },
+    "pick-ui-library": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/pick-ui-library/SKILL.md",
+      "computedHash": "f8d4d2cf4677bf54b14f35f62a741add93541bfcb67863315a40164365161b49"
+    },
+    "prototype": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/prototype/SKILL.md",
+      "computedHash": "f246d1f47566481d9207e1aa574bdee5454257d862919a6591283e9af2f57eab"
+    },
+    "remotion-video": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/remotion-video/SKILL.md",
+      "computedHash": "940885087443f4aa5d3baf6edb4ed25edafea2435b52922e120200b4c1af99ba"
+    },
+    "review-animations": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/review-animations/SKILL.md",
+      "computedHash": "b9f669af5ae280c19a592a94611520335a81de25c88f225bf60ae4b2d66c8c7c"
+    },
+    "shot-composition": {
+      "source": "iart-ai/motion-design-skills",
+      "sourceType": "github",
+      "skillPath": "skills/shot-composition/SKILL.md",
+      "computedHash": "9ff4551d175f951fb443a0680020871eb93c5ae07a0f36a2008ca98e5d0fa324"
+    },
+    "testimonial-video": {
+      "source": "iart-ai/ad-video-skills",
+      "sourceType": "github",
+      "skillPath": "skills/testimonial-video/SKILL.md",
+      "computedHash": "0d71fa501ffc13fc979d4d93865785c16741c6b4041ccbb3926eaf0da0f486da"
+    },
+    "write-swift": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/write-swift/SKILL.md",
+      "computedHash": "ccbb74cac81765fcf2912ceba8d188fddbd75393ecb808aa1a4f6f58d9c2c828"
+    }
+  }
+}

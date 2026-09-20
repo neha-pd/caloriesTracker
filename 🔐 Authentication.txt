@@ -1,0 +1,174 @@
+🔐 Authentication
+Register with email + password + optional display name
+Login with email + password
+JWT auto-refresh — access token silently refreshed on 401 (15min tokens, 7-day refresh)
+Secure token storage via expo-secure-store
+Logout with token wipe
+🚀 Onboarding
+Set initial daily goals on first login (calories, protein, carbs, fat)
+Redirected to dashboard automatically after setup
+🏠 Dashboard
+Calorie hero card — remaining kcal, goal, eaten, with animated ring
+Streak counter 🔥 — consecutive days logged
+Macro rings — protein / carbs / fat with progress circles, consumed vs goal
+Meal sections — breakfast, lunch, dinner, snack with per-meal calorie + macro breakdown
+Water tracker — visual glasses UI, quick +250ml / +500ml buttons, percentage display
+Water goal — personalized based on body weight (35ml/kg), fallback 2500ml
+Pull-to-refresh with 30s auto-refetch
+Tap Goal → Edit Goals shortcut directly from the hero card
+📸 Log Food
+AI Vision Scan — take a photo with camera, Gemini AI identifies food + estimates nutrition
+Gallery upload — pick existing photo for AI analysis
+Real-time WebSocket — nutrition results pushed instantly when AI finishes (30s timeout)
+Food search — text search against USDA/Nutritionix database
+Local food cache — frequently searched foods cached in PostgreSQL + Redis (5min)
+Manual food log — tap any search result to log instantly (qty = 1 serving)
+Meal type selector — log to breakfast / lunch / dinner / snack
+Animated results list — staggered FadeInUp animations per item
+📜 Food Database
+Nutritionix API integration for food search
+USDA full-text search on local cached food items
+Food upsert cache — API results saved to DB with 30-day expiry, served from cache first
+Nutrition data per food — calories, protein, carbs, fat, fiber, sugar, sodium
+📈 History
+7-day bar chart — daily calorie bars with day labels
+Day cards — each day shows protein / carbs / fat consumed
+Goal vs actual badge — green if under goal, red if over
+Timezone-correct dates — parsed as local time (not UTC)
+🎯 Edit Goals
+Goal type selector — Lose Weight (−15% deficit) / Maintain / Gain Muscle (+10% surplus)
+Manual calorie intake editing — large tap-friendly input
+Live macro calorie balance — shows total macro kcal vs calorie goal in real time
+Macro fields — protein / carbs / fat with per-macro kcal contribution shown
+Auto-Calculate from Profile — one tap computes TDEE via Mifflin-St Jeor BMR + AMDR macro split
+Micronutrient recommendations panel — fiber, sodium, calcium, iron, vitamin C, vitamin D, potassium, magnesium (DRI-based)
+Goal type recalculates macros — changing goal type in auto-calc mode instantly updates all values
+Redirect to Profile if physical stats missing (instead of error alert)
+👤 Profile & Edit Profile
+Profile screen — shows daily goals, goal type, physical stats
+Edit Goals button
+Edit Profile button + inline "Edit →" shortcut on physical profile card
+Edit display name
+Edit age
+Gender picker — 4 options with emoji chips
+Height & weight fields — decimal input in cm / kg
+Live BMI indicator — updates as you type, shows category (Underweight / Normal / Overweight / Obese)
+Activity level picker — 5 levels (Sedentary → Extra Active) with descriptions, radio-button style
+Save patches PATCH /api/users/me and updates local auth store immediately
+⚙️ Backend / Infrastructure
+Fastify REST API with JWT auth middleware
+PostgreSQL database with trigger-based daily total aggregation
+Redis caching — dashboard (60s TTL), food search (5min TTL), invalidated on goal/water updates
+BullMQ job queue for vision processing (3 retries, exponential backoff)
+WebSocket per log entry for real-time AI results push
+Rate limiting — 200 req/min
+Image upload — local filesystem (dev) or Cloudinary (prod)
+Vision worker — Gemini AI + Nutritionix lookup pipeline
+DB triggers — auto-update daily_logs totals on every log entry insert/update/delete
+Streak calculation — recursive CTE counting consecutive logged days
+Total: 50+ distinct features across auth, logging, AI vision, food search, dashboard analytics, goal management, profile editing, and backend infrastructure.
+
+
+
+1. Register
+App opens → see Login screen
+Tap "Create Account"
+Enter email, display name, password
+Tap "Create Account"
+✅ Should land on Dashboard
+2. Dashboard (first look)
+See Calorie hero card showing 0 / 2000 kcal
+See 3 macro rings — Protein, Carbs, Fat all at 0%
+See 4 meal sections — Breakfast, Lunch, Dinner, Snack
+See 💧 Water tracker showing 0.0 L / 2.5 L
+See 🔥 streak counter
+3. Set Up Physical Profile
+Tap Profile tab (bottom nav)
+Tap "👤 Edit Profile"
+Enter: Name, Age, select Gender chip
+Enter Height (cm), Weight (kg)
+✅ BMI indicator appears and shows category
+Select Activity Level (e.g. Moderately Active)
+Tap "Save Profile"
+✅ Back on Profile, see updated height/weight in Physical Profile card
+4. Set Goals via Auto-Calculate
+Tap "✏️ Edit Goals"
+Select goal type chip — 🔥 Lose Weight
+Toggle "🧮 Auto-Calculate from Profile"
+✅ Banner shows Uses Mifflin-St Jeor BMR + AMDR macro split
+Tap "Calculate"
+✅ Calories, Protein, Carbs, Fat fields fill automatically
+Scroll down → ✅ Micronutrient Targets panel appears (Fiber, Calcium, Iron, etc.)
+Switch goal type to 💪 Gain Muscle → values recalculate
+Tap "Save Goals"
+✅ Back on Profile, calorie goal is updated
+5. Log Food (Text Search)
+Tap Home tab → Dashboard
+Tap + on the Breakfast section
+✅ Log Food screen opens — see "AI Vision Scan" and search bar
+Type banana in search → tap Search
+✅ Results list appears with nutritional info
+Tap a result to add it
+✅ Returns to Dashboard — Breakfast shows calories and macro chips
+6. Log Food (AI Camera Scan)
+Tap + on Lunch
+Tap "AI Vision Scan" (camera button)
+Allow camera permission
+Take photo of any food
+✅ Shows "analysing nutrition…" pending state on dashboard
+✅ After ~5–10s, nutrition updates (WebSocket push)
+7. Water Tracker
+Scroll down on Dashboard to 💧 Water
+Tap +250ml → ✅ Shows 0.3 L, glasses fill
+Tap +250ml again → ✅ Shows 0.5 L
+Tap +500ml → ✅ Shows 1.0 L, percentage updates
+8. Dashboard After Logging
+Scroll to top of Dashboard
+✅ Calorie hero card shows calories consumed
+✅ Remaining calories decreased
+✅ Macro rings show partial fill
+✅ Breakfast card shows item count + kcal
+9. History Screen
+Tap History tab (bottom nav)
+✅ See "📈 Progress History" header
+✅ Bar chart shows today's calories
+✅ Day card shows today with Protein / Carbs / Fat
+✅ Badge is green if under calorie goal, red if over
+10. Edit Goals — Manual Mode
+Tap Profile → "✏️ Edit Goals"
+Turn off Auto-Calculate toggle
+Manually change Calories to 1600
+✅ Macro balance warning appears if P+C+F ≠ calories
+Edit Protein/Carbs/Fat manually
+Tap "Save Goals"
+✅ Dashboard updates immediately (Redis cache cleared)
+11. Edit Goals — Incomplete Profile Redirect
+(Skip for existing user — test with a fresh account)
+Register new account, don't fill profile
+Go to Edit Goals → enable Auto-Calculate
+✅ Banner shows "tap to complete your profile →" (not an alert)
+Tap the link → ✅ Goes to Edit Profile screen
+12. Logout
+Tap Profile tab
+Scroll down → tap "Sign Out"
+✅ Confirmation dialog appears
+Tap "Sign Out" to confirm
+✅ Returns to Login screen
+13. Login (returning user)
+Enter email + password of registered account
+Tap "Sign In"
+✅ Dashboard loads with previously saved data (goals, today's logs)
+✅ Pass Criteria Summary
+Step	Check
+Register	Lands on Dashboard
+Profile save	Height/Weight visible on Profile
+Auto-calculate	TDEE + macros populated
+Log food	Dashboard calorie count increases
+AI scan	Pending → complete with nutrition
+Water	Value increments, glasses fill
+History	Bar chart + day cards visible
+Goal save	Dashboard reflects new goal instantly
+Redirect	Incomplete profile → Edit Profile (no alert)
+Logout	Returns to Login screen
+Re-login	Data persists
+17:54
