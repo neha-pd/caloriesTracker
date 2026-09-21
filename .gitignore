@@ -22,3 +22,6 @@ artifacts/
 .neon/
 .neon
 .codex/config.toml
+
+mobile/modules/*/android/build/
+mobile/modules/*/android/.gradle/

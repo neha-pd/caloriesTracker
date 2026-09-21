@@ -68,3 +68,11 @@ Today → Share my day opens a preview with Midnight / Soft Cream themes and a s
 - Local AI model weights require a one-time download with internet access; inference then runs on device. The demo is useful for testing selected-day reviews; it is not a claim of longitudinal memory across all 45 days.
 
 - Android release build completed successfully (ARM64, Android 9+, version 2.0.0). APK signature verified and installation on the Android emulator succeeded. This does not validate physical-device LFM inference, health permissions, notifications or launcher widget interactions. Test APK uses development signing and the LAN API URL.
+
+## Hosted preview — 21 September 2026
+
+Web: https://fitlens-kpph.onrender.com · API: https://fitlens-api.onrender.com. The API runs on Render Free in Singapore, with the provided Neon production database and Firebase Email/Password authentication. No paid plan was enabled. This supersedes the earlier local-only handoff notes.
+
+Seven backend/domain tests pass. Real Firebase + Neon acceptance verified signup, refresh, a generated password-reset action, access/refresh revocation, login, logout and account deletion. The full browser lifecycle also passes against the hosted web app and API, including actual food/water persistence, offline sync, report PNG export and deletion. Test accounts were removed. Password-reset inbox delivery remains a user check; the automated test did not send mail.
+
+The current ARM64 APK is version 2.0.0, Android versionCode 2, embeds the hosted HTTPS API, disables cleartext traffic, and includes all three widget receivers. Signature verification and emulator upgrade installation passed. It is a preview signed with the development identity. Physical-phone LFM, health sync, notifications and launcher widget interactions remain acceptance tests.

@@ -16,8 +16,8 @@ Demo data edits survive logout. Re-enter the demo to resume. Deleting the demo a
 
 ## Real account and health tests
 
-This preview's real-account API runs on the development Mac. A phone needs the same network and the API process running. Offline demo and downloaded local AI do not depend on that API. There is no hosted service yet. Health Connect must be tested with a real account, compatible device and explicit permissions; actual health records must not be replaced by sample activity.
+The current APK connects to https://fitlens-api.onrender.com over HTTPS. Real accounts work without the development Mac. The free server may take time to wake after inactivity. Offline demo and downloaded local AI do not depend on the API. Health Connect must be tested with a real account, compatible device and explicit permissions; actual health records must not be replaced by sample activity.
 
 ## Rebuild
 
-From the repo root, set `JAVA_HOME`, `ANDROID_HOME` and optionally `EXPO_PUBLIC_API_URL`, then run `scripts/build-preview-apk.sh`. The script regenerates Android via Expo prebuild, builds ARM64 release, and copies the APK into `artifacts/`. `FITLENS_TEST_BUILD=true` enables HTTP for LAN testing; omit this flag for production configuration and provide HTTPS plus production signing.
+From the repo root, set `JAVA_HOME`, `ANDROID_HOME` and optionally `EXPO_PUBLIC_API_URL`, then run `scripts/build-preview-apk.sh`. The script regenerates Android via Expo prebuild, builds ARM64 release, and copies the APK into `artifacts/`. `FITLENS_TEST_BUILD=false` is the default and requires HTTPS. Set it to `true` only for an explicit LAN test. Public store distribution also requires a production signing identity.

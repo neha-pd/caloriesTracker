@@ -1,7 +1,0 @@
-expo.modules.fitlenswidgets.fitlens-widgets-pngs-0 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/build/generated/res/pngs/release
-expo.modules.fitlenswidgets.fitlens-widgets-resValues-1 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/build/generated/res/resValues/release
-expo.modules.fitlenswidgets.fitlens-widgets-mergeReleaseResources-2 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/build/intermediates/incremental/release/mergeReleaseResources/merged.dir
-expo.modules.fitlenswidgets.fitlens-widgets-mergeReleaseResources-3 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/build/intermediates/incremental/release/mergeReleaseResources/stripped.dir
-expo.modules.fitlenswidgets.fitlens-widgets-release-4 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/build/intermediates/merged_res/release/mergeReleaseResources
-expo.modules.fitlenswidgets.fitlens-widgets-main-5 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/src/main/res
-expo.modules.fitlenswidgets.fitlens-widgets-release-6 /Users/juni/Personal/Neha-works/caloriesTracker/mobile/modules/fitlens-widgets/android/src/release/res
