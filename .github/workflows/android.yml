@@ -1,0 +1,49 @@
+name: Build team APK
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: team-apk
+  cancel-in-progress: false
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_PUBLIC_API_URL: https://fitlens-api.onrender.com
+      FITLENS_TEST_BUILD: 'false'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm ci --workspace mobile --include=dev
+      - name: Build signed ARM64 APK
+        working-directory: mobile
+        env:
+          KEYSTORE_BASE64: ${{ secrets.FITLENS_KEYSTORE_BASE64 }}
+          FITLENS_KEYSTORE_PASSWORD: ${{ secrets.FITLENS_KEYSTORE_PASSWORD }}
+        run: |
+          test -n "$KEYSTORE_BASE64"
+          test -n "$FITLENS_KEYSTORE_PASSWORD"
+          export FITLENS_KEYSTORE_PATH="$RUNNER_TEMP/fitlens-team.p12"
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$FITLENS_KEYSTORE_PATH"
+          chmod 600 "$FITLENS_KEYSTORE_PATH"
+          trap 'rm -f "$FITLENS_KEYSTORE_PATH"' EXIT
+          npx expo prebuild --platform android --no-install
+          ./android/gradlew -p android assembleRelease -PreactNativeArchitectures=arm64-v8a --console=plain --max-workers=2 -Dorg.gradle.jvmargs='-Xmx4g -XX:MaxMetaspaceSize=2g'
+          mkdir -p ../artifacts
+          cp android/app/build/outputs/apk/release/app-release.apk ../artifacts/FitLens-team-arm64.apk
+          cd ../artifacts
+          sha256sum FitLens-team-arm64.apk > FitLens-team-arm64.sha256
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: FitLens-team-APK
+          path: artifacts/FitLens-team-arm64.*
+          retention-days: 14

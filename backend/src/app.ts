@@ -202,9 +202,13 @@ export async function createApp({
       badges,
     };
   }
-  app.get("/health", async () => {
+  // Liveness never queries Neon: scheduled probes must not keep its compute awake.
+  const liveness = async () => ({ status: "ok", ai: "on-device", version: 2 });
+  app.get("/health", liveness);
+  app.get("/ping", { logLevel: "silent" }, liveness);
+  app.get("/ready", async () => {
     await db.query("SELECT 1");
-    return { status: "ok", ai: "on-device", version: 2 };
+    return { status: "ok", database: "connected" };
   });
   app.get("/api/config", async () => ({
     google_sign_in: !!process.env.GOOGLE_CLIENT_IDS,

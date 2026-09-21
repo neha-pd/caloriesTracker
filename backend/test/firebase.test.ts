@@ -49,3 +49,19 @@ test("Firebase accounts preserve app sessions, reject revoked tokens, and delete
     assert.equal((await call("GET", "/api/users/me", undefined, token)).status, 401);
   } finally { await app.close(); await db.close(); }
 });
+
+test("liveness and keep-awake probes never query the database", async () => {
+  let queries = 0;
+  const db = {
+    query: async () => { queries++; throw new Error("database asleep"); },
+    transaction: async () => { throw new Error("not expected"); },
+    close: async () => {},
+  };
+  const app = await createApp({ db, secret: "liveness-tests-secret-at-least-32-characters", testing: true });
+  try {
+    for (const url of ["/health", "/ping"]) assert.equal((await app.inject({ method: "GET", url })).statusCode, 200);
+    assert.equal(queries, 0);
+    assert.equal((await app.inject({ method: "GET", url: "/ready" })).statusCode, 500);
+    assert.equal(queries, 1);
+  } finally { await app.close(); }
+});

@@ -1,0 +1,54 @@
+name: FitLens CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.22.0'
+          cache: npm
+      - run: npm ci --workspace backend --workspace mobile --include=dev --ignore-scripts
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run export:web --workspace mobile
+        env:
+          EXPO_PUBLIC_API_URL: http://127.0.0.1:3000
+      - name: Prepare browser tests
+        run: |
+          python3 -m pip install playwright==1.58.0
+          python3 -m playwright install --with-deps chromium
+      - name: Start isolated test services
+        run: |
+          NODE_ENV=test PORT=3000 LOCAL_DATABASE_PATH=.data/ci npm run start --workspace backend > /tmp/fitlens-ci-api.log 2>&1 &
+          python3 checks/serve_spa.py > /tmp/fitlens-ci-web.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/ready && curl --fail --silent http://127.0.0.1:8084/ > /dev/null; then exit 0; fi
+            echo "Waiting for test services ($attempt/30)"
+            sleep 2
+          done
+          exit 1
+      - name: Browser account lifecycle
+        run: python3 checks/e2e.py
+        env:
+          FITLENS_WEB_URL: http://127.0.0.1:8084
+          FITLENS_API_URL: http://127.0.0.1:3000
+      - name: Browser demo without backend access
+        run: python3 checks/demo_e2e.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results/
+          retention-days: 7

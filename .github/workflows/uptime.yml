@@ -1,0 +1,19 @@
+name: API uptime check
+on:
+  schedule:
+    - cron: '3-59/10 * * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: api-uptime
+  cancel-in-progress: true
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check the app process without waking Neon
+        run: |
+          curl --fail --silent --show-error --max-time 70 --retry 1 --retry-delay 5 \
+            -H 'Cache-Control: no-cache' \
+            https://fitlens-api.onrender.com/ping
