@@ -1,1 +1,1 @@
-export { History as default } from "../../src/features/home";
+export {default} from '../../src/features/fitness/calendar';

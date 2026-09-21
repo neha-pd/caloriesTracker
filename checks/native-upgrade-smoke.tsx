@@ -9,6 +9,7 @@ import { useAuthStore } from "../mobile/src/store/authStore";
 import { localReminderDraft } from "../mobile/src/features/reminderDomain";
 import {
   saveCustomReminder,
+  saveReminderBatch,
   listCustomReminders,
   pauseCustomReminder,
 } from "../mobile/src/features/customReminders";
@@ -58,6 +59,14 @@ export default function UpgradeSmoke() {
       await pauseCustomReminder(uid, saved.id, true);
       if ((await N.getAllScheduledNotificationsAsync()).length)
         throw new Error("Delete failed");
+      const batch=[8,13,19].map((hour,i)=>({id:'meal-test-'+i,draft:{title:['Breakfast','Lunch','Dinner'][i],body:'Meal time',hour,minute:i===2?30:0,cadence:'daily' as const,quietHours:true}}));
+      await saveReminderBatch(uid,batch);
+      const mealTriggers=await N.getAllScheduledNotificationsAsync();
+      if(mealTriggers.length!==3)throw Error('Expected three separate meal reminders');
+      await saveReminderBatch(uid,batch);
+      if((await N.getAllScheduledNotificationsAsync()).length!==3)throw Error('Batch retry duplicated reminders');
+      result.mealBatch='passed';
+      for(const r of await listCustomReminders(uid))await pauseCustomReminder(uid,r.id,true);
       result.status = "passed";
     }
     run()

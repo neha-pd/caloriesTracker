@@ -253,3 +253,64 @@ test("personal context uses only the authenticated diary even with another popul
     await db.close();
   }
 });
+
+test("native tool-call syntax never appears as a conversational reply", async () => {
+  const raw =
+    "<|tool_call_start|>reminder(title='Meal Reminders', body='Time to eat', hour=8, minute=0, cadence='daily', quietHours=True)<|tool_call_end|>";
+  for (const output of [
+    raw,
+    "Sure! " + raw,
+    "reminder(title='Meals', hour=8)",
+    JSON.stringify({ reply: raw, reminder: null }),
+    '{"reply":"\\u003c|tool_call_start|>reminder(title=x)","reminder":null}',
+  ]) {
+    assert.throws(() => parseChatAnswer(output), /Unusable response/);
+  }
+  assert.equal(
+    parseChatAnswer("What times do you prefer for breakfast, lunch and dinner?")
+      .reminder,
+    null,
+  );
+  const service = createChatService(
+    "test",
+    async () =>
+      new Response(
+        JSON.stringify({
+          model: FREE_MODELS[1],
+          choices: [{ message: { content: raw } }],
+        }),
+      ),
+  );
+  await assert.rejects(
+    () => service.answer([{ role: "user", content: "Yes" }], {}),
+    (error) =>
+      error instanceof Error &&
+      /usable reply/.test(error.message) &&
+      !error.message.includes("tool_call"),
+  );
+});
+test("activity context requires a matching day and bounded device values", async () => {
+  const { chatInput } = await import("../src/core/chat.js");
+  const b = {
+    date: "2026-09-21",
+    messages: [{ role: "user", content: "How much did I burn?" }],
+    includeDiary: true,
+    activity: {
+      date: "2026-09-21",
+      activeCalories: 400,
+      totalCalories: 2100,
+      restingCalories: 1700,
+      steps: 7000,
+      exerciseMinutes: 45,
+      source: "Health Connect",
+      readAt: "2026-09-21T15:00:00.000Z",
+    },
+  };
+  assert.equal(chatInput.parse(b).activity?.totalCalories, 2100);
+  assert.throws(() =>
+    chatInput.parse({ ...b, activity: { ...b.activity, date: "2026-09-20" } }),
+  );
+  assert.throws(() =>
+    chatInput.parse({ ...b, activity: { ...b.activity, activeCalories: -1 } }),
+  );
+});

@@ -29,6 +29,8 @@ export interface User {
   onboarding_complete: boolean;
   settings: {
     water_goal_ml: number;
+    move_goal_kcal?: number | null;
+    exercise_goal_minutes?: number | null;
     meal_reminders: boolean;
     water_reminders: boolean;
     quest_reminders: boolean;

@@ -483,6 +483,29 @@ export async function createApp({
           "SELECT COALESCE(SUM(amount_ml),0)::int AS ml FROM water_entries WHERE user_id=$1 AND log_date=$2 AND deleted_at IS NULL",
           [uid, b.date],
         );
+        const rangeStart = new Date(b.date + "T12:00:00Z");
+        rangeStart.setUTCDate(rangeStart.getUTCDate() - 29);
+        const recentFood = await db.query(
+          "SELECT log_date,SUM(calories)::float AS calories,COUNT(*)::int AS entries FROM entries_v2 WHERE user_id=$1 AND deleted_at IS NULL AND log_date BETWEEN $2 AND $3 GROUP BY log_date ORDER BY log_date",
+          [uid, rangeStart.toISOString().slice(0, 10), b.date],
+        );
+        const fitnessHistory = (
+          await db.query(
+            "SELECT data FROM fitness_records WHERE user_id=$1 AND deleted_at IS NULL AND log_date<=$2 ORDER BY log_date DESC LIMIT 90",
+            [uid, b.date],
+          )
+        ).map((r) => r.data);
+        const datedWeights = fitnessHistory
+          .filter((r) => r.kind === "weight")
+          .sort((a, b) => a.log_date.localeCompare(b.log_date));
+        const firstWeight = datedWeights[0],
+          lastWeight = datedWeights.at(-1);
+        const weightSpanDays =
+          firstWeight && lastWeight
+            ? (Date.parse(lastWeight.log_date) -
+                Date.parse(firstWeight.log_date)) /
+              86400000
+            : 0;
         context = {
           date: b.date,
           diaryShared: true,
@@ -499,7 +522,36 @@ export async function createApp({
           },
           foods,
           waterMl: water.ml,
-          activity: "Not available to this chat",
+          activity: b.activity
+            ? {
+                ...b.activity,
+                provenance: "User-shared device summary; may be incomplete",
+              }
+            : "Not available to this chat",
+          fitnessHistory,
+          observedWeightTrend:
+            weightSpanDays >= 14 && datedWeights.length >= 3
+              ? {
+                  days: weightSpanDays,
+                  readings: datedWeights.length,
+                  changeKg:
+                    Math.round(
+                      (lastWeight.weightKg - firstWeight.weightKg) * 100,
+                    ) / 100,
+                  notAPrediction: true,
+                }
+              : "Need at least three dated weigh-ins spanning two weeks to discuss a trend",
+          recentFoodSummary: {
+            from: rangeStart.toISOString().slice(0, 10),
+            to: b.date,
+            loggedDays: recentFood.length,
+            caloriesLogged: recentFood.reduce(
+              (n, r) => n + Number(r.calories),
+              0,
+            ),
+            days: recentFood,
+            completeness: "Unknown; do not treat unlogged days as zero intake",
+          },
           logsMayBeIncomplete: true,
         };
       }
@@ -614,6 +666,10 @@ export async function createApp({
       water: await db.query("SELECT * FROM water_entries WHERE user_id=$1", [
         uid,
       ]),
+      fitness: await db.query(
+        "SELECT * FROM fitness_records WHERE user_id=$1",
+        [uid],
+      ),
       progress: await progress(uid),
     };
   });
@@ -823,6 +879,99 @@ export async function createApp({
     return { awarded_xp: await xp(db, user.id, date, "check-in", 10) };
   });
   app.get("/api/v2/progress", auth, async (req) => progress(userId(req)));
+  const fitnessBody = z.discriminatedUnion("kind", [
+    z
+      .object({
+        kind: z.literal("workout"),
+        log_date: day,
+        name: z.string().trim().min(1).max(80),
+        start: z.string().datetime(),
+        minutes: z.number().positive().max(1440),
+        calories: z.number().min(0).max(10000).nullable(),
+        energyPolicy: z.enum(["auto", "included", "additional"]),
+        notes: z.string().max(500).default(""),
+      })
+      .strict(),
+    z
+      .object({
+        kind: z.literal("weight"),
+        log_date: day,
+        weightKg: z.number().min(25).max(400),
+      })
+      .strict(),
+  ]);
+  const fitnessRows = async (uid: string) =>
+    (
+      await db.query("SELECT * FROM fitness_records WHERE user_id=$1", [uid])
+    ).map((r) => ({
+      ...r.data,
+      id: r.id,
+      version: r.version,
+      deleted_at: r.deleted_at,
+    }));
+  app.get("/api/v2/fitness", auth, async (req) => ({
+    records: await fitnessRows(userId(req)),
+  }));
+  app.put("/api/v2/fitness/:id", auth, async (req) => {
+    const id = z
+        .string()
+        .uuid()
+        .parse((req.params as any).id),
+      body = fitnessBody.parse(req.body),
+      uid = userId(req);
+    const rows = await db.query(
+      "INSERT INTO fitness_records(id,user_id,kind,log_date,data) VALUES($1,$2,$3,$4,$5) ON CONFLICT(id) DO NOTHING RETURNING id",
+      [id, uid, body.kind, body.log_date, JSON.stringify(body)],
+    );
+    const [existing] = await db.query(
+      "SELECT * FROM fitness_records WHERE id=$1 AND user_id=$2",
+      [id, uid],
+    );
+    if (!existing) throw fail(409, "Record identifier unavailable.");
+    return {
+      record: {
+        ...existing.data,
+        id,
+        version: existing.version,
+        deleted_at: existing.deleted_at,
+      },
+    };
+  });
+  app.patch("/api/v2/fitness/:id", auth, async (req) => {
+    const id = z
+      .string()
+      .uuid()
+      .parse((req.params as any).id);
+    const { version, ...input } = z
+      .object({ version: z.number().int().positive() })
+      .passthrough()
+      .parse(req.body);
+    const body = fitnessBody.parse(input);
+    const [row] = await db.query(
+      "UPDATE fitness_records SET data=$1,log_date=$2,version=version+1,updated_at=NOW() WHERE id=$3 AND user_id=$4 AND version=$5 AND kind=$6 AND deleted_at IS NULL RETURNING *",
+      [
+        JSON.stringify(body),
+        body.log_date,
+        id,
+        userId(req),
+        version,
+        body.kind,
+      ],
+    );
+    if (!row) throw fail(409, "Record changed. Sync and try again.");
+    return { record: { ...row.data, id, version: row.version } };
+  });
+  app.delete("/api/v2/fitness/:id", auth, async (req) => {
+    const id = z
+      .string()
+      .uuid()
+      .parse((req.params as any).id);
+    await db.query(
+      "UPDATE fitness_records SET deleted_at=NOW(),updated_at=NOW() WHERE id=$1 AND user_id=$2 AND deleted_at IS NULL",
+      [id, userId(req)],
+    );
+    return { ok: true };
+  });
   app.get("/api/v2/changes", auth, async (req) => {
     const { since } = z
       .object({

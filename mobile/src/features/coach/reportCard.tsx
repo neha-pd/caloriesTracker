@@ -8,6 +8,7 @@ type Props = {
   light: boolean;
   date: string;
   entries: Entry[];
+  workouts?: { name: string; minutes: number; source: string }[];
   totals: Nutrition;
   water: number;
   goal: number;
@@ -17,11 +18,12 @@ type Props = {
   currentWeight: number | null;
   targetWeight: number | null;
   activeCalories: number | null;
+  totalCalories?: number | null;
   steps: number | null;
   activityTime: string | null;
 };
 export default function ReportCard(p: Props) {
-  const layout = reportLayout(p.entries),
+  const layout = reportLayout(p.entries, p.workouts?.length || 0),
     bg = p.light ? "#f4f0e5" : "#11180f",
     ink = p.light ? "#192414" : "#f4f5ec",
     muted = p.light ? "#596451" : "#aab79b",
@@ -133,32 +135,42 @@ export default function ReportCard(p: Props) {
         true,
       )}
       {text(
+        p.totalCalories == null
+          ? "Total burn: not available"
+          : `Total burned: ${Math.round(p.totalCalories)} kcal (includes active)`,
+        34,
+        377,
+        10,
+        ink,
+        true,
+      )}
+      {text(
         p.steps == null
           ? "Steps: not available"
           : `${Math.round(p.steps).toLocaleString()} steps`,
         34,
-        377,
+        393,
         10,
         muted,
       )}
       {text(
         p.activityTime
-          ? `Synced ${p.activityTime} · active energy, not total daily burn`
-          : "Connect health on the day to include recorded activity.",
+          ? `Read ${p.activityTime} · device estimates may be incomplete`
+          : "Connect health to import recorded activity.",
         34,
-        393,
+        409,
         8,
         muted,
       )}
       {text(
         `WEIGHT  ${p.currentWeight == null ? "Not set" : p.currentWeight + " kg"}  →  TARGET  ${p.targetWeight == null ? "Not set" : p.targetWeight + " kg"}`,
         34,
-        423,
+        443,
         11,
         ink,
         true,
       )}
-      {text(weightDistance(p.currentWeight, p.targetWeight), 34, 442, 9, muted)}
+      {text(weightDistance(p.currentWeight, p.targetWeight), 34, 462, 9, muted)}
       {layout.rows.map((row, i) =>
         row.kind === "heading" ? (
           <G key={i}>{text(row.label, 34, row.y, 10, accent, true)}</G>
@@ -197,6 +209,25 @@ export default function ReportCard(p: Props) {
       )}
       {!p.entries.length &&
         text("No foods logged for this date.", 34, 495, 12, muted)}
+      {p.workouts?.map((w, i) => (
+        <G key={i}>
+          {text(
+            w.name.slice(0, 42),
+            34,
+            layout.workoutY + i * 48,
+            12,
+            ink,
+            true,
+          )}
+          {text(
+            `${Math.round(w.minutes)} min · ${w.source}`.slice(0, 55),
+            34,
+            layout.workoutY + i * 48 + 17,
+            9,
+            muted,
+          )}
+        </G>
+      ))}
       {text(
         "LOGGED DATA, NOT A PRESCRIPTION",
         34,

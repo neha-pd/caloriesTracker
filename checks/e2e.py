@@ -26,7 +26,7 @@ with sync_playwright() as p:
   page.get_by_test_id('auth-name').fill('Neha Test');page.get_by_test_id('auth-email').fill(email);page.get_by_test_id('auth-password').fill(password)
   page.get_by_test_id('auth-submit').click();page.get_by_test_id('goals-submit').click();page.get_by_test_id('goal-calories').fill('2100');page.get_by_test_id('goals-submit').click()
   expect(page.get_by_test_id('dashboard')).to_be_visible();screenshot('01-dashboard-empty')
-  page.get_by_test_id('tab-add').click();page.get_by_test_id('food-search').fill('banana')
+  page.get_by_test_id('tab-add').click();page.get_by_role('button',name='Add food',exact=True).click();page.get_by_test_id('food-search').fill('banana')
   page.get_by_text('Banana, raw',exact=True).click();page.get_by_test_id('food-quantity').fill('1.5');page.get_by_test_id('food-confirm').click()
   expect(page.get_by_text('Your food story.',exact=True)).to_be_visible();wait_synced()
   entries=api('/api/v2/changes')['entries'];assert len(entries)==1;entry=entries[0];assert entry['quantity']==1.5;assert api('/api/v2/progress')['xp']==35
@@ -45,7 +45,7 @@ with sync_playwright() as p:
   png=(out/'daily-story-midnight.png').read_bytes()
   assert png[:8]==b'\x89PNG\r\n\x1a\n' and struct.unpack('>II',png[16:24])==(1080,1920)
   click('Soft cream');page.get_by_role('switch',name='Include calories and macros').click()
-  expect(page.get_by_test_id('share-card').get_by_text('FOODS LOGGED',exact=True)).to_be_visible()
+  expect(page.get_by_test_id('share-card').get_by_text('FOOD LOGGED',exact=True)).to_be_visible()
   with page.expect_download() as info:page.get_by_test_id('download-story').click()
   info.value.save_as(out/'daily-story-cream.png')
   screenshot('07-share-preview');click('Go home')
@@ -55,7 +55,7 @@ with sync_playwright() as p:
   click('How to use FitLens');expect(page.get_by_text('Start with what you ate.',exact=True)).to_be_visible();click('Skip guide');page.get_by_test_id('tab-profile').click()
   page.get_by_test_id('logout').click();page.get_by_test_id('logout-confirm').click();expect(page.get_by_test_id('start-journey')).to_be_visible()
   click('I already have an account');page.get_by_test_id('auth-email').fill(email);page.get_by_test_id('auth-password').fill(password);page.get_by_test_id('auth-submit').click();expect(page.get_by_test_id('dashboard')).to_be_visible();wait_synced();assert len(api('/api/v2/changes')['entries'])==1
-  page.get_by_test_id('tab-add').click();click('Create a custom food');page.get_by_test_id('custom-name').fill('Homemade test bowl')
+  page.get_by_test_id('tab-add').click();page.get_by_role('button',name='Add food',exact=True).click();click('Create a custom food');page.get_by_test_id('custom-name').fill('Homemade test bowl')
   for key,val in [('calories','320'),('protein','20'),('carbs','40'),('fat','10')]:page.get_by_test_id('custom-'+key).fill(val)
   page.get_by_test_id('custom-save').click();page.get_by_test_id('food-confirm').click();wait_synced();assert len(api('/api/v2/changes')['entries'])==2
   click('Go home');page.get_by_test_id('home-connect-device').click();expect(page.get_by_text('Apple Health + Health Connect',exact=True)).to_be_visible();click('Go home');page.get_by_test_id('talk-ember').click()

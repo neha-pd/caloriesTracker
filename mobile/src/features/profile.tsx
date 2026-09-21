@@ -1,3 +1,4 @@
+import { useHealth, removeLocalHealth } from "./health/store";
 import React, { useState } from "react";
 import { View, Platform, Switch, Share } from "react-native";
 import { router } from "expo-router";
@@ -332,7 +333,14 @@ export function Privacy() {
     setError("");
     try {
       const { data } = await api.get("/api/users/me/export");
-      const text = JSON.stringify(data, null, 2);
+      if (useAuthStore.getState().user?.id !== u?.id)
+        throw new Error("Your account changed; export again.");
+      const health = useHealth.getState();
+      const text = JSON.stringify(
+        { ...data, device_health: health.uid === u?.id ? health.days : {} },
+        null,
+        2,
+      );
       if (Platform.OS === "web") {
         const url = URL.createObjectURL(
           new Blob([text], { type: "application/json" }),
@@ -361,6 +369,7 @@ export function Privacy() {
     setError("");
     try {
       await api.delete("/api/users/me", { data: { password } });
+      if (u?.id) await removeLocalHealth(u.id);
       await AsyncStorage.removeItem("fitlens:data:" + u?.id);
       const privateKeys = (await AsyncStorage.getAllKeys()).filter(
         (k) =>
@@ -381,12 +390,12 @@ export function Privacy() {
       <Card>
         <Icon name="shield-checkmark-outline" size={32} />
         <T bold size={20}>
-          Photos stay with you.
+          Your health, your choice.
         </T>
         <T color={C.muted}>
           {u?.id === "fitlens-offline-demo"
             ? "This demo uses fictional sample data stored only on this device. Food search and logging work offline."
-            : "Food search and logging work offline. AI chat sends messages to an online provider only when you choose to use it. Confirmed food logs, targets, and account details sync to the server. Activity read from Apple Health or Health Connect stays on this device."}
+            : "Food search and logging work offline. AI chat sends messages to an online provider only when you choose to use it. Confirmed food logs, targets, and account details sync to the server. Health history stays on this device. If you enable diary sharing in Ember, the selected day’s activity summary also goes to the online AI provider. Account export includes this device’s saved health history; deleting the account removes it here."}
         </T>
       </Card>
       <Card>

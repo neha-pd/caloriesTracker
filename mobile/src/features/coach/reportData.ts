@@ -19,8 +19,8 @@ export function wrapLabel(text: string, max = 40) {
   if (line) lines.push(line);
   return lines.length ? lines : ["Food entry"];
 }
-export function reportLayout(entries: Entry[]) {
-  let y = 480;
+export function reportLayout(entries: Entry[], workoutCount = 0) {
+  let y = 500;
   const rows: (
     | { kind: "heading"; label: string; y: number }
     | { kind: "food"; entry: Entry; lines: string[]; y: number; height: number }
@@ -39,7 +39,12 @@ export function reportLayout(entries: Entry[]) {
     y += 12;
   }
   if (!entries.length) y += 40;
-  return { rows, height: Math.max(720, y + 100), footerY: y + 20 };
+  return {
+    rows,
+    workoutY: y + 10,
+    height: Math.max(720, y + 100 + workoutCount * 48),
+    footerY: y + 20 + workoutCount * 48,
+  };
 }
 export function weightDistance(
   current: number | null | undefined,

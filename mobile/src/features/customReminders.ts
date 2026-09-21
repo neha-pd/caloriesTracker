@@ -39,6 +39,7 @@ export async function saveCustomReminder(
   uid: string,
   draft: ReminderDraft,
   existing?: CustomReminder,
+  assignedId?: string,
 ) {
   const clean = validateReminder(draft);
   if (Platform.OS === "web")
@@ -71,7 +72,7 @@ export async function saveCustomReminder(
     throw new Error(
       "This schedule would create too many notifications. Choose a longer interval, daily instead of weekdays, or pause a reminder first.",
     );
-  const id = existing?.id || Crypto.randomUUID(),
+  const id = existing?.id || assignedId || Crypto.randomUUID(),
     notificationIds: string[] = [];
   try {
     const content = {
@@ -164,4 +165,34 @@ export async function pauseCustomReminder(
           ),
     ),
   );
+}
+
+// Stable draft IDs make retries safe; previously saved group items are not scheduled twice.
+export async function saveReminderBatch(
+  uid: string,
+  drafts: { id: string; draft: ReminderDraft }[],
+) {
+  if (
+    !drafts.length ||
+    drafts.length > 8 ||
+    new Set(drafts.map((x) => x.id)).size !== drafts.length
+  )
+    throw new Error("Choose between one and eight distinct reminders.");
+  const clean = drafts.map((x) => ({ ...x, draft: validateReminder(x.draft) }));
+  const before = await listCustomReminders(uid);
+  const pending = clean.filter((x) => !before.some((r) => r.id === x.id));
+  if (before.length + pending.length > 8)
+    throw new Error(
+      "This group exceeds the limit of 8 custom reminders. Remove an old reminder first.",
+    );
+  const created: string[] = [];
+  try {
+    for (const x of pending) {
+      await saveCustomReminder(uid, x.draft, undefined, x.id);
+      created.push(x.id);
+    }
+  } catch (error) {
+    for (const id of created) await pauseCustomReminder(uid, id, true);
+    throw error;
+  }
 }

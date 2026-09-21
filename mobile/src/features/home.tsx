@@ -1,3 +1,4 @@
+import DailyEnergy from "./health/energy";
 import { GuidePrompt } from "./guide";
 import { useHealth } from "./health/store";
 import React, { useState } from "react";
@@ -37,15 +38,17 @@ export function DatePicker() {
       <Tap label="Previous day" onPress={() => move(-1)} style={S.round}>
         <Icon name="chevron-back" />
       </Tap>
-      <T bold>
-        {date === localDateKey()
-          ? "Today"
-          : new Date(date + "T12:00:00").toLocaleDateString(undefined, {
-              month: "short",
-              day: "numeric",
-              year: "numeric",
-            })}
-      </T>
+      <Tap label="Open calendar" onPress={() => router.push("/(tabs)/history")}>
+        <T bold>
+          {date === localDateKey()
+            ? "Today"
+            : new Date(date + "T12:00:00").toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+        </T>
+      </Tap>
       <Tap
         label="Next day"
         disabled={date >= localDateKey()}
@@ -165,13 +168,21 @@ export function Dashboard() {
       {u?.id === "fitlens-offline-demo" && (
         <Banner text="DEMO · 45 days of fictional sample data, stored only on this device." />
       )}
+      <DatePicker />
+      <DailyEnergy />
+      <Button
+        secondary
+        title="Log activity"
+        icon="fitness-outline"
+        onPress={() => router.push("/activity")}
+      />
       <Card style={{ backgroundColor: C.elevated }}>
         <View style={S.row}>
           <Icon name="watch-outline" color={C.lime} />
           <View style={{ flex: 1 }}>
             <T bold>
               {health.enabled
-                ? "Your device is connected"
+                ? "Health connection enabled"
                 : "Connect your device"}
             </T>
             <T size={12} color={C.muted}>
@@ -180,23 +191,19 @@ export function Dashboard() {
             </T>
           </View>
         </View>
-        {health.enabled && (
-          <T color={C.muted}>
-            {health.steps == null
-              ? "Steps unavailable"
-              : health.steps.toLocaleString() + " steps"}{" "}
-            ·{" "}
-            {health.activeCalories == null
-              ? "Activity unavailable"
-              : Math.round(health.activeCalories) + " active kcal"}
-          </T>
-        )}
         <Button
-          title={health.enabled ? "Device & sync settings" : "Connect device"}
+          title={
+            health.enabled
+              ? health.permissionVersion < 2
+                ? "Enable burn & workout access"
+                : "Device & sync settings"
+              : "Connect device"
+          }
           secondary
           loading={health.busy}
           onPress={() =>
-            health.enabled || Platform.OS === "web"
+            (health.enabled && health.permissionVersion >= 2) ||
+            Platform.OS === "web"
               ? router.push("/health")
               : void health.connect()
           }
@@ -205,7 +212,6 @@ export function Dashboard() {
         {health.error && <Banner error text={health.error} />}
       </Card>
       <GuidePrompt />
-      <DatePicker />
       <View style={S.two}>
         <View style={{ flex: 1 }}>
           <Button
@@ -232,53 +238,13 @@ export function Dashboard() {
         testID="share-day"
       />
       <SyncBanner />
-      <Card
-        style={{
-          backgroundColor: "#242e1c",
-          borderColor: "#455736",
-          padding: 24,
-        }}
-      >
-        <View style={[S.row, { justifyContent: "space-between" }]}>
-          <T bold size={12} color={C.lime}>
-            YOUR DAILY ENERGY
-          </T>
-          <Icon name="sunny-outline" />
-        </View>
-        <View style={{ alignItems: "center", marginVertical: 8 }}>
-          <Svg width={230} height={230} viewBox="0 0 230 230">
-            <Circle
-              cx={115}
-              cy={115}
-              r={98}
-              stroke="#3b492e"
-              strokeWidth={12}
-              fill="none"
-            />
-            <Circle
-              cx={115}
-              cy={115}
-              r={98}
-              stroke={C.lime}
-              strokeWidth={12}
-              fill="none"
-              strokeLinecap="round"
-              strokeDasharray={`${pct * 616} 616`}
-              rotation={-90}
-              origin="115,115"
-            />
-          </Svg>
-          <View style={{ position: "absolute", top: 65, alignItems: "center" }}>
-            <T bold size={42} testID="calorie-total">
-              {Math.round(t.calories).toLocaleString()}
-            </T>
-            <T color={C.muted}>of {goal.toLocaleString()} kcal</T>
-            <T color={C.lime} size={12} style={{ marginTop: 10 }}>
-              {Math.round(Math.abs(goal - t.calories))}{" "}
-              {t.calories > goal ? "above target" : "remaining"}
-            </T>
-          </View>
-        </View>
+      <Card>
+        <T bold size={18}>
+          Food & macros
+        </T>
+        <T color={C.muted}>
+          {Math.round(t.calories)} of {goal.toLocaleString()} kcal eaten
+        </T>
         <Macros compact />
       </Card>
       <View style={S.two}>

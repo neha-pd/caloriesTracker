@@ -47,6 +47,10 @@ jobs:
           FITLENS_API_URL: http://127.0.0.1:3000
       - name: Browser chat and reminder drafts
         run: python3 checks/chat_e2e.py
+      - name: Browser daily energy and activity context
+        run: python3 checks/health_e2e.py
+      - name: Browser fitness calendar and multi-reminders
+        run: python3 checks/fitness_e2e.py
       - name: Browser demo without backend access
         run: python3 checks/demo_e2e.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

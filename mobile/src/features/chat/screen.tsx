@@ -1,3 +1,5 @@
+import * as Crypto from "expo-crypto";
+import { useHealth } from "../health/store";
 import React, { useEffect, useRef, useState } from "react";
 import {
   View,
@@ -14,8 +16,15 @@ import { useAuthStore } from "../../store/authStore";
 import { useTracker } from "../tracker";
 import { validateReminder } from "../reminderDomain";
 import { Art, Banner, Button, C, Card, S, T, Tap, Icon } from "../ui";
-type Turn = { role: "user" | "assistant"; content: string; reminder?: any };
+type Turn = {
+  role: "user" | "assistant";
+  content: string;
+  reminder?: any;
+  reminders?: any[];
+  batchId?: string;
+};
 export default function Chat() {
+  const health = useHealth();
   const user = useAuthStore((s) => s.user),
     date = useTracker((s) => s.date),
     insets = useSafeAreaInsets();
@@ -66,6 +75,23 @@ export default function Chat() {
   async function send(text = input) {
     text = text.trim();
     if (!text || !ready || pending.current) return;
+    const proposal = turns.at(-1);
+    if (
+      /^(yes|yes please|okay|ok|sure|do it|sounds good)[.! ]*$/i.test(text) &&
+      proposal?.reminders?.length
+    ) {
+      setInput("");
+      setTurns([
+        ...turns,
+        { role: "user", content: text },
+        {
+          ...proposal,
+          content:
+            "Your drafts are ready below. Review the times and confirm in the editor to enable them on this device.",
+        },
+      ]);
+      return;
+    }
     pending.current = true;
     const id = ++run.current,
       controller = new AbortController();
@@ -81,6 +107,20 @@ export default function Chat() {
         {
           date,
           includeDiary: diary,
+          ...(diary && health.uid === user?.id && health.days[date]
+            ? {
+                activity: ((d) => ({
+                  date: d.date,
+                  activeCalories: d.activeCalories,
+                  totalCalories: d.totalCalories,
+                  restingCalories: d.restingCalories,
+                  steps: d.steps,
+                  exerciseMinutes: d.exerciseMinutes,
+                  source: d.source.slice(0, 160),
+                  readAt: d.readAt,
+                }))(health.days[date]),
+              }
+            : {}),
           messages: next
             .slice(-11)
             .map((t) => ({ role: t.role, content: t.content.slice(0, 2000) })),
@@ -89,13 +129,23 @@ export default function Chat() {
       );
       if (id !== run.current) return;
       let reminder;
+      let reminders: any[] = [];
       try {
+        if (Array.isArray(data.reminders))
+          reminders = data.reminders.slice(0, 8).map(validateReminder);
         if (data.reminder) reminder = validateReminder(data.reminder);
+        if (!reminders.length && reminder) reminders = [reminder];
       } catch {}
       setTurns(
         [
           ...next,
-          { role: "assistant" as const, content: data.reply, reminder },
+          {
+            role: "assistant" as const,
+            content: data.reply,
+            reminder,
+            reminders,
+            batchId: Crypto.randomUUID(),
+          },
         ].slice(-40),
       );
     } catch (e) {
@@ -203,8 +253,8 @@ export default function Chat() {
             <View style={{ flex: 1 }}>
               <T bold>Use my diary & goals</T>
               <T color={C.muted} size={12}>
-                {date} · saved food, water and weight targets. Sync food first
-                for the latest context.
+                {date} · saved food, water, activity and weight targets. Sync
+                food first for the latest context.
               </T>
             </View>
             <Switch
@@ -264,17 +314,41 @@ export default function Chat() {
                 {t.role === "user" ? "You" : "Ember"}
               </T>
               <T>{t.content}</T>
-              {t.reminder && (
-                <>
-                  <T color={C.muted} size={12}>
-                    Draft only · nothing scheduled yet
+              {t.reminders && t.reminders.length > 1 && (
+                <Button
+                  title="Review all reminders"
+                  onPress={() =>
+                    router.push({
+                      pathname: "/reminder-batch",
+                      params: {
+                        drafts: JSON.stringify(t.reminders),
+                        batchId: t.batchId,
+                      },
+                    })
+                  }
+                />
+              )}
+              {!!t.reminders?.length && (
+                <T color={C.muted} size={12}>
+                  Drafts only · review and confirm to schedule
+                </T>
+              )}
+              {t.reminders?.map((r, j) => (
+                <View key={j} style={{ gap: 8 }}>
+                  <T bold>
+                    {r.title} · {String(r.hour).padStart(2, "0")}:
+                    {String(r.minute).padStart(2, "0")}
                   </T>
                   <Button
-                    title="Review reminder"
-                    onPress={() => draft(t.reminder)}
+                    title={
+                      t.reminders!.length === 1
+                        ? "Review reminder"
+                        : `Review ${r.title}`
+                    }
+                    onPress={() => draft(r)}
                   />
-                </>
-              )}
+                </View>
+              ))}
             </Card>
           ))}
           {busy && <T color={C.lime}>Ember is thinking…</T>}

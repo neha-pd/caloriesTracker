@@ -19,7 +19,7 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.2.0</string>
+	<string>2.3.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -60,7 +60,7 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Allow $(PRODUCT_NAME) to access your Face ID biometric data.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>FitLens reads your steps and active energy, including Apple Watch activity, to show your daily movement.</string>
+	<string>FitLens reads your steps, active and resting energy, and workout history to show food eaten and energy burned for each day.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>FitLens saves meals, nutrition, and water you confirm to Apple Health.</string>
 	<key>NSLocalNetworkUsageDescription</key>

@@ -24,7 +24,7 @@ export default function Layout() {
           {[
             { name: "dashboard", title: "Today", icon: "home-outline" },
             { name: "history", title: "Progress", icon: "stats-chart-outline" },
-            { name: "add", title: "Add food", icon: "add" },
+            { name: "add", title: "Add a record", icon: "add" },
             { name: "quests", title: "Quests", icon: "sparkles-outline" },
             { name: "profile", title: "You", icon: "person-outline" },
           ].map((tab) => {
@@ -36,7 +36,7 @@ export default function Layout() {
                 label={tab.title}
                 onPress={() =>
                   tab.name === "add"
-                    ? router.push("/log")
+                    ? router.push("/add")
                     : navigation.navigate(tab.name)
                 }
                 style={{

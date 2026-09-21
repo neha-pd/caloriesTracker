@@ -20,7 +20,7 @@ with sync_playwright() as p:
  assert len(set(e['log_date'] for e in data['entries']))==43
  assert len(data['water'])>300
  page.screenshot(path=str(out/'demo-dashboard.png'),full_page=True)
- page.get_by_test_id('tab-add').click();page.get_by_test_id('food-search').fill('poha')
+ page.get_by_test_id('tab-add').click();page.get_by_role('button',name='Add food',exact=True).click();page.get_by_test_id('food-search').fill('poha')
  page.get_by_text('Kanda poha',exact=True).click()
  page.get_by_test_id('food-confirm').click()
  after=page.evaluate('JSON.parse(localStorage.getItem("fitlens:data:fitlens-offline-demo"))')

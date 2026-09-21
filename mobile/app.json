@@ -2,7 +2,7 @@
   "expo": {
     "name": "FitLens",
     "slug": "fitlens",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -31,7 +31,10 @@
         "android.permission.health.READ_ACTIVE_CALORIES_BURNED",
         "android.permission.health.WRITE_NUTRITION",
         "android.permission.health.WRITE_HYDRATION",
-        "android.permission.POST_NOTIFICATIONS"
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.health.READ_TOTAL_CALORIES_BURNED",
+        "android.permission.health.READ_EXERCISE",
+        "android.permission.health.READ_HEALTH_DATA_HISTORY"
       ],
       "package": "com.fitlens.app",
       "blockedPermissions": [
@@ -48,7 +51,7 @@
       [
         "@kingstinct/react-native-healthkit",
         {
-          "NSHealthShareUsageDescription": "FitLens reads your steps and active energy, including Apple Watch activity, to show your daily movement.",
+          "NSHealthShareUsageDescription": "FitLens reads your steps, active and resting energy, and workout history to show food eaten and energy burned for each day.",
           "NSHealthUpdateUsageDescription": "FitLens saves meals, nutrition, and water you confirm to Apple Health."
         }
       ],

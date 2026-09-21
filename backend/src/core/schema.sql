@@ -52,3 +52,15 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS weight_goal_kg NUMERIC;
 ALTER TABLE users ADD COLUMN IF NOT EXISTS firebase_uid TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS users_firebase_uid ON users(firebase_uid);
 ALTER TABLE sessions ADD COLUMN IF NOT EXISTS firebase_auth_time BIGINT;
+
+CREATE TABLE IF NOT EXISTS fitness_records (
+ id UUID PRIMARY KEY,
+ user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ kind TEXT NOT NULL CHECK (kind IN ('workout','weight')),
+ log_date TEXT NOT NULL,
+ data JSONB NOT NULL,
+ version INTEGER NOT NULL DEFAULT 1,
+ deleted_at TIMESTAMPTZ,
+ updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS fitness_user_date ON fitness_records(user_id,log_date);

@@ -39,6 +39,14 @@ export const entrySchema = nutrition.extend({
 });
 export const settingsSchema = z
   .object({
+    move_goal_kcal: z.number().int().min(50).max(3000).nullable().optional(),
+    exercise_goal_minutes: z
+      .number()
+      .int()
+      .min(5)
+      .max(300)
+      .nullable()
+      .optional(),
     water_goal_ml: z.number().int().min(250).max(10000).optional(),
     meal_reminders: z.boolean().optional(),
     water_reminders: z.boolean().optional(),

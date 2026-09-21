@@ -51,3 +51,22 @@ export interface Progress {
     unlocked: boolean;
   }[];
 }
+
+export type FitnessRecord = {
+  id: string;
+  version: number;
+  deleted_at?: string | null;
+  log_date: string;
+} & (
+  | {
+      kind: "workout";
+      name: string;
+      start: string;
+      minutes: number;
+      calories: number | null;
+      energyPolicy: "auto" | "included" | "additional";
+      notes: string;
+    }
+  | { kind: "weight"; weightKg: number }
+);
+export type Workout = Extract<FitnessRecord, { kind: "workout" }>;

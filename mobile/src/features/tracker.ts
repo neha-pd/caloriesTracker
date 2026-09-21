@@ -6,7 +6,15 @@ import * as Crypto from "expo-crypto";
 import api, { errorMessage } from "../lib/api";
 import { onSessionExpired } from "../lib/session";
 import { localDateKey } from "../lib/dates";
-import type { Entry, Water, Food, Meal, Progress, Nutrition } from "./types";
+import type {
+  Entry,
+  Water,
+  Food,
+  Meal,
+  Progress,
+  Nutrition,
+  FitnessRecord,
+} from "./types";
 export type Operation = {
   method: "put" | "patch" | "delete" | "post";
   url: string;
@@ -29,6 +37,9 @@ interface Tracker {
   entries: Entry[];
   water: Water[];
   foods: Food[];
+  fitness: FitnessRecord[];
+  saveFitness: (record: FitnessRecord) => Promise<void>;
+  deleteFitness: (id: string) => Promise<void>;
   queue: Operation[];
   progress: Progress;
   syncing: boolean;
@@ -61,6 +72,7 @@ function persist() {
     entries: s.entries,
     water: s.water,
     foods: s.foods,
+    fitness: s.fitness,
     queue: s.queue,
     progress: s.progress,
   });
@@ -108,6 +120,7 @@ export const useTracker = create<Tracker>((set, get) => ({
   entries: [],
   water: [],
   foods: [],
+  fitness: [],
   queue: [],
   progress: emptyProgress,
   syncing: false,
@@ -121,6 +134,7 @@ export const useTracker = create<Tracker>((set, get) => ({
       entries: [],
       water: [],
       foods: [],
+      fitness: [],
       queue: [],
       progress: emptyProgress,
       ready: false,
@@ -191,6 +205,17 @@ export const useTracker = create<Tracker>((set, get) => ({
                   e.id === data.entry.id ? data.entry : e,
                 ),
               }));
+            if (
+              data.record &&
+              !get()
+                .queue.slice(1)
+                .some((o) => o.url === op.url)
+            )
+              set((s) => ({
+                fitness: s.fitness.map((r) =>
+                  r.id === data.record.id ? data.record : r,
+                ),
+              }));
             if (op.optimisticXp || data.awarded_xp)
               set((s) => ({
                 progress: withXp(
@@ -230,16 +255,18 @@ export const useTracker = create<Tracker>((set, get) => ({
           set((s) => ({ queue: s.queue.slice(1) }));
           await persist();
         }
-        const [changes, progress, custom] = await Promise.all([
+        const [changes, progress, custom, fitness] = await Promise.all([
           api.get("/api/v2/changes"),
           api.get("/api/v2/progress"),
           api.get("/api/v2/foods/custom"),
+          api.get("/api/v2/fitness"),
         ]);
         if (get().uid !== uid) return;
         // Preserve mutations queued during the pull; the next sync reconciles them.
         if (get().queue.length === 0)
           set({
             entries: changes.data.entries,
+            fitness: fitness.data.records,
             water: changes.data.water,
             foods: custom.data.foods.map((f: any) => ({
               ...f,
@@ -277,6 +304,29 @@ export const useTracker = create<Tracker>((set, get) => ({
       flight = null;
     });
     return flight;
+  },
+  saveFitness: async (record) => {
+    const exists = get().fitness.find((r) => r.id === record.id);
+    set((s) => ({
+      fitness: [
+        ...s.fitness.filter((r) => r.id !== record.id),
+        { ...record, version: exists ? exists.version + 1 : 1 },
+      ],
+    }));
+    const { id, version, deleted_at, ...body } = record;
+    await enqueue({
+      method: exists ? "patch" : "put",
+      url: "/api/v2/fitness/" + id,
+      body: exists ? { ...body, version: exists.version } : body,
+    });
+  },
+  deleteFitness: async (id) => {
+    set((s) => ({
+      fitness: s.fitness.map((r) =>
+        r.id === id ? { ...r, deleted_at: new Date().toISOString() } : r,
+      ),
+    }));
+    await enqueue({ method: "delete", url: "/api/v2/fitness/" + id });
   },
   addFood: async (food, quantity, meal, source = "catalog") => {
     const now = new Date().toISOString();
@@ -393,6 +443,7 @@ onSessionExpired(() => {
     entries: [],
     water: [],
     foods: [],
+    fitness: [],
     queue: [],
     progress: emptyProgress,
     ready: false,

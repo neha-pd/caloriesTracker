@@ -1,3 +1,5 @@
+import PeriodCard from "./fitness/periodCard";
+import { periodDates, summarize, energyForDay } from "./fitness/domain";
 import React, { useRef, useState } from "react";
 import { Platform, Switch, View, useWindowDimensions } from "react-native";
 import Svg, {
@@ -21,10 +23,20 @@ import { useTracker, totalNutrition } from "./tracker";
 import { useAuthStore } from "../store/authStore";
 
 export default function ShareDay() {
-  const params = useLocalSearchParams<{ mode?: string }>();
+  const params = useLocalSearchParams<{
+    mode?: string;
+    period?: string;
+    anchor?: string;
+  }>();
   const [mode, setMode] = useState(
     params.mode === "report" ? "report" : "story",
   );
+  const [period, setPeriod] = useState(
+      params.period === "month" || params.period === "year"
+        ? params.period
+        : "day",
+    ),
+    [composition, setComposition] = useState("rings");
   const health = useHealth();
   const tracker = useTracker(),
     user = useAuthStore((s) => s.user),
@@ -59,13 +71,50 @@ export default function ShareDay() {
       })
       .toUpperCase();
   const progress = Math.min(1, totals.calories / (user?.calorie_goal || 2000));
-  const report = mode === "report";
-  const height = report ? reportLayout(entries).height : 640;
-  const activityAvailable =
-    health.enabled &&
-    tracker.date === localDateKey() &&
-    !!health.lastSync &&
-    localDateKey(new Date(health.lastSync)) === tracker.date;
+  const report = mode === "report" && period === "day";
+  const periodSummary = summarize(
+    periodDates(
+      params.anchor || tracker.date,
+      period as "day" | "month" | "year",
+    ),
+    tracker.entries,
+    tracker.fitness,
+    health.days,
+  );
+  const periodTitle =
+    (demo ? "DEMO · " : "") +
+    (period === "day"
+      ? tracker.date
+      : new Date(
+          (params.anchor || tracker.date) + "T12:00:00",
+        ).toLocaleDateString(
+          undefined,
+          period === "year"
+            ? { year: "numeric" }
+            : { month: "long", year: "numeric" },
+        ));
+  const shareWorkouts = [
+    ...tracker.fitness
+      .filter(
+        (r) =>
+          r.kind === "workout" && !r.deleted_at && r.log_date === tracker.date,
+      )
+      .map((r) => ({
+        name: r.kind === "workout" ? r.name : "",
+        minutes: r.kind === "workout" ? r.minutes : 0,
+        source: "Manual record",
+      })),
+    ...(health.days[tracker.date]?.workouts || []),
+  ];
+  const height = report
+    ? reportLayout(entries, shareWorkouts.length).height
+    : 640;
+  const deviceActivity = health.days[tracker.date];
+  const activity = {
+    ...deviceActivity,
+    ...energyForDay(tracker.date, tracker.fitness, deviceActivity),
+  };
+  const activityAvailable = !!activity;
   async function exportCard(download = false) {
     setBusy(true);
     setError("");
@@ -94,7 +143,7 @@ export default function ShareDay() {
           { width: 1080, height: height * 3 },
         );
       });
-      const filename = `fitlens-${tracker.date}${report ? "-coach" : ""}.png`;
+      const filename = `fitlens-${params.anchor || tracker.date}-${period}${report ? "-coach" : ""}.png`;
       if (Platform.OS === "web") {
         const bytes = toByteArray(base64);
         const file = new globalThis.File([bytes as BlobPart], filename, {
@@ -149,6 +198,24 @@ export default function ShareDay() {
       }
     >
       <Segments
+        value={period}
+        onChange={setPeriod}
+        values={[
+          { key: "day", label: "Day" },
+          { key: "month", label: "Month" },
+          { key: "year", label: "Year" },
+        ]}
+      />
+      <Segments
+        value={composition}
+        onChange={setComposition}
+        values={[
+          { key: "rings", label: "Motion rings" },
+          { key: "mosaic", label: "Calendar mosaic" },
+          { key: "classic", label: "Classic day" },
+        ]}
+      />
+      <Segments
         values={[
           { key: "story", label: "Daily story" },
           { key: "report", label: "Coach report" },
@@ -191,6 +258,7 @@ export default function ShareDay() {
             light={light}
             date={date}
             entries={entries}
+            workouts={shareWorkouts}
             totals={totals}
             water={water}
             goal={user?.calorie_goal || 2000}
@@ -199,16 +267,30 @@ export default function ShareDay() {
             fatGoal={user?.fat_goal_g || 67}
             currentWeight={user?.weight_kg ?? null}
             targetWeight={user?.weight_goal_kg ?? null}
-            activeCalories={activityAvailable ? health.activeCalories : null}
-            steps={activityAvailable ? health.steps : null}
+            activeCalories={activity?.activeCalories ?? null}
+            totalCalories={activity?.totalCalories ?? null}
+            steps={activity?.steps ?? null}
             activityTime={
               activityAvailable
-                ? new Date(health.lastSync!).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
+                ? new Date(activity!.readAt || Date.now()).toLocaleTimeString(
+                    [],
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    },
+                  )
                 : null
             }
+          />
+        ) : period !== "day" || composition !== "classic" ? (
+          <PeriodCard
+            svgRef={svg}
+            width={width}
+            summary={periodSummary}
+            title={periodTitle}
+            light={light}
+            nutrition={nutrition}
+            style={composition}
           />
         ) : (
           <Svg

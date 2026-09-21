@@ -57,6 +57,10 @@ export default function Guide() {
       "Each new food today earns 10 XP for the first 20 entries. The first entry in each meal category adds 25 XP. Water adds 15 XP once daily; checking in adds 10. Offline XP appears immediately and is confirmed on sync. Edits and retries do not earn extra.",
     ],
     [
+      "Food and movement, together.",
+      "Home rings show food, active burn and workout time. Total burn includes resting energy when your device supplies it. Tap + to log a workout or weigh-in. Auto prevents manual workouts being added on top of watch totals; choose Not captured only when your watch missed it. Progress opens a month calendar or year view; share either period as a PNG. Missing readings stay unknown.",
+    ],
+    [
       "Meet Ember.",
       "Open Chat with Ember for meal ideas and support. Turn on Use my diary & goals for personal context. Messages go to online AI providers using free capacity. Review any reminder draft before scheduling. Share your day from Home when you want to send a story or a detailed report to your coach.",
     ],
