@@ -1,3 +1,4 @@
+import { reminderSummary } from "./reminderDomain";
 import React, { useEffect, useState } from "react";
 import { Platform, Switch, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -155,8 +156,7 @@ export default function Reminders() {
           </T>
           <T color={C.muted}>{r.body}</T>
           <T color={C.lime}>
-            {String(r.hour).padStart(2, "0")}:
-            {String(r.minute).padStart(2, "0")} · {r.cadence} ·{" "}
+            {reminderSummary(r)} · {r.cadence} ·{" "}
             {r.enabled ? "Scheduled" : "Paused"}
           </T>
           <Button

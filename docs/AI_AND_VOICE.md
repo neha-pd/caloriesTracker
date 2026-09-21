@@ -30,7 +30,7 @@ Automated domain checks cover varied food-output formats, quoted numeric reminde
 
 Physical phone checks still matter: recognition quality across dishes, microphone capture and accents, audible playback, background notification delivery, and device-specific memory/latency. A model naming a dish is a suggestion, not a verified ingredient list or calorie estimate.
 
-Reminder schedule parsing uses an explicit time in the user request. AI drafts wording only. Missing/ambiguous times, individual weekdays, interval/one-off schedules and timezone conversions are rejected rather than silently guessed.
+Reminder schedule parsing uses an explicit time in the user request. AI drafts wording only. Exact-time reminders require an explicit clock time. Since 2.1.1, hourly intervals are also supported. Vague “regular intervals” produces an explicitly proposed two-hour draft; all times are shown before confirmation. One-off schedules, custom interval windows and timezone conversions still require manual review.
 
 ## Measured results, 2026-09-21
 
@@ -41,3 +41,9 @@ The 1.6B VLM caused a low-memory process kill on a 4 GB Android emulator. Enhanc
 Final Android classifier smoke test returned Sambar first (raw score 0.758) and Idli second (0.137), in 42 ms on the emulator. A populated 15-entry diary plus two prior exchanges generated a coherent response and recalled the earlier ingredients, though it did not answer every part of the calorie question. These checks validate the integration, not general model accuracy.
 
 The optional native harness `checks/native-ai-smoke.tsx` requires a locally supplied `.data/ai-smoke-photo.json` object with a base64 JPEG under `base64`; the fixture is not shipped. Run only in a separate instrumentation application ID, never as the production entry point.
+
+## 2.1.1: first-user interval reminder fix
+
+“Drink water at regular intervals in 24hrs” now prepares a water reminder without AI: proposed every two hours, daily, 08:00–20:00 with quiet hours enabled. Change the interval or disable quiet hours for an overnight schedule (00:00–22:00 every two hours). This repeats on the chosen days; it is not a one-day timer. The preview lists every delivery time. Optional local AI polishes wording separately, so model setup or inference failure cannot block schedule drafting.
+
+Changed or failed requests disable confirmation until prepared again or explicitly switched to manual editing. Existing single-time reminders remain compatible. Interval schedules expand to daily/weekly OS triggers, with a conservative 60-pending-notification cap. Editing replaces old trigger IDs; pause/delete cancels all occurrences. Android instrumentation verified seven daytime triggers, editing to four, pausing, resuming with twelve around-the-clock triggers, and deleting without leftovers. Browser regression covers the screenshot's exact request with a newly created account and no AI model.

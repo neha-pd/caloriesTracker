@@ -5,6 +5,7 @@ import { useAuthStore } from "../store/authStore";
 import {
   validateReminder,
   reminderWeekdays,
+  reminderTimes,
   type CustomReminder,
   type ReminderDraft,
 } from "./reminderDomain";
@@ -62,6 +63,14 @@ export async function saveCustomReminder(
     throw new Error(
       "Allow notifications in your device settings to schedule this reminder.",
     );
+  const times = reminderTimes(clean);
+  const days = reminderWeekdays(clean.cadence);
+  const pending = await N.getAllScheduledNotificationsAsync();
+  // Keep old triggers until the replacement is persisted; budget for both sets.
+  if (pending.length + times.length * Math.max(1, days.length) > 60)
+    throw new Error(
+      "This schedule would create too many notifications. Choose a longer interval, daily instead of weekdays, or pause a reminder first.",
+    );
   const id = existing?.id || Crypto.randomUUID(),
     notificationIds: string[] = [];
   try {
@@ -71,33 +80,34 @@ export async function saveCustomReminder(
       sound: false as const,
       data: { fitlens: true, route: "/coach" },
     };
-    const days = reminderWeekdays(clean.cadence);
-    if (!days.length)
-      notificationIds.push(
-        await N.scheduleNotificationAsync({
-          content,
-          trigger: {
-            type: N.SchedulableTriggerInputTypes.DAILY,
-            hour: clean.hour,
-            minute: clean.minute,
-            channelId: "daily-habits",
-          },
-        }),
-      );
-    else
-      for (const weekday of days)
+    for (const time of times) {
+      if (!days.length)
         notificationIds.push(
           await N.scheduleNotificationAsync({
             content,
             trigger: {
-              type: N.SchedulableTriggerInputTypes.WEEKLY,
-              weekday,
-              hour: clean.hour,
-              minute: clean.minute,
+              type: N.SchedulableTriggerInputTypes.DAILY,
+              hour: time.hour,
+              minute: time.minute,
               channelId: "daily-habits",
             },
           }),
         );
+      else
+        for (const weekday of days)
+          notificationIds.push(
+            await N.scheduleNotificationAsync({
+              content,
+              trigger: {
+                type: N.SchedulableTriggerInputTypes.WEEKLY,
+                weekday,
+                hour: time.hour,
+                minute: time.minute,
+                channelId: "daily-habits",
+              },
+            }),
+          );
+    }
     if (useAuthStore.getState().user?.id !== uid)
       throw new Error("Your session ended before the reminder was saved.");
     const reminder: CustomReminder = {

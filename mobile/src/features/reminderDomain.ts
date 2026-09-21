@@ -6,6 +6,7 @@ export interface ReminderDraft {
   minute: number;
   cadence: Cadence;
   quietHours: boolean;
+  intervalHours?: number;
 }
 export interface CustomReminder extends ReminderDraft {
   id: string;
@@ -29,7 +30,14 @@ export function validateReminder(d: ReminderDraft) {
     throw new Error("Enter a valid 24-hour time, such as 15:30.");
   if (!["daily", "weekdays", "weekends"].includes(d.cadence))
     throw new Error("Choose a valid repeat schedule.");
-  if (d.quietHours && (d.hour >= 22 || d.hour < 8))
+  if (
+    d.intervalHours !== undefined &&
+    (!Number.isInteger(d.intervalHours) ||
+      d.intervalHours < 1 ||
+      d.intervalHours > 12)
+  )
+    throw new Error("Choose an interval between 1 and 12 whole hours.");
+  if (!d.intervalHours && d.quietHours && (d.hour >= 22 || d.hour < 8))
     throw new Error(
       "Quiet hours are 22:00–08:00. Choose a daytime time or turn quiet hours off for this reminder.",
     );
@@ -44,12 +52,65 @@ export function reminderWeekdays(cadence: Cadence): number[] {
 }
 export function reminderSchedule(request: string) {
   if (
-    /\b(?:tomorrow|today|tonight|once|UTC|GMT|IST|PST|EST|CET)\b|\bevery\s+\d+\s*(?:minutes?|hours?|days?)\b/i.test(
+    /\b(?:tomorrow|today|tonight|once|UTC|GMT|IST|PST|EST|CET)\b|\bfor (?:the next )?\d+\s*(?:hours?|hrs?|days?)\b/i.test(
       request,
     )
   )
     throw new Error(
-      "Use a recurring reminder in device local time: daily, weekdays or weekends. One-off, interval and timezone conversions are not supported here.",
+      "This editor repeats daily, on weekdays or weekends. One-off schedules and timezone conversions need manual review.",
+    );
+  if (
+    /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(
+      request,
+    )
+  )
+    throw new Error(
+      "Choose daily, weekdays or weekends. Individual weekdays are not supported yet.",
+    );
+  const weekend = /\bweekends?\b/i.test(request),
+    weekday = /\bweekdays?\b/i.test(request);
+  if (weekend && weekday) throw new Error("Choose one repeat schedule.");
+  const cadence: Cadence = weekend
+    ? "weekends"
+    : weekday
+      ? "weekdays"
+      : "daily";
+  if (/\bevery\s+\d+\s*(?:minutes?|mins?|days?)\b/i.test(request))
+    throw new Error("Choose an hourly interval from 1 to 12 hours.");
+  const intervals = [
+    ...request.matchAll(/\bevery\s+(?:(\d+)\s*)?(hours?|hrs?)\b/gi),
+  ];
+  const regular =
+    /\bregular\s+intervals?\b|\bthroughout\s+(?:the\s+)?day\b|\bhourly\b/i.test(
+      request,
+    );
+  if (intervals.length > 1)
+    throw new Error("Choose one interval per reminder.");
+  if (intervals.length || regular) {
+    if (
+      /\b\d{1,2}(?::\d{2})?\s*[ap]\.?m|\b\d{1,2}:\d{2}\b|\b(?:from|until|starting|between)\b/i.test(
+        request,
+      )
+    )
+      throw new Error(
+        "For interval reminders, choose the spacing below. Quiet hours control the daily delivery window; custom start/end times are not supported yet.",
+      );
+    const intervalHours = intervals.length
+      ? Number(intervals[0][1] || 1)
+      : /\bhourly\b/i.test(request)
+        ? 1
+        : 2;
+    if (intervalHours < 1 || intervalHours > 12)
+      throw new Error("Choose an interval between 1 and 12 whole hours.");
+    return { hour: 8, minute: 0, cadence, intervalHours };
+  }
+  if (
+    /\bintervals?\b|\bevery\s+(?:\d+|one|two|three|four|five|half)\s*(?:minutes?|mins?|hours?|hrs?|days?)\b/i.test(
+      request,
+    )
+  )
+    throw new Error(
+      "Use an hourly interval such as every 2 hours, or choose the interval below.",
     );
   const matches = [
     ...request.matchAll(/\b(\d{1,2})(?::([0-5]\d))?\s*(a\.?m\.?|p\.?m\.?)/gi),
@@ -83,23 +144,7 @@ export function reminderSchedule(request: string) {
     hour = Number(clocks[0][1]);
     minute = Number(clocks[0][2]);
   }
-  if (
-    /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(
-      request,
-    )
-  )
-    throw new Error(
-      "Choose daily, weekdays or weekends. Individual weekdays are not supported yet.",
-    );
-  const weekend = /\bweekends?\b/i.test(request),
-    weekday = /\bweekdays?\b/i.test(request);
-  if (weekend && weekday)
-    throw new Error("Choose one repeat schedule: daily, weekdays or weekends.");
-  return {
-    hour,
-    minute,
-    cadence: (weekend ? "weekends" : weekday ? "weekdays" : "daily") as Cadence,
-  };
+  return { hour, minute, cadence, intervalHours: undefined };
 }
 export function parseReminder(text: string, request?: string): ReminderDraft {
   const match = text.match(/\{[\s\S]*\}/);
@@ -136,4 +181,44 @@ export function parseReminder(text: string, request?: string): ReminderDraft {
 export function reminderPrompt(request: string) {
   reminderSchedule(request);
   return `Write friendly notification wording for this request: ${JSON.stringify(request.slice(0, 400))}. Return only a JSON object with two fields: "title" (under 60 characters) and "body" (under 180 characters). Example for a water reminder: {"title":"Water break","body":"Pause for a sip of water."}. Describe the action, not just the clock time. Do not add medical advice or dosages. Do not schedule anything. The app separately handles the time and repeat schedule.`;
+}
+
+export function reminderTimes(
+  d: Pick<ReminderDraft, "hour" | "minute" | "quietHours" | "intervalHours">,
+) {
+  if (d.intervalHours === undefined)
+    return [{ hour: d.hour, minute: d.minute }];
+  if (
+    !Number.isInteger(d.intervalHours) ||
+    d.intervalHours < 1 ||
+    d.intervalHours > 12
+  )
+    return [];
+  const times: { hour: number; minute: number }[] = [];
+  for (
+    let hour = d.quietHours ? 8 : 0;
+    hour < (d.quietHours ? 22 : 24);
+    hour += d.intervalHours
+  )
+    times.push({ hour, minute: 0 });
+  return times;
+}
+export function localReminderDraft(request: string): ReminderDraft {
+  const schedule = reminderSchedule(request);
+  const water = /\bwater|hydrate|hydration\b/i.test(request);
+  return validateReminder({
+    ...schedule,
+    title: water ? "Water break" : "Your reminder",
+    body: water
+      ? "Take a moment for a drink of water."
+      : request.trim().slice(0, 180),
+    quietHours: true,
+  });
+}
+export function reminderSummary(
+  d: Pick<ReminderDraft, "hour" | "minute" | "quietHours" | "intervalHours">,
+) {
+  return d.intervalHours
+    ? `Every ${d.intervalHours} hour${d.intervalHours === 1 ? "" : "s"}`
+    : `${String(d.hour).padStart(2, "0")}:${String(d.minute).padStart(2, "0")}`;
 }

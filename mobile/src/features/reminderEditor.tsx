@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Platform, Switch, View } from "react-native";
+import React, { useEffect, useState, useRef } from "react";
+import { Switch, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "expo-router";
-import {
-  Banner,
-  Button,
-  C,
-  Card,
-  Field,
-  Meter,
-  Page,
-  S,
-  Segments,
-  T,
-} from "./ui";
+import { Banner, Button, C, Card, Field, Page, S, Segments, T } from "./ui";
 import { useAuthStore } from "../store/authStore";
 import { useLocalCoach } from "./coach/localModel";
 import {
   parseReminder,
+  localReminderDraft,
+  reminderTimes,
+  reminderSummary,
   reminderPrompt,
   validateReminder,
   type Cadence,
@@ -40,11 +32,20 @@ export default function ReminderEditor() {
     [minute, setMinute] = useState("00"),
     [cadence, setCadence] = useState<Cadence>("daily"),
     [quiet, setQuiet] = useState(true),
+    [interval, setInterval] = useState(""),
+    [needsDraft, setNeedsDraft] = useState(false),
     [request, setRequest] = useState(""),
     [existing, setExisting] = useState<CustomReminder>(),
     [busy, setBusy] = useState(false),
     [error, setError] = useState(""),
     [message, setMessage] = useState("");
+  const requestVersion = useRef(0);
+  useEffect(
+    () => () => {
+      requestVersion.current++;
+    },
+    [focused, uid],
+  );
   useEffect(() => {
     if (uid && params.id)
       void listCustomReminders(uid).then((all) => {
@@ -57,32 +58,49 @@ export default function ReminderEditor() {
           setMinute(String(r.minute).padStart(2, "0"));
           setCadence(r.cadence);
           setQuiet(r.quietHours);
+          setInterval(r.intervalHours ? String(r.intervalHours) : "");
         }
       });
   }, [uid, params.id]);
-  async function draft() {
+  async function draft(polish = false) {
+    const version = requestVersion.current;
     setBusy(true);
     setError("");
     setMessage("");
     try {
       if (!request.trim())
         throw new Error(
-          "Describe a reminder and include a time, for example “water at 3 pm on weekdays”.",
+          "Describe a reminder, for example “water every 2 hours” or “water at 3 pm on weekdays”.",
         );
-      const d = parseReminder(
-        await model.generate(reminderPrompt(request)),
-        request,
-      );
+      let d = localReminderDraft(request);
+      let wording = "Schedule prepared on this device. No AI download needed.";
+      if (polish && model.ready) {
+        try {
+          d = parseReminder(
+            await model.generate(reminderPrompt(request)),
+            request,
+          );
+          wording = "Local AI wording added.";
+        } catch {
+          wording =
+            "AI wording was unavailable; your local schedule is ready to review.";
+        }
+      }
+      if (version !== requestVersion.current) return;
       setTitle(d.title);
       setBody(d.body);
       setHour(String(d.hour));
       setMinute(String(d.minute).padStart(2, "0"));
       setCadence(d.cadence);
       setQuiet(d.quietHours);
+      setInterval(d.intervalHours ? String(d.intervalHours) : "");
+      setNeedsDraft(false);
       setMessage(
-        "Draft ready. Check the wording, time, and repeat schedule before saving.",
+        `${wording} ${d.intervalHours ? "Proposed interval: every " + d.intervalHours + " hours, repeating on the selected days. Quiet hours are on; turn them off only if you want overnight reminders." : "Check the time and repeat schedule."} Nothing is scheduled until you confirm.`,
       );
     } catch (e) {
+      if (version !== requestVersion.current) return;
+      setNeedsDraft(true);
       setError(e instanceof Error ? e.message : "Could not draft a reminder.");
     } finally {
       setBusy(false);
@@ -92,6 +110,10 @@ export default function ReminderEditor() {
     setBusy(true);
     setError("");
     try {
+      if (needsDraft)
+        throw new Error(
+          "Prepare the changed request first, or choose manual editing.",
+        );
       if (!uid) throw new Error("Sign in to save your reminder.");
       const d = validateReminder({
         title,
@@ -100,6 +122,7 @@ export default function ReminderEditor() {
         minute: Number(minute),
         cadence,
         quietHours: quiet,
+        intervalHours: interval ? Number(interval) : undefined,
       });
       await saveCustomReminder(uid, d, existing);
       router.replace("/reminders");
@@ -122,32 +145,47 @@ export default function ReminderEditor() {
         <Field
           label="What should I remind you about?"
           value={request}
-          onChange={setRequest}
-          placeholder="Water at 3 pm on weekdays"
+          onChange={(v) => {
+            requestVersion.current++;
+            setRequest(v);
+            setNeedsDraft(!!v.trim());
+            setMessage("");
+            setError("");
+          }}
+          testID="reminder-request"
+          placeholder="Drink water every 2 hours"
         />
-        {model.ready ? (
+        <Button
+          secondary
+          title="Prepare reminder"
+          testID="reminder-draft"
+          loading={busy}
+          onPress={() => void draft()}
+        />
+        {model.ready && (
           <Button
             secondary
-            title="Draft with local AI"
+            title="Polish wording with local AI"
             loading={busy}
-            onPress={() => void draft()}
+            onPress={() => void draft(true)}
           />
-        ) : (
-          <>
-            <T color={C.muted} size={13}>
-              {Platform.OS === "web"
-                ? "AI drafting is available in the native app. The fields below work as a preview."
-                : model.enabled
-                  ? "Preparing local model…"
-                  : "Enable your local model to turn a sentence into a draft, or edit the fields below."}
-            </T>
-            {model.enabled && <Meter value={model.progress} />}
-            <Button
-              secondary
-              title="Manage local AI"
-              onPress={() => router.push({ pathname: "/chat" })}
-            />
-          </>
+        )}
+        <T color={C.muted} size={13}>
+          Schedule drafting works immediately, without an AI download. If your
+          local model is ready, it can polish the wording.
+        </T>
+        {needsDraft && (
+          <Button
+            secondary
+            title="Use manual fields instead"
+            onPress={() => {
+              requestVersion.current++;
+              setRequest("");
+              setNeedsDraft(false);
+              setError("");
+              setMessage("");
+            }}
+          />
         )}
         {model.error && <Banner error text={model.error.message} />}
       </Card>
@@ -167,22 +205,40 @@ export default function ReminderEditor() {
           onChange={setBody}
           testID="reminder-body"
         />
-        <View style={S.two}>
+        <Segments
+          values={[
+            { key: "once", label: "One time per day" },
+            { key: "interval", label: "Regular intervals" },
+          ]}
+          value={interval ? "interval" : "once"}
+          onChange={(v) => setInterval(v === "interval" ? "2" : "")}
+        />
+        {interval ? (
           <Field
-            label="Hour · 00–23"
-            value={hour}
-            onChange={setHour}
+            label="Repeat every · hours (1–12)"
+            value={interval}
+            onChange={(v) => setInterval(v || "0")}
             numeric
-            testID="reminder-hour"
+            testID="reminder-interval"
           />
-          <Field
-            label="Minute · 00–59"
-            value={minute}
-            onChange={setMinute}
-            numeric
-            testID="reminder-minute"
-          />
-        </View>
+        ) : (
+          <View style={S.two}>
+            <Field
+              label="Hour · 00–23"
+              value={hour}
+              onChange={setHour}
+              numeric
+              testID="reminder-hour"
+            />
+            <Field
+              label="Minute · 00–59"
+              value={minute}
+              onChange={setMinute}
+              numeric
+              testID="reminder-minute"
+            />
+          </View>
+        )}
         <Segments
           values={[
             { key: "daily", label: "Daily" },
@@ -209,9 +265,27 @@ export default function ReminderEditor() {
           />
         </View>
         <T color={C.lime}>
-          Preview: {hour.padStart(2, "0")}:{minute.padStart(2, "0")} · {cadence}{" "}
-          · device local time
+          Preview:{" "}
+          {reminderSummary({
+            hour: Number(hour),
+            minute: Number(minute),
+            quietHours: quiet,
+            intervalHours: interval ? Number(interval) : undefined,
+          })}{" "}
+          · {cadence} · device local time
         </T>
+        {interval && (
+          <T color={C.lime} testID="reminder-times">
+            {reminderTimes({
+              hour: 0,
+              minute: 0,
+              quietHours: quiet,
+              intervalHours: Number(interval),
+            })
+              .map((t) => String(t.hour).padStart(2, "0") + ":00")
+              .join(" · ") || "Choose an interval from 1 to 12 hours."}
+          </T>
+        )}
         <T color={C.muted} size={12}>
           Notification text may appear on your lock screen. Keep personal
           details out if you prefer.
@@ -222,6 +296,7 @@ export default function ReminderEditor() {
       <Button
         title="Confirm & schedule reminder"
         testID="reminder-save"
+        disabled={needsDraft || busy}
         loading={busy}
         onPress={() => void save()}
       />

@@ -135,3 +135,35 @@ test("reminder times come from explicit user input, not invented model fields", 
   assert.throws(() => parseReminder(text, "water in the afternoon"));
   assert.throws(() => parseReminder(text, "water at 3 pm and 5 pm"));
 });
+
+test("first-user regular interval request produces a reviewable water schedule without AI", async () => {
+  const {
+    localReminderDraft,
+    reminderTimes,
+    reminderWeekdays,
+    validateReminder,
+  } = await import("../../mobile/src/features/reminderDomain");
+  const d = localReminderDraft("Drink water at regular intervals in 24hrs");
+  assert.equal(d.title, "Water break");
+  assert.equal(d.intervalHours, 2);
+  assert.deepEqual(
+    reminderTimes(d).map((t) => t.hour),
+    [8, 10, 12, 14, 16, 18, 20],
+  );
+  assert.equal(reminderTimes({ ...d, quietHours: false }).length, 12);
+  const weekday = localReminderDraft("Drink water every 3 hours on weekdays");
+  assert.equal(weekday.intervalHours, 3);
+  assert.equal(
+    reminderTimes(weekday).length * reminderWeekdays(weekday.cadence).length,
+    25,
+  );
+  assert.equal(localReminderDraft("Water every hour").intervalHours, 1);
+  assert.throws(() => localReminderDraft("water every 30 minutes"));
+  assert.throws(() =>
+    localReminderDraft("water every 2 hours from 9 am to 8 pm"),
+  );
+  assert.throws(() => localReminderDraft("water every 2 hours for 24 hours"));
+  assert.throws(() => validateReminder({ ...d, intervalHours: 0 }));
+  assert.throws(() => validateReminder({ ...d, intervalHours: 1.5 }));
+  assert.equal(localReminderDraft("water at 3 pm").intervalHours, undefined);
+});
