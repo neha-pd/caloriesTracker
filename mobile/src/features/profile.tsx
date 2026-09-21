@@ -85,6 +85,11 @@ export function Profile() {
           onPress={() => router.push("/widgets")}
         />
         <RowLink
+          title="Talk to Ember · voice & chat"
+          icon="mic-outline"
+          onPress={() => router.push("/chat")}
+        />
+        <RowLink
           title="Daily coach"
           icon="chatbubble-ellipses-outline"
           onPress={() => router.push("/coach")}
@@ -108,7 +113,11 @@ export function Profile() {
         />
       </Card>
       <Card>
-        <T bold>{u?.id === "fitlens-offline-demo" ? "Offline demo" : "Across your devices"}</T>
+        <T bold>
+          {u?.id === "fitlens-offline-demo"
+            ? "Offline demo"
+            : "Across your devices"}
+        </T>
         <T color={C.muted} size={13}>
           {s.queue.length
             ? `${s.queue.length} changes waiting to sync.`
@@ -116,7 +125,9 @@ export function Profile() {
               ? "Syncing your little wins…"
               : u?.id === "fitlens-offline-demo"
                 ? "Sample data and your edits stay on this device. Exit the demo to sign in to your own account."
-                : u?.id === "fitlens-offline-demo" ? "Fictional sample data stays on this device." : "Your confirmed logs sync to your account."}
+                : u?.id === "fitlens-offline-demo"
+                  ? "Fictional sample data stays on this device."
+                  : "Your confirmed logs sync to your account."}
         </T>
         {s.error && <Banner text={s.error} error />}
         <Button
@@ -132,7 +143,9 @@ export function Profile() {
           <T color={C.muted}>
             {s.queue.length
               ? "You have unsynced changes. They remain on this device for your next login. Sync first to see them elsewhere."
-              : u?.id === "fitlens-offline-demo" ? "Your demo changes stay on this device for your next visit." : "Your synced progress will be here when you return."}
+              : u?.id === "fitlens-offline-demo"
+                ? "Your demo changes stay on this device for your next visit."
+                : "Your synced progress will be here when you return."}
           </T>
           <Button
             danger
@@ -378,7 +391,9 @@ export function Privacy() {
           Photos stay with you.
         </T>
         <T color={C.muted}>
-          {u?.id === "fitlens-offline-demo" ? "This demo uses fictional sample data stored only on this device. Food recognition runs locally after a model download." : "Food recognition runs on your device after a model download. Confirmed food logs, targets, and account details sync to the server. Activity read from Apple Health or Health Connect stays on this device."}
+          {u?.id === "fitlens-offline-demo"
+            ? "This demo uses fictional sample data stored only on this device. Food recognition runs locally. The Android quick lens is bundled; optional LFM models need a download."
+            : "Food recognition runs on your device. The Android quick lens is bundled; optional LFM models need a download. Confirmed food logs, targets, and account details sync to the server. Activity read from Apple Health or Health Connect stays on this device."}
         </T>
       </Card>
       <Card>
@@ -409,14 +424,18 @@ export function Privacy() {
             Permanently delete your account?
           </T>
           <T color={C.muted}>
-            {u?.id === "fitlens-offline-demo" ? "This removes the local demo data and your demo edits. Exploring the demo again will create fresh sample data." : "This removes your server account and synced logs, plus this device’s cached diary. Previously exported health records remain in your health app."}
+            {u?.id === "fitlens-offline-demo"
+              ? "This removes the local demo data and your demo edits. Exploring the demo again will create fresh sample data."
+              : "This removes your server account and synced logs, plus this device’s cached diary. Previously exported health records remain in your health app."}
           </T>
-          {u?.id !== "fitlens-offline-demo" && <Field
-            label="Confirm your password"
-            value={password}
-            onChange={setPassword}
-            secure
-          />}
+          {u?.id !== "fitlens-offline-demo" && (
+            <Field
+              label="Confirm your password"
+              value={password}
+              onChange={setPassword}
+              secure
+            />
+          )}
           <Button
             danger
             title="Delete account permanently"

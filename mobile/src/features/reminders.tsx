@@ -8,6 +8,7 @@ import type { CustomReminder } from "./reminderDomain";
 import { Banner, Button, C, Card, Page, S, T } from "./ui";
 import { useAuthStore } from "../store/authStore";
 import { onSessionExpired } from "../lib/session";
+import { NotificationPermissionCard } from "./notificationSetup";
 const choices = [
   {
     key: "meal",
@@ -141,6 +142,7 @@ export default function Reminders() {
       title="At your own pace."
       subtitle="Daily reminders on this device, in your local time. You can switch them off anytime."
     >
+      <NotificationPermissionCard />
       <Button
         title="Create a custom reminder"
         testID="custom-reminder"

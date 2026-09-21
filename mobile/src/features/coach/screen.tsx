@@ -106,6 +106,11 @@ export default function Coach() {
       title="A moment to reflect."
       subtitle="A grounded look at what you logged, with gentle ideas for your routine."
     >
+      <Button
+        title="Talk to Ember · voice & chat"
+        icon="chatbubble-ellipses-outline"
+        onPress={() => router.push("/chat")}
+      />
       <DatePicker />
       <Card>
         <T bold size={22}>
@@ -156,16 +161,14 @@ export default function Coach() {
           <Art size={95} />
           <T bold>Use your private local coach</T>
           <T color={C.muted}>
-            The same LFM model used for food photos can review your day. Your
-            diary stays on this device during the review.
+            Your conversation model can review your day. Your diary stays on
+            this device during the review.
           </T>
           <Button
             title={
               Platform.OS === "web" ? "About on-device AI" : "Set up local AI"
             }
-            onPress={() =>
-              router.push({ pathname: "/ai", params: { mode: "settings" } })
-            }
+            onPress={() => router.push({ pathname: "/chat" })}
           />
         </Card>
       ) : !model.ready ? (
@@ -180,9 +183,7 @@ export default function Coach() {
           <Button
             secondary
             title="Manage local AI"
-            onPress={() =>
-              router.push({ pathname: "/ai", params: { mode: "settings" } })
-            }
+            onPress={() => router.push({ pathname: "/chat" })}
           />
         </Card>
       ) : (

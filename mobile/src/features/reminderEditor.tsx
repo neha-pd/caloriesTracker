@@ -69,7 +69,10 @@ export default function ReminderEditor() {
         throw new Error(
           "Describe a reminder and include a time, for example “water at 3 pm on weekdays”.",
         );
-      const d = parseReminder(await model.generate(reminderPrompt(request)));
+      const d = parseReminder(
+        await model.generate(reminderPrompt(request)),
+        request,
+      );
       setTitle(d.title);
       setBody(d.body);
       setHour(String(d.hour));
@@ -142,9 +145,7 @@ export default function ReminderEditor() {
             <Button
               secondary
               title="Manage local AI"
-              onPress={() =>
-                router.push({ pathname: "/ai", params: { mode: "settings" } })
-              }
+              onPress={() => router.push({ pathname: "/chat" })}
             />
           </>
         )}

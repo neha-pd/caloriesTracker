@@ -20,6 +20,7 @@ export default function AI() {
           library, without uploading your photos.
         </T>
       </Card>
+      <Button title="Talk to Ember · voice & chat" onPress={() => router.push("/chat")} />
       <Button title="Search food library" onPress={() => router.push("/log")} />
       <Card>
         <T bold>No AI API keys</T>

@@ -180,6 +180,8 @@ export function Page({
   right,
   refresh,
   testID,
+  scrollRef,
+  onContentSizeChange,
 }: {
   children: React.ReactNode;
   title?: string;
@@ -188,6 +190,8 @@ export function Page({
   back?: boolean;
   right?: React.ReactNode;
   refresh?: { loading: boolean; run: () => void };
+  scrollRef?: React.RefObject<ScrollView | null>;
+  onContentSizeChange?: (width: number, height: number) => void;
   testID?: string;
 }) {
   return (
@@ -201,6 +205,8 @@ export function Page({
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView
+          ref={scrollRef}
+          onContentSizeChange={onContentSizeChange}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
           contentContainerStyle={S.page}

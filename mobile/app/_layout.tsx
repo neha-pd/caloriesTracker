@@ -12,6 +12,7 @@ import { useTracker } from "../src/features/tracker";
 import { useHealth } from "../src/features/health/store";
 import "../src/features/reminders";
 import { WidgetBridge } from "../src/features/widgets";
+import NotificationSetup from "../src/features/notificationSetup";
 import NotificationBridge from "../src/features/notificationBridge";
 import { C } from "../src/features/ui";
 const client = new QueryClient();
@@ -88,6 +89,7 @@ export default function Layout() {
       <QueryClientProvider client={client}>
         <StatusBar style="light" />
         <NotificationBridge />
+        <NotificationSetup />
         <WidgetBridge />
         <Stack
           screenOptions={{

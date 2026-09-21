@@ -170,13 +170,25 @@ export function Dashboard() {
         onPress={() => router.push("/share")}
         testID="share-day"
       />
-      <Button
-        title="Ask Ember · daily coach"
-        icon="sparkles-outline"
-        secondary
-        onPress={() => router.push("/coach")}
-        testID="daily-coach"
-      />
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Daily review"
+            icon="sparkles-outline"
+            secondary
+            onPress={() => router.push("/coach")}
+            testID="daily-coach"
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Talk to Ember"
+            icon="mic-outline"
+            onPress={() => router.push("/chat")}
+            testID="talk-ember"
+          />
+        </View>
+      </View>
       <SyncBanner />
       <Card
         style={{
