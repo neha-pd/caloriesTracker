@@ -1,3 +1,4 @@
+import { DateTimeField } from "./pickers";
 import React, { useEffect, useState, useRef } from "react";
 import { Switch, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -204,22 +205,17 @@ export default function ReminderEditor() {
             testID="reminder-interval"
           />
         ) : (
-          <View style={S.two}>
-            <Field
-              label="Hour · 00–23"
-              value={hour}
-              onChange={setHour}
-              numeric
-              testID="reminder-hour"
-            />
-            <Field
-              label="Minute · 00–59"
-              value={minute}
-              onChange={setMinute}
-              numeric
-              testID="reminder-minute"
-            />
-          </View>
+          <DateTimeField
+            label="Reminder time"
+            mode="time"
+            value={hour.padStart(2, "0") + ":" + minute.padStart(2, "0")}
+            onChange={(v) => {
+              const [h, m] = v.split(":");
+              setHour(h);
+              setMinute(m);
+            }}
+            testID="reminder-time"
+          />
         )}
         <Segments
           values={[

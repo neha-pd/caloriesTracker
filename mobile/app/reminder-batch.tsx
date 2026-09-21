@@ -1,3 +1,4 @@
+import { DateTimeField } from "../src/features/pickers";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Page, Card, T, Field, Button, Banner, C } from "../src/features/ui";
@@ -41,26 +42,24 @@ export default function Batch() {
             }
           />
           <T>{d.body}</T>
-          <Field
-            label={"Hour " + (i + 1)}
-            value={String(d.hour)}
-            numeric
-            onChange={(v) =>
-              setDrafts((a) =>
-                a.map((x, j) =>
-                  i === j ? { ...x, hour: v === "" ? NaN : Number(v) } : x,
-                ),
-              )
+          <DateTimeField
+            label={"Time " + (i + 1)}
+            mode="time"
+            value={
+              String(d.hour).padStart(2, "0") +
+              ":" +
+              String(d.minute).padStart(2, "0")
             }
-          />
-          <Field
-            label={"Minute " + (i + 1)}
-            value={String(d.minute)}
-            numeric
             onChange={(v) =>
               setDrafts((a) =>
                 a.map((x, j) =>
-                  i === j ? { ...x, minute: v === "" ? NaN : Number(v) } : x,
+                  i === j
+                    ? {
+                        ...x,
+                        hour: Number(v.split(":")[0]),
+                        minute: Number(v.split(":")[1]),
+                      }
+                    : x,
                 ),
               )
             }

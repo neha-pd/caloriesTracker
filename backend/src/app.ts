@@ -519,6 +519,8 @@ export async function createApp({
             carbs: user.carbs_goal_g,
             fat: user.fat_goal_g,
             water: user.settings.water_goal_ml,
+            steps: user.settings.step_goal ?? null,
+            activeCalories: user.settings.move_goal_kcal ?? null,
           },
           foods,
           waterMl: water.ml,

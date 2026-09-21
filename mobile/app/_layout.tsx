@@ -1,3 +1,4 @@
+import NudgeBridge from "../src/features/nudges/bridge";
 import { removeRetiredModels } from "../src/features/retiredModels";
 import React, { useEffect } from "react";
 import { Stack, router, useSegments } from "expo-router";
@@ -90,6 +91,7 @@ export default function Layout() {
       <QueryClientProvider client={client}>
         <StatusBar style="light" />
         <NotificationBridge />
+        <NudgeBridge />
         <WidgetBridge />
         <Stack
           screenOptions={{

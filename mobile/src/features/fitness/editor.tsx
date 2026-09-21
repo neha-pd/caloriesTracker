@@ -1,3 +1,4 @@
+import { DateTimeField } from "../pickers";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import * as Crypto from "expo-crypto";
@@ -116,7 +117,13 @@ export default function ActivityEditor() {
           ]}
         />
       )}
-      <Field label="Date · YYYY-MM-DD" value={date} onChange={setDate} />
+      <DateTimeField
+        label="Activity date"
+        mode="date"
+        value={date}
+        onChange={setDate}
+        maximumDate={new Date()}
+      />
       {kind === "weight" ? (
         <Field
           label="Weight · kg"
@@ -135,7 +142,12 @@ export default function ActivityEditor() {
               label: x,
             }))}
           />
-          <Field label="Start time · HH:MM" value={time} onChange={setTime} />
+          <DateTimeField
+            label="Start time"
+            mode="time"
+            value={time}
+            onChange={setTime}
+          />
           <Field
             label="Duration · minutes"
             value={minutes}

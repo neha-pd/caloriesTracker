@@ -2,7 +2,7 @@
   "expo": {
     "name": "FitLens",
     "slug": "fitlens",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -34,7 +34,8 @@
         "android.permission.POST_NOTIFICATIONS",
         "android.permission.health.READ_TOTAL_CALORIES_BURNED",
         "android.permission.health.READ_EXERCISE",
-        "android.permission.health.READ_HEALTH_DATA_HISTORY"
+        "android.permission.health.READ_HEALTH_DATA_HISTORY",
+        "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"
       ],
       "package": "com.fitlens.app",
       "blockedPermissions": [

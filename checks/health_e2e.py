@@ -15,8 +15,8 @@ with sync_playwright() as p:
  expect(page.get_by_test_id('daily-energy').get_by_text('2,100 kcal',exact=True)).to_have_count(0)
  page.get_by_role('button',name='Next day',exact=True).click();expect(page.get_by_test_id('daily-energy').get_by_text('2,100 kcal',exact=True)).to_be_visible()
  page.screenshot(path='test-results/health-day-rings.png',full_page=True)
- page.get_by_role('button',name='Activity & burn details',exact=True).click();page.get_by_label('Active kcal goal · optional',exact=True).fill('350');page.get_by_label('Workout minutes goal · optional',exact=True).fill('30');page.get_by_role('button',name='Save movement goals',exact=True).click();expect(page.get_by_text('Movement goals saved.',exact=False)).to_be_visible()
- page.get_by_role('button',name='Go home',exact=True).click();page.get_by_test_id('talk-ember').click()
+ page.get_by_role('button',name='Activity & burn details',exact=True).click();page.get_by_label('Daily step goal · optional',exact=True).fill('6000');page.get_by_label('Active kcal goal · optional',exact=True).fill('350');page.get_by_label('Workout minutes goal · optional',exact=True).fill('30');page.get_by_role('button',name='Save movement goals',exact=True).click();expect(page.get_by_text('Movement goals saved.',exact=False)).to_be_visible()
+ page.get_by_role('button',name='Go home',exact=True).click();expect(page.get_by_test_id('step-progress').get_by_text('Hooray!',exact=False)).to_be_visible();page.screenshot(path='test-results/step-goal-celebration.png',full_page=True);page.get_by_test_id('talk-ember').click()
  sent=[]
  context.route('**/api/v2/chat/status',lambda r:r.fulfill(json={'available':True,'freeOnly':True}))
  # Status may already have been fetched; retry explicitly if necessary.

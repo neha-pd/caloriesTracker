@@ -1,3 +1,4 @@
+import { DateTimeField } from "./pickers";
 import DailyEnergy from "./health/energy";
 import { GuidePrompt } from "./guide";
 import { useHealth } from "./health/store";
@@ -38,17 +39,14 @@ export function DatePicker() {
       <Tap label="Previous day" onPress={() => move(-1)} style={S.round}>
         <Icon name="chevron-back" />
       </Tap>
-      <Tap label="Open calendar" onPress={() => router.push("/(tabs)/history")}>
-        <T bold>
-          {date === localDateKey()
-            ? "Today"
-            : new Date(date + "T12:00:00").toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-        </T>
-      </Tap>
+      <DateTimeField
+        label="Choose diary date"
+        mode="date"
+        value={date}
+        onChange={(d) => useTracker.getState().setDate(d)}
+        maximumDate={new Date()}
+        compact
+      />
       <Tap
         label="Next day"
         disabled={date >= localDateKey()}

@@ -50,7 +50,7 @@ export default function Guide() {
     ],
     [
       "Make a routine that fits.",
-      "Open Reminders to choose times or regular intervals. Your phone asks for notification permission when needed. Quiet hours protect 22:00–08:00. Reminders work without chat or an internet connection once scheduled.",
+      "Open Reminders for clock pickers and custom schedules. On Android, Personalize Ember nudges adds meal-aware messages, step celebrations and watch alerts. Choose your meal times and quiet hours; allow background watch checks separately. Your phone delivers these without an AI request, though Android can delay background checks.",
     ],
     [
       "Little wins add up.",
@@ -58,7 +58,7 @@ export default function Guide() {
     ],
     [
       "Food and movement, together.",
-      "Home rings show food, active burn and workout time. Total burn includes resting energy when your device supplies it. Tap + to log a workout or weigh-in. Auto prevents manual workouts being added on top of watch totals; choose Not captured only when your watch missed it. Progress opens a month calendar or year view; share either period as a PNG. Missing readings stay unknown.",
+      "Home rings show food, active burn and workout time. Total burn includes resting energy when your device supplies it. Tap + to log a workout or weigh-in. Auto prevents manual workouts being added on top of watch totals; choose Not captured only when your watch missed it. Choose your own step goal to see progress and a little celebration. Tap the date to jump with a calendar picker. Progress opens a month calendar or year view; share either period as a PNG. Missing readings stay unknown.",
     ],
     [
       "Meet Ember.",

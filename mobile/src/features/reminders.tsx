@@ -144,6 +144,17 @@ export default function Reminders() {
       subtitle="Daily reminders on this device, in your local time. You can switch them off anytime."
     >
       <NotificationPermissionCard />
+      <Card>
+        <T bold>Meet your smart nudges</T>
+        <T color={C.muted}>
+          Meal-aware reminders, watch check-ins and step celebrations. Choose
+          your times and quiet hours.
+        </T>
+        <Button
+          title="Personalize Ember nudges"
+          onPress={() => router.push("/smart-nudges")}
+        />
+      </Card>
       <Button
         title="Create a custom reminder"
         testID="custom-reminder"
@@ -192,7 +203,7 @@ export default function Reminders() {
         </Card>
       ))}
       <T bold size={19}>
-        Quick reminders
+        Fixed quick reminders
       </T>
       {choices.map((c) => (
         <Card key={c.key}>
@@ -217,8 +228,9 @@ export default function Reminders() {
       ))}
       {error && <Banner error text={error} />}
       <T size={12} color={C.muted}>
-        Reminders stop when you log out. After changing your device timezone,
-        toggle reminders off and on to reset their schedule.
+        Reminders stop when you log out. Smart nudges follow your device’s local
+        time automatically. After a timezone change, resave any fixed custom
+        schedules.
       </T>
     </Page>
   );

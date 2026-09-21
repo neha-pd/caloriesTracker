@@ -1,3 +1,5 @@
+import { useNudges } from "./nudges/store";
+import { pauseNudgesSession } from "./nudges/native";
 import { useHealth, removeLocalHealth } from "./health/store";
 import React, { useState } from "react";
 import { View, Platform, Switch, Share } from "react-native";
@@ -337,7 +339,14 @@ export function Privacy() {
         throw new Error("Your account changed; export again.");
       const health = useHealth.getState();
       const text = JSON.stringify(
-        { ...data, device_health: health.uid === u?.id ? health.days : {} },
+        {
+          ...data,
+          device_health: health.uid === u?.id ? health.days : {},
+          smart_nudges:
+            useNudges.getState().uid === u?.id
+              ? useNudges.getState().settings
+              : null,
+        },
         null,
         2,
       );
@@ -369,11 +378,13 @@ export function Privacy() {
     setError("");
     try {
       await api.delete("/api/users/me", { data: { password } });
+      pauseNudgesSession();
       if (u?.id) await removeLocalHealth(u.id);
       await AsyncStorage.removeItem("fitlens:data:" + u?.id);
       const privateKeys = (await AsyncStorage.getAllKeys()).filter(
         (k) =>
           k === `fitlens:custom-reminders:${u?.id}` ||
+          k === `fitlens:nudges:${u?.id}` ||
           k.startsWith(`fitlens:coach:${u?.id}:`),
       );
       if (privateKeys.length) await AsyncStorage.multiRemove(privateKeys);

@@ -1,3 +1,4 @@
+import { DateTimeField } from "../pickers";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
@@ -55,6 +56,16 @@ export default function Calendar() {
           onPress={() => move(1)}
         />
       </View>
+      <DateTimeField
+        label="Jump to date"
+        mode="date"
+        value={anchor}
+        maximumDate={new Date()}
+        onChange={(d) => {
+          setAnchor(d);
+          t.setDate(d);
+        }}
+      />
       {period === "month" ? (
         <Card>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>

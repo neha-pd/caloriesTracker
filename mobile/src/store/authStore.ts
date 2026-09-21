@@ -1,3 +1,4 @@
+import { pauseNudgesSession } from "../features/nudges/native";
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../lib/api";
@@ -29,6 +30,7 @@ export interface User {
   onboarding_complete: boolean;
   settings: {
     water_goal_ml: number;
+    step_goal?: number | null;
     move_goal_kcal?: number | null;
     exercise_goal_minutes?: number | null;
     meal_reminders: boolean;
@@ -121,6 +123,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     await accept(data);
   },
   logout: async () => {
+    pauseNudgesSession();
     try {
       const refresh_token = await getSecret("refresh_token");
       if (refresh_token)

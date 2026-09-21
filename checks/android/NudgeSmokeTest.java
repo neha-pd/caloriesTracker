@@ -1,0 +1,27 @@
+package com.fitlens.smoke;
+import android.app.*;import android.content.*;import android.os.Bundle;import java.io.*;import java.nio.file.Files;import java.time.*;import org.json.*;
+public class NudgeSmokeTest extends Instrumentation {
+ Object choose(JSONObject c,JSONObject ledger,Instant now)throws Exception{return Class.forName("expo.modules.fitlensnudges.NudgeEngine").getMethod("choose",JSONObject.class,JSONObject.class,Instant.class).invoke(null,c,ledger,now);}
+ void check(JSONObject c,JSONObject l,Instant now,String kind)throws Exception{Object n=choose(c,l,now);String actual=n==null?null:(String)n.getClass().getMethod("getKind").invoke(n);if(!java.util.Objects.equals(actual,kind))throw new Exception("Expected "+kind+" got "+actual);}
+ public void onCreate(Bundle args){super.onCreate(args);start();}
+ public void onStart(){Bundle out=new Bundle();try{
+ Context c=getTargetContext();File result=new File(c.getFilesDir(),"fitlens-nudges-smoke.json");result.delete();Intent launch=c.getPackageManager().getLaunchIntentForPackage(c.getPackageName());launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);c.startActivity(launch);
+ for(int i=0;i<90&&!result.exists();i++)Thread.sleep(1000);if(!result.exists())throw new Exception("Native result missing");String report=new String(Files.readAllBytes(result.toPath()));if(report.contains("failed"))throw new Exception(report);
+ NotificationManager nm=(NotificationManager)c.getSystemService(Context.NOTIFICATION_SERVICE);long count=java.util.Arrays.stream(nm.getActiveNotifications()).filter(n->"fitlens-smart".equals(n.getTag())).count();if(count!=1)throw new Exception("Expected one offline workout notice, got "+count);
+ SharedPreferences prefs=c.getSharedPreferences("fitlens-smart-nudges",Context.MODE_PRIVATE);JSONObject config=new JSONObject(prefs.getString("config","{}"));JSONObject settings=config.getJSONObject("settings");
+ String date=LocalDate.now().toString();Instant now=LocalDate.now().atTime(11,30).atZone(ZoneId.systemDefault()).toInstant();JSONObject day=config.getJSONObject("days").getJSONObject(date);day.put("workouts",new JSONArray());settings.put("fitness",0);settings.put("water",false);config.put("stepGoal",6000);
+ day.put("steps",3000);check(config,new JSONObject(),now,"stepHalf");day.put("steps",6000);check(config,new JSONObject(),now,"stepGoal");check(config,new JSONObject().put(date+"|stepGoal",now.minusSeconds(3600).toEpochMilli()),now,null);
+ day.put("steps",JSONObject.NULL);check(config,new JSONObject(),now,null);
+ settings.put("quietStart","11:00");settings.put("quietEnd","12:00");day.put("steps",6000);check(config,new JSONObject(),now,null);settings.put("quietStart","22:00");settings.put("quietEnd","08:00");check(config,new JSONObject(),LocalDate.now().atTime(23,0).atZone(ZoneId.systemDefault()).toInstant(),null);settings.put("quietStart","00:00");settings.put("quietEnd","00:00");
+ day.put("steps",JSONObject.NULL);Instant lunch=LocalDate.now().atTime(13,0).atZone(ZoneId.systemDefault()).toInstant();check(config,new JSONObject(),lunch,"lunch");day.put("meals",new JSONArray().put("lunch"));check(config,new JSONObject(),lunch,null);day.put("meals",new JSONArray());
+ check(config,new JSONObject().put(date+"|water:test",lunch.minusSeconds(60).toEpochMilli()),lunch,null);
+ JSONObject capped=new JSONObject();for(int i=0;i<8;i++)capped.put(date+"|test"+i,lunch.minusSeconds(3600).toEpochMilli());check(config,capped,lunch,null);
+ settings.put("water",true);config.put("waterGoal",2000);day.put("water",2000);check(config,new JSONObject(),now,null);day.put("water",500);check(config,new JSONObject(),now,"water");settings.put("water",false);
+ settings.put("workouts",true);settings.put("enabledAt",now.minusSeconds(3600).toString());JSONObject w=new JSONObject().put("id","test").put("name","Walk").put("start",now.minusSeconds(1800).toString()).put("end",now.minusSeconds(1200).toString()).put("minutes",10);day.put("workouts",new JSONArray().put(w));check(config,new JSONObject(),now,"workout");
+ Object notice=choose(config,new JSONObject(),now);String key=(String)notice.getClass().getMethod("getKey").invoke(notice);check(config,new JSONObject().put(key,now.minusSeconds(3600).toEpochMilli()),now,null);
+ day.put("manual",new JSONArray().put(new JSONObject().put("start",w.getString("start")).put("minutes",10)));check(config,new JSONObject(),now,null);day.put("manual",new JSONArray());settings.put("enabledAt",now.toString());check(config,new JSONObject(),now,null);
+ settings.put("enabled",false);day.put("steps",6000);check(config,new JSONObject(),now,null);
+ Class<?> storage=Class.forName("expo.modules.fitlensnudges.NudgeStorage");storage.getMethod("stop",Context.class).invoke(storage.getField("INSTANCE").get(null),c);if(prefs.contains("config"))throw new Exception("Logout left private background configuration");for(int i=0;i<30&&java.util.Arrays.stream(nm.getActiveNotifications()).anyMatch(n->"fitlens-smart".equals(n.getTag()));i++)Thread.sleep(100);if(java.util.Arrays.stream(nm.getActiveNotifications()).anyMatch(n->"fitlens-smart".equals(n.getTag())))throw new Exception("Logout left smart notifications after cancellation settled");
+ out.putString("report",report);out.putString("engine","passed: milestones, unknown steps, quiet hours, meal suppression, cooldown, cap, hydration, workout retry/manual matching/history suppression, disable");finish(-1,out);
+ }catch(Exception e){out.putString("error",e.toString());finish(0,out);}}
+}

@@ -1,8 +1,20 @@
-import { router } from "expo-router";
+import { localDateKey } from "../../lib/dates";
+import { useLocalSearchParams, router } from "expo-router";
 import { energyForDay } from "../fitness/domain";
 import React, { useEffect, useState } from "react";
 import { Platform, View } from "react-native";
-import { Banner, Button, C, Card, Field, Icon, Page, S, T } from "../ui";
+import {
+  Banner,
+  Button,
+  C,
+  Card,
+  Field,
+  Icon,
+  Page,
+  S,
+  T,
+  Segments,
+} from "../ui";
 import { useHealth } from "./store";
 import * as adapter from "./adapter";
 import { useTracker, totalNutrition } from "../tracker";
@@ -10,6 +22,16 @@ import { useAuthStore } from "../../store/authStore";
 import api, { errorMessage } from "../../lib/api";
 import { DatePicker } from "../home";
 export default function Health() {
+  const params = useLocalSearchParams<{ date?: string }>();
+  useEffect(() => {
+    if (
+      params.date &&
+      /^\d{4}-\d{2}-\d{2}$/.test(params.date) &&
+      params.date <= localDateKey() &&
+      localDateKey(new Date(params.date + "T12:00:00")) === params.date
+    )
+      useTracker.getState().setDate(params.date);
+  }, [params.date]);
   const s = useHealth(),
     tracker = useTracker(),
     u = useAuthStore((x) => x.user),
@@ -18,9 +40,8 @@ export default function Health() {
       ...deviceDay,
       ...energyForDay(tracker.date, tracker.fitness, deviceDay),
     };
-  const [move, setMove] = useState(
-      u?.settings.move_goal_kcal?.toString() || "",
-    ),
+  const [steps, setSteps] = useState(u?.settings.step_goal?.toString() || ""),
+    [move, setMove] = useState(u?.settings.move_goal_kcal?.toString() || ""),
     [minutes, setMinutes] = useState(
       u?.settings.exercise_goal_minutes?.toString() || "",
     ),
@@ -32,10 +53,15 @@ export default function Health() {
   async function saveGoals() {
     try {
       const goals = {
+        step_goal: steps ? Number(steps) : null,
         move_goal_kcal: move ? Number(move) : null,
         exercise_goal_minutes: minutes ? Number(minutes) : null,
       };
       if (
+        (steps &&
+          (!Number.isInteger(Number(steps)) ||
+            Number(steps) < 500 ||
+            Number(steps) > 60000)) ||
         (move &&
           (!Number.isInteger(goals.move_goal_kcal) ||
             Number(move) < 50 ||
@@ -46,8 +72,15 @@ export default function Health() {
             Number(minutes) > 300))
       )
         throw new Error(
-          "Choose 50–3000 active kcal and 5–300 workout minutes, or leave blank.",
+          "Choose 500–60,000 steps, 50–3000 active kcal and 5–300 workout minutes, or leave blank.",
         );
+      if (u?.id === "fitlens-offline-demo") {
+        useAuthStore
+          .getState()
+          .updateUser({ settings: { ...u.settings, ...goals } });
+        setMessage("Movement goals saved for this demo.");
+        return;
+      }
       const { data } = await api.patch("/api/users/me/settings", goals);
       useAuthStore
         .getState()
@@ -213,6 +246,25 @@ export default function Health() {
         </>
       )}
       <Card>
+        <T bold>How many steps feel right for you?</T>
+        <T color={C.muted} size={12}>
+          Choose a daily goal that fits your routine. You can change it anytime.
+        </T>
+        <Segments
+          value={steps}
+          onChange={setSteps}
+          values={[
+            { key: "3000", label: "3,000" },
+            { key: "6000", label: "6,000" },
+            { key: "10000", label: "10,000" },
+          ]}
+        />
+        <Field
+          label="Daily step goal · optional"
+          value={steps}
+          onChange={setSteps}
+          numeric
+        />
         <T bold>Optional movement goals</T>
         <Field
           label="Active kcal goal · optional"
@@ -229,6 +281,11 @@ export default function Health() {
         <Button title="Save movement goals" onPress={() => void saveGoals()} />
         {!!message && <Banner text={message} />}
       </Card>
+      <Button
+        secondary
+        title="Watch alerts & step celebrations"
+        onPress={() => router.push("/smart-nudges")}
+      />
       <T color={C.muted} size={12}>
         Read access: steps, active/total or resting energy, workouts and
         available history. Separate write access exports your confirmed

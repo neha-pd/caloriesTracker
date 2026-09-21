@@ -39,6 +39,7 @@ export const entrySchema = nutrition.extend({
 });
 export const settingsSchema = z
   .object({
+    step_goal: z.number().int().min(500).max(60000).nullable().optional(),
     move_goal_kcal: z.number().int().min(50).max(3000).nullable().optional(),
     exercise_goal_minutes: z
       .number()

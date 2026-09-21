@@ -7,7 +7,7 @@ import { useHealth } from "./store";
 import { useTracker, totalNutrition } from "../tracker";
 import { useAuthStore } from "../../store/authStore";
 import { localDateKey } from "../../lib/dates";
-import { Card, T, C, S, Button } from "../ui";
+import { Card, T, C, S, Button, Meter } from "../ui";
 export default function DailyEnergy() {
   const health = useHealth(),
     tracker = useTracker(),
@@ -126,6 +126,38 @@ export default function DailyEnergy() {
             estimates may be incomplete.
           </T>
         )}
+        <View style={{ gap: 8 }} testID="step-progress">
+          <T bold>
+            {day?.steps == null
+              ? "Your step story starts here"
+              : `${Math.round(day.steps).toLocaleString()} steps`}
+          </T>
+          {u?.settings.step_goal ? (
+            <>
+              <Meter
+                value={
+                  day?.steps == null
+                    ? 0
+                    : Math.min(100, (day.steps / u.settings.step_goal) * 100)
+                }
+              />
+              <T size={12} color={C.blue}>
+                {day?.steps == null
+                  ? "Waiting for a device reading"
+                  : day.steps >= u.settings.step_goal
+                    ? "Hooray! Your chosen step goal is complete 🎉"
+                    : `${Math.max(0, u.settings.step_goal - Math.round(day.steps)).toLocaleString()} to your goal`}{" "}
+                · chosen goal {u.settings.step_goal.toLocaleString()}
+              </T>
+            </>
+          ) : (
+            <Button
+              secondary
+              title="Choose my step goal"
+              onPress={() => router.push("/health")}
+            />
+          )}
+        </View>
         <Button
           secondary
           title="Activity & burn details"
