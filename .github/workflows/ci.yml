@@ -31,13 +31,14 @@ jobs:
           python3 -m playwright install --with-deps chromium
       - name: Start isolated test services
         run: |
-          NODE_ENV=test PORT=3000 LOCAL_DATABASE_PATH=.data/ci npm run start --workspace backend > /tmp/fitlens-ci-api.log 2>&1 &
+          DOTENV_CONFIG_PATH=/dev/null NODE_ENV=test PORT=3000 LOCAL_DATABASE_PATH=.data/ci npm run start --workspace backend > /tmp/fitlens-ci-api.log 2>&1 &
           python3 checks/serve_spa.py > /tmp/fitlens-ci-web.log 2>&1 &
           for attempt in $(seq 1 30); do
             if curl --fail --silent http://127.0.0.1:3000/ready && curl --fail --silent http://127.0.0.1:8084/ > /dev/null; then exit 0; fi
             echo "Waiting for test services ($attempt/30)"
             sleep 2
           done
+          cat /tmp/fitlens-ci-api.log /tmp/fitlens-ci-web.log
           exit 1
       - name: Browser account lifecycle
         run: python3 checks/e2e.py
@@ -50,5 +51,8 @@ jobs:
         if: failure()
         with:
           name: browser-test-results
-          path: test-results/
+          path: |
+            test-results/
+            /tmp/fitlens-ci-api.log
+            /tmp/fitlens-ci-web.log
           retention-days: 7
