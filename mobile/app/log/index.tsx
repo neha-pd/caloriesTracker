@@ -1,2 +1,1 @@
-import LogFoodScreen from '../../src/screens/LogFoodScreen';
-export default LogFoodScreen;
+export { LogFood as default } from "../../src/features/food";

@@ -2,7 +2,7 @@
   "name": "fitlens",
   "version": "1.0.0",
   "private": true,
-  "description": "FitLens — AI-powered calorie & nutrition tracking app",
+  "description": "FitLens \u2014 AI-powered calorie & nutrition tracking app",
   "workspaces": [
     "mobile",
     "backend",
@@ -13,11 +13,15 @@
     "backend": "npm run dev --workspace backend",
     "backend:migrate": "npm run migrate --workspace backend",
     "video:studio": "npm run studio --workspace video",
-    "video:render": "npm run render --workspace video"
+    "video:render": "npm run render --workspace video",
+    "test": "npm run test --workspace backend",
+    "typecheck": "npm run typecheck --workspace mobile && npm run build --workspace backend",
+    "dev:api": "npm run dev --workspace backend",
+    "dev:api:local": "npm run dev:local --workspace backend"
   },
   "overrides": {
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-native-worklets": "0.5.1"
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native-worklets": "0.10.1"
   }
 }

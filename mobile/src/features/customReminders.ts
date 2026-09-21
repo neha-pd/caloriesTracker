@@ -1,0 +1,157 @@
+import { Platform } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Crypto from "expo-crypto";
+import { useAuthStore } from "../store/authStore";
+import {
+  validateReminder,
+  reminderWeekdays,
+  type CustomReminder,
+  type ReminderDraft,
+} from "./reminderDomain";
+const key = (uid: string) => "fitlens:custom-reminders:" + uid;
+export async function listCustomReminders(
+  uid: string,
+): Promise<CustomReminder[]> {
+  const raw = await AsyncStorage.getItem(key(uid));
+  try {
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+export async function reconcileReminders(uid: string) {
+  const all = await listCustomReminders(uid);
+  if (Platform.OS === "web") return all;
+  const N = await import("expo-notifications"),
+    scheduled = await N.getAllScheduledNotificationsAsync();
+  const active = new Set(scheduled.map((n) => n.identifier));
+  const result = all.map((r) => ({
+    ...r,
+    enabled:
+      r.notificationIds.length > 0 &&
+      r.notificationIds.every((id) => active.has(id)),
+  }));
+  await AsyncStorage.setItem(key(uid), JSON.stringify(result));
+  return result;
+}
+export async function saveCustomReminder(
+  uid: string,
+  draft: ReminderDraft,
+  existing?: CustomReminder,
+) {
+  const clean = validateReminder(draft);
+  if (Platform.OS === "web")
+    throw new Error(
+      "Scheduling reminders requires the native phone app. You can preview and edit the draft here.",
+    );
+  if (useAuthStore.getState().user?.id !== uid)
+    throw new Error("Sign in before scheduling a reminder.");
+  const all = await listCustomReminders(uid);
+  if (!existing && all.length >= 8)
+    throw new Error(
+      "You can keep up to 8 custom reminders. Remove one before adding another.",
+    );
+  const N = await import("expo-notifications");
+  if (Platform.OS === "android")
+    await N.setNotificationChannelAsync("daily-habits", {
+      name: "Daily habits",
+      importance: N.AndroidImportance.DEFAULT,
+    });
+  const permission = await N.requestPermissionsAsync();
+  if (!permission.granted)
+    throw new Error(
+      "Allow notifications in your device settings to schedule this reminder.",
+    );
+  const id = existing?.id || Crypto.randomUUID(),
+    notificationIds: string[] = [];
+  try {
+    const content = {
+      title: clean.title,
+      body: clean.body,
+      sound: false as const,
+      data: { fitlens: true, route: "/coach" },
+    };
+    const days = reminderWeekdays(clean.cadence);
+    if (!days.length)
+      notificationIds.push(
+        await N.scheduleNotificationAsync({
+          content,
+          trigger: {
+            type: N.SchedulableTriggerInputTypes.DAILY,
+            hour: clean.hour,
+            minute: clean.minute,
+            channelId: "daily-habits",
+          },
+        }),
+      );
+    else
+      for (const weekday of days)
+        notificationIds.push(
+          await N.scheduleNotificationAsync({
+            content,
+            trigger: {
+              type: N.SchedulableTriggerInputTypes.WEEKLY,
+              weekday,
+              hour: clean.hour,
+              minute: clean.minute,
+              channelId: "daily-habits",
+            },
+          }),
+        );
+    if (useAuthStore.getState().user?.id !== uid)
+      throw new Error("Your session ended before the reminder was saved.");
+    const reminder: CustomReminder = {
+      ...clean,
+      id,
+      notificationIds,
+      enabled: true,
+      createdAt: existing?.createdAt || new Date().toISOString(),
+    };
+    await AsyncStorage.setItem(
+      key(uid),
+      JSON.stringify(
+        existing
+          ? all.map((r) => (r.id === id ? reminder : r))
+          : [...all, reminder],
+      ),
+    );
+  } catch (e) {
+    await Promise.all(
+      notificationIds.map((id) => N.cancelScheduledNotificationAsync(id)),
+    );
+    throw e;
+  }
+  if (existing)
+    await Promise.all(
+      existing.notificationIds.map((id) =>
+        N.cancelScheduledNotificationAsync(id),
+      ),
+    );
+}
+export async function pauseCustomReminder(
+  uid: string,
+  id: string,
+  remove = false,
+) {
+  const all = await listCustomReminders(uid),
+    reminder = all.find((r) => r.id === id);
+  if (!reminder) return;
+  if (Platform.OS !== "web") {
+    const N = await import("expo-notifications");
+    await Promise.all(
+      reminder.notificationIds.map((id) =>
+        N.cancelScheduledNotificationAsync(id),
+      ),
+    );
+  }
+  await AsyncStorage.setItem(
+    key(uid),
+    JSON.stringify(
+      remove
+        ? all.filter((r) => r.id !== id)
+        : all.map((r) =>
+            r.id === id ? { ...r, enabled: false, notificationIds: [] } : r,
+          ),
+    ),
+  );
+}

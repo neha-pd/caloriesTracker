@@ -1,2 +1,4 @@
-import LoginScreen from '../../src/screens/auth/LoginScreen';
-export default LoginScreen;
+import { AuthForm } from "../../src/features/auth";
+export default function Screen() {
+  return <AuthForm />;
+}

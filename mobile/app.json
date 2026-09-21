@@ -2,8 +2,7 @@
   "expo": {
     "name": "FitLens",
     "slug": "fitlens",
-    "version": "1.0.0",
-    "sdkVersion": "54.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
@@ -20,7 +19,8 @@
       "bundleIdentifier": "com.fitlens.app",
       "infoPlist": {
         "NSCameraUsageDescription": "FitLens uses your camera to identify food and estimate portions.",
-        "NSPhotoLibraryUsageDescription": "FitLens accesses your photo library to log meals."
+        "NSPhotoLibraryUsageDescription": "FitLens accesses your photo library to log meals.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -30,7 +30,12 @@
       },
       "permissions": [
         "CAMERA",
-        "READ_MEDIA_IMAGES"
+        "READ_MEDIA_IMAGES",
+        "android.permission.health.READ_STEPS",
+        "android.permission.health.READ_ACTIVE_CALORIES_BURNED",
+        "android.permission.health.WRITE_NUTRITION",
+        "android.permission.health.WRITE_HYDRATION",
+        "android.permission.POST_NOTIFICATIONS"
       ],
       "package": "com.fitlens.app"
     },
@@ -50,7 +55,28 @@
       ],
       "expo-web-browser",
       "@react-native-community/datetimepicker",
-      "expo-font"
+      "expo-font",
+      [
+        "@kingstinct/react-native-healthkit",
+        {
+          "NSHealthShareUsageDescription": "FitLens reads your steps and active energy, including Apple Watch activity, to show your daily movement.",
+          "NSHealthUpdateUsageDescription": "FitLens saves meals, nutrition, and water you confirm to Apple Health."
+        }
+      ],
+      "react-native-health-connect",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "17.0"
+          },
+          "android": {
+            "minSdkVersion": 28
+          }
+        }
+      ],
+      "expo-notifications",
+      "expo-secure-store"
     ],
     "scheme": "fitlens",
     "extra": {
@@ -60,7 +86,7 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "single",
       "favicon": "./assets/favicon.png"
     }
   }

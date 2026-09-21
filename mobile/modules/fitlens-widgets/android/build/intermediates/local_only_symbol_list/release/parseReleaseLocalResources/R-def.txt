@@ -1,0 +1,14 @@
+R_DEF: Internal format may change without notice
+local
+drawable fitlens_widget_cream
+drawable fitlens_widget_dark
+id widget_action
+id widget_brand
+id widget_detail
+id widget_root
+id widget_secondary
+id widget_value
+layout fitlens_widget
+xml fitlens_coach
+xml fitlens_today
+xml fitlens_water

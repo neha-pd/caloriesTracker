@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "expo.modules.fitlenswidgets.fitlens-widgets-release-3:/drawable/fitlens_widget_cream.xml",
+        "source": "expo.modules.fitlenswidgets.fitlens-widgets-main-4:/drawable/fitlens_widget_cream.xml"
+    },
+    {
+        "merged": "expo.modules.fitlenswidgets.fitlens-widgets-release-3:/drawable/fitlens_widget_dark.xml",
+        "source": "expo.modules.fitlenswidgets.fitlens-widgets-main-4:/drawable/fitlens_widget_dark.xml"
+    }
+]

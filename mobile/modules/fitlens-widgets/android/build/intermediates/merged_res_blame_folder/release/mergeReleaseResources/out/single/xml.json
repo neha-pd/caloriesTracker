@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "expo.modules.fitlenswidgets.fitlens-widgets-release-3:/xml/fitlens_coach.xml",
+        "source": "expo.modules.fitlenswidgets.fitlens-widgets-main-4:/xml/fitlens_coach.xml"
+    },
+    {
+        "merged": "/Users/juni/.gradle/daemon/9.3.1/expo.modules.fitlenswidgets.fitlens-widgets-release-3:/xml/fitlens_water.xml",
+        "source": "/Users/juni/.gradle/daemon/9.3.1/expo.modules.fitlenswidgets.fitlens-widgets-main-4:/xml/fitlens_water.xml"
+    },
+    {
+        "merged": "/Users/juni/.gradle/daemon/9.3.1/expo.modules.fitlenswidgets.fitlens-widgets-release-3:/xml/fitlens_coach.xml",
+        "source": "/Users/juni/.gradle/daemon/9.3.1/expo.modules.fitlenswidgets.fitlens-widgets-main-4:/xml/fitlens_coach.xml"
+    },
+    {
+        "merged": "/Users/juni/.gradle/daemon/9.3.1/expo.modules.fitlenswidgets.fitlens-widgets-release-3:/xml/fitlens_today.xml",
+        "source": "/Users/juni/.gradle/daemon/9.3.1/expo.modules.fitlenswidgets.fitlens-widgets-main-4:/xml/fitlens_today.xml"
+    },
+    {
+        "merged": "expo.modules.fitlenswidgets.fitlens-widgets-release-3:/xml/fitlens_today.xml",
+        "source": "expo.modules.fitlenswidgets.fitlens-widgets-main-4:/xml/fitlens_today.xml"
+    },
+    {
+        "merged": "expo.modules.fitlenswidgets.fitlens-widgets-release-3:/xml/fitlens_water.xml",
+        "source": "expo.modules.fitlenswidgets.fitlens-widgets-main-4:/xml/fitlens_water.xml"
+    }
+]

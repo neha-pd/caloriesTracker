@@ -1,0 +1,9 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="18dp" android:background="@drawable/fitlens_widget_dark">
+<TextView android:id="@+id/widget_brand" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="FITLENS · TODAY" android:textColor="#d1fa70" android:textSize="10sp" android:textStyle="bold" android:letterSpacing="0.1"/>
+<TextView android:id="@+id/widget_value" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Your daily spark" android:textColor="#f4f5ef" android:textSize="26sp" android:textStyle="bold" android:maxLines="1" android:ellipsize="end"/>
+<TextView android:id="@+id/widget_detail" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="4dp" android:text="Open FitLens to get started" android:textColor="#a2a99e" android:textSize="11sp" android:maxLines="2" android:ellipsize="end"/>
+<LinearLayout android:layout_width="match_parent" android:layout_height="40dp" android:orientation="horizontal">
+<TextView android:id="@+id/widget_action" android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:gravity="center_vertical" android:text="LOG FOOD +" android:textStyle="bold" android:textSize="11sp" android:textColor="#d1fa70"/>
+<TextView android:id="@+id/widget_secondary" android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:text="WATER +" android:textStyle="bold" android:textSize="11sp" android:textColor="#d1fa70"/>
+</LinearLayout>
+</LinearLayout>

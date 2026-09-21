@@ -1,88 +1,51 @@
-import 'dotenv/config';
-import Fastify from 'fastify';
-import cors from '@fastify/cors';
-import jwt from '@fastify/jwt';
-import multipart from '@fastify/multipart';
-import rateLimit from '@fastify/rate-limit';
-import websocket from '@fastify/websocket';
-import staticFiles from '@fastify/static';
-import path from 'path';
-
-import { authRoutes } from './routes/auth.js';
-import { userRoutes } from './routes/users.js';
-import { foodRoutes } from './routes/foods.js';
-import { logRoutes } from './routes/logs.js';
-import { dashboardRoutes } from './routes/dashboard.js';
-import { wsRoutes } from './routes/websocket.js';
-import { startVisionWorker } from './workers/visionWorker.js';
-
-const app = Fastify({
-  logger: {
-    level: process.env.NODE_ENV === 'production' ? 'warn' : 'info',
-  },
-});
-
-// ── Plugins ──────────────────────────────────────────────────────────────────
-await app.register(cors, {
-  origin: true,
-  credentials: true,
-});
-
-await app.register(jwt, {
-  secret: process.env.JWT_SECRET!,
-});
-
-await app.register(multipart, {
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
-});
-
-await app.register(rateLimit, {
-  max: 200,
-  timeWindow: '1 minute',
-});
-
-await app.register(websocket);
-
-// ── Serve local upload folder (dev only) ─────────────────────────────────
-if (process.env.STORAGE_MODE !== 'cloudinary') {
-  const uploadDir = path.resolve(process.env.UPLOAD_DIR ?? './uploads');
-  await app.register(staticFiles, {
-    root:   uploadDir,
-    prefix: '/uploads/',
-  });
-}
-
-// ── Auth decorator ────────────────────────────────────────────────────────────
-app.decorate('authenticate', async function (request: any, reply: any) {
+import "dotenv/config";
+import { randomBytes } from "node:crypto";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { openDatabase, migrate } from "./core/database.js";
+import { firebaseAccounts } from "./core/firebase.js";
+import { createApp } from "./app.js";
+let secret = process.env.JWT_SECRET;
+if (!secret && process.env.NODE_ENV !== "production") {
+  await mkdir(".data", { recursive: true });
   try {
-    await request.jwtVerify();
-  } catch (err) {
-    reply.send(err);
+    secret = await readFile(".data/session-secret", "utf8");
+  } catch {
+    secret = randomBytes(48).toString("hex");
+    await writeFile(".data/session-secret", secret, { mode: 0o600 });
   }
-});
-
-// ── Routes ────────────────────────────────────────────────────────────────────
-await app.register(authRoutes, { prefix: '/api/auth' });
-await app.register(userRoutes, { prefix: '/api/users' });
-await app.register(foodRoutes, { prefix: '/api/foods' });
-await app.register(logRoutes, { prefix: '/api/logs' });
-await app.register(dashboardRoutes, { prefix: '/api/dashboard' });
-await app.register(wsRoutes, { prefix: '/ws' });
-
-// ── Health check ──────────────────────────────────────────────────────────────
-app.get('/health', async () => ({ status: 'ok', ts: new Date().toISOString() }));
-
-// ── Start ─────────────────────────────────────────────────────────────────────
-const PORT = Number(process.env.PORT ?? 3000);
-
-try {
-  await app.listen({ port: PORT, host: '0.0.0.0' });
-  app.log.info(`🚀 FitLens API running on http://0.0.0.0:${PORT}`);
-
-  // Start the vision job worker
-  startVisionWorker();
-  app.log.info('⚙️  Vision worker started');
-} catch (err) {
-  app.log.error(err);
-  process.exit(1);
 }
+if (!secret)
+  throw new Error(
+    "Set JWT_SECRET to a random value of at least 32 characters.",
+  );
+const db = await openDatabase(process.env.DATABASE_URL);
+await migrate(db);
+const sendRecovery = process.env.RESEND_API_KEY
+  ? async (email: string, token: string) => {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: process.env.EMAIL_FROM,
+          to: [email],
+          subject: "Reset your FitLens password",
+          text: `Your FitLens recovery code is:\n\n${token}\n\nEnter it in the app within 30 minutes. If you did not request this, ignore this email.`,
+        }),
+      });
+      if (!response.ok) throw new Error("Recovery email delivery failed.");
+    }
+  : undefined;
+const app = await createApp({
+  db,
+  secret,
+  sendRecovery,
+  firebase: firebaseAccounts(),
+  testing: process.env.NODE_ENV === "test",
+});
+app.addHook("onClose", () => db.close());
+await app.listen({ host: "0.0.0.0", port: Number(process.env.PORT ?? 3000) });
+for (const signal of ["SIGINT", "SIGTERM"])
+  process.on(signal, () => void app.close().then(() => process.exit(0)));

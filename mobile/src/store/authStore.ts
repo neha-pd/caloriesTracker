@@ -1,94 +1,155 @@
-import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
-import api from '../lib/api';
-
-interface User {
-  id:             string;
-  email:          string;
-  display_name:   string | null;
-  calorie_goal:   number;
+import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import api from "../lib/api";
+import {
+  clearSession,
+  setDemoMode,
+  getSecret,
+  onSessionExpired,
+  saveTokens,
+  sessionGeneration,
+} from "../lib/session";
+import { DEMO_ID, buildDemoData, demoUser } from "../features/demo/data";
+export interface User {
+  id: string;
+  email: string;
+  display_name: string;
+  calorie_goal: number;
   protein_goal_g: number;
-  carbs_goal_g:   number;
-  fat_goal_g:     number;
-  goal_type:      string | null;
-  // Physical profile
-  age:            number | null;
-  gender:         string | null;
-  height_cm:      number | null;
-  weight_kg:      number | null;
+  carbs_goal_g: number;
+  fat_goal_g: number;
+  goal_type: string | null;
+  age: number | null;
+  gender: string | null;
+  height_cm: number | null;
+  weight_kg: number | null;
+  weight_goal_kg: number | null;
   activity_level: string | null;
+  timezone: string;
+  onboarding_complete: boolean;
+  settings: {
+    water_goal_ml: number;
+    meal_reminders: boolean;
+    water_reminders: boolean;
+    quest_reminders: boolean;
+    haptics: boolean;
+  };
 }
-
 interface AuthState {
-  user:         User | null;
-  isLoading:    boolean;
-  isLoggedIn:   boolean;
-  login:        (email: string, password: string) => Promise<void>;
+  enterDemo: () => Promise<void>;
+  user: User | null;
+  isLoading: boolean;
+  isLoggedIn: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name?: string) => Promise<void>;
   loginWithGoogle: (idToken: string) => Promise<void>;
-  register:     (email: string, password: string, name?: string) => Promise<void>;
-  logout:       () => Promise<void>;
-  loadSession:  () => Promise<void>;
-  refreshUser:  () => Promise<void>;
-  updateUser:   (updates: Partial<User>) => void;
+  logout: () => Promise<void>;
+  loadSession: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+  updateUser: (updates: Partial<User>) => void;
 }
-
-export const useAuthStore = create<AuthState>((set) => ({
-  user:       null,
-  isLoading:  true,
+async function accept(data: any) {
+  setDemoMode(false);
+  await AsyncStorage.removeItem("fitlens:demo-active");
+  await saveTokens(data);
+  await AsyncStorage.setItem("fitlens:profile", JSON.stringify(data.user));
+  useAuthStore.setState({
+    user: data.user,
+    isLoggedIn: true,
+    isLoading: false,
+  });
+}
+export const useAuthStore = create<AuthState>((set, get) => ({
+  user: null,
+  isLoading: true,
   isLoggedIn: false,
-
+  enterDemo: async () => {
+    await get().logout();
+    const existing = await AsyncStorage.getItem("fitlens:data:" + DEMO_ID);
+    if (!existing)
+      await AsyncStorage.setItem(
+        "fitlens:data:" + DEMO_ID,
+        JSON.stringify(buildDemoData()),
+      );
+    const cached = await AsyncStorage.getItem("fitlens:demo-profile");
+    const user = cached ? JSON.parse(cached) : demoUser();
+    await AsyncStorage.setItem("fitlens:demo-profile", JSON.stringify(user));
+    await AsyncStorage.setItem("fitlens:demo-active", "true");
+    setDemoMode(true);
+    set({ user, isLoggedIn: true, isLoading: false });
+  },
   loadSession: async () => {
     try {
-      const token = await SecureStore.getItemAsync('access_token');
-      if (!token) {
-        set({ isLoading: false, isLoggedIn: false });
+      if ((await AsyncStorage.getItem("fitlens:demo-active")) === "true") {
+        const raw = await AsyncStorage.getItem("fitlens:demo-profile");
+        if (raw) {
+          setDemoMode(true);
+          set({ user: JSON.parse(raw), isLoggedIn: true, isLoading: false });
+          return;
+        }
+      }
+      if (!(await getSecret("access_token"))) {
+        set({ isLoading: false });
         return;
       }
-      const { data } = await api.get('/api/users/me');
-      set({ user: data.user, isLoggedIn: true, isLoading: false });
-    } catch {
-      set({ isLoggedIn: false, isLoading: false });
+      const cached = await AsyncStorage.getItem("fitlens:profile");
+      if (cached) set({ user: JSON.parse(cached), isLoggedIn: true });
+      await get().refreshUser();
+    } catch (e: any) {
+      if (e?.response?.status === 401) await clearSession();
+    } finally {
+      set({ isLoading: false });
     }
   },
-
   login: async (email, password) => {
-    const { data } = await api.post('/api/auth/login', { email, password });
-    await SecureStore.setItemAsync('access_token', data.token);
-    await SecureStore.setItemAsync('refresh_token', data.refresh_token);
-    set({ user: data.user, isLoggedIn: true });
+    const { data } = await api.post("/api/auth/login", { email, password });
+    await accept(data);
   },
-
-  loginWithGoogle: async (idToken: string) => {
-    const { data } = await api.post('/api/auth/google', { id_token: idToken });
-    await SecureStore.setItemAsync('access_token', data.token);
-    await SecureStore.setItemAsync('refresh_token', data.refresh_token);
-    set({ user: data.user, isLoggedIn: true });
-  },
-
   register: async (email, password, name) => {
-    const { data } = await api.post('/api/auth/register', {
-      email, password, display_name: name,
+    const { data } = await api.post("/api/auth/register", {
+      email,
+      password,
+      display_name: name || "Friend",
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     });
-    await SecureStore.setItemAsync('access_token', data.token);
-    await SecureStore.setItemAsync('refresh_token', data.refresh_token);
-    set({ user: data.user, isLoggedIn: true });
+    await accept(data);
   },
-
+  loginWithGoogle: async (id_token) => {
+    const { data } = await api.post("/api/auth/google", { id_token });
+    await accept(data);
+  },
   logout: async () => {
-    await SecureStore.deleteItemAsync('access_token');
-    await SecureStore.deleteItemAsync('refresh_token');
-    set({ user: null, isLoggedIn: false });
-  },
-
-  refreshUser: async () => {
     try {
-      const { data } = await api.get('/api/users/me');
-      set({ user: data.user });
-    } catch {
-      // silently fail — user will see stale data
+      const refresh_token = await getSecret("refresh_token");
+      if (refresh_token)
+        await api.post(
+          "/api/auth/logout",
+          { refresh_token },
+          { timeout: 8000 },
+        );
+    } catch {}
+    await clearSession();
+    await AsyncStorage.removeItem("fitlens:profile");
+  },
+  refreshUser: async () => {
+    const generation = sessionGeneration();
+    const { data } = await api.get("/api/users/me");
+    if (generation !== sessionGeneration()) return;
+    await AsyncStorage.setItem("fitlens:profile", JSON.stringify(data.user));
+    set({ user: data.user });
+  },
+  updateUser: (updates) => {
+    const user = get().user;
+    if (user) {
+      const next = { ...user, ...updates };
+      set({ user: next });
+      void AsyncStorage.setItem(
+        user.id === DEMO_ID ? "fitlens:demo-profile" : "fitlens:profile",
+        JSON.stringify(next),
+      );
     }
   },
-
-  updateUser: (updates) =>
-    set((s) => ({ user: s.user ? { ...s.user, ...updates } : null })),
 }));
+onSessionExpired(() =>
+  useAuthStore.setState({ user: null, isLoggedIn: false, isLoading: false }),
+);

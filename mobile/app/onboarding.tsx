@@ -1,2 +1,4 @@
-import OnboardingScreen from '../src/screens/onboarding/OnboardingScreen';
-export default OnboardingScreen;
+import { Goals } from "../src/features/auth";
+export default function Screen() {
+  return <Goals onboarding />;
+}

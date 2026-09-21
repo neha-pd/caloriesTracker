@@ -1,2 +1,4 @@
-import EditGoalsScreen from '../src/screens/EditGoalsScreen';
-export default EditGoalsScreen;
+import { Goals } from "../src/features/auth";
+export default function Screen() {
+  return <Goals />;
+}
