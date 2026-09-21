@@ -104,7 +104,7 @@ test("complete account lifecycle, isolation, idempotent logs, sync and recovery"
     const meal = await call("PUT", `/api/v2/entries/${id}`, body, token);
     assert.equal(meal.status, 200, JSON.stringify(meal.body));
     assert.equal(meal.body.entry.calories, 200);
-    assert.equal(meal.body.awarded_xp, 25);
+    assert.equal(meal.body.awarded_xp, 35);
     assert.equal(
       (await call("PUT", `/api/v2/entries/${id}`, body, token)).body.awarded_xp,
       0,
@@ -182,7 +182,7 @@ test("complete account lifecycle, isolation, idempotent logs, sync and recovery"
     assert.equal(day.body.consumed.calories, 300);
     assert.equal(
       (await call("GET", "/api/v2/progress", undefined, token)).body.xp,
-      50,
+      60,
     );
     await call("DELETE", `/api/v2/entries/${id}`, undefined, token);
     assert.ok(

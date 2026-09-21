@@ -65,7 +65,7 @@ export function Welcome() {
       />
       {error && <Banner error text={error} />}
       <T size={12} color={C.muted} style={{ textAlign: "center" }}>
-        Private by design. Food AI runs on your device.
+        Food logging works offline. Sync when you’re connected.
       </T>
     </Page>
   );
@@ -182,7 +182,10 @@ export function Recovery() {
       } else {
         const { data } = await api.post("/api/auth/forgot-password", { email });
         setLinkSent(data.mode === "email_link");
-        setMessage(data.message || "If this email has an account, a recovery email is on its way.");
+        setMessage(
+          data.message ||
+            "If this email has an account, a recovery email is on its way.",
+        );
         setStage(data.mode !== "email_link");
       }
     } catch (e) {
@@ -218,7 +221,13 @@ export function Recovery() {
       {message && <Banner text={message} />}
       {error && <Banner text={error} error />}
       <Button
-        title={stage ? "Set new password" : linkSent ? "Send email again" : "Send recovery email"}
+        title={
+          stage
+            ? "Set new password"
+            : linkSent
+              ? "Send email again"
+              : "Send recovery email"
+        }
         loading={busy}
         onPress={() => void submit()}
       />

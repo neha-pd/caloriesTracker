@@ -85,21 +85,14 @@ export function Profile() {
           onPress={() => router.push("/widgets")}
         />
         <RowLink
-          title="Talk to Ember · voice & chat"
-          icon="mic-outline"
+          title="Chat with Ember"
+          icon="chatbubble-outline"
           onPress={() => router.push("/chat")}
         />
         <RowLink
-          title="Daily coach"
-          icon="chatbubble-ellipses-outline"
-          onPress={() => router.push("/coach")}
-        />
-        <RowLink
-          title="On-device AI"
-          icon="sparkles-outline"
-          onPress={() =>
-            router.push({ pathname: "/ai", params: { mode: "settings" } })
-          }
+          title="How to use FitLens"
+          icon="help-circle-outline"
+          onPress={() => router.push("/guide")}
         />
         <RowLink
           title="Preferences & reminders"
@@ -392,8 +385,8 @@ export function Privacy() {
         </T>
         <T color={C.muted}>
           {u?.id === "fitlens-offline-demo"
-            ? "This demo uses fictional sample data stored only on this device. Food recognition runs locally. The Android quick lens is bundled; optional LFM models need a download."
-            : "Food recognition runs on your device. The Android quick lens is bundled; optional LFM models need a download. Confirmed food logs, targets, and account details sync to the server. Activity read from Apple Health or Health Connect stays on this device."}
+            ? "This demo uses fictional sample data stored only on this device. Food search and logging work offline."
+            : "Food search and logging work offline. AI chat sends messages to an online provider only when you choose to use it. Confirmed food logs, targets, and account details sync to the server. Activity read from Apple Health or Health Connect stays on this device."}
         </T>
       </Card>
       <Card>

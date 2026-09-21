@@ -1,3 +1,11 @@
+# Current release: 2.2.0
+
+Manual food logging replaces photo AI; all local model downloads and runtimes are removed. The offline library has 13,681 foods with Indian search aliases and 146 transparent recipe estimates. Home exposes device connection and a short guide. Food XP updates locally and reconciles with per-entry server awards (10 XP, first 20 daily), plus existing meal bonuses. One online chat modal supports free-only model fallback, optional account-scoped diary context and validated reminder drafts; confirmation is required to schedule.
+
+See [free chat](FREE_CHAT.md), [food sources](FOOD_CATALOG.md), and [current Android testing](ANDROID_TESTING.md). Earlier implementation notes below describe superseded releases, including the removed local AI.
+
+---
+
 # Revamp status — 21 September 2026
 
 Branch: `codex/fitlens-revamp`.

@@ -1,3 +1,4 @@
+import { createChatService, chatInput, type ChatService } from "./core/chat.js";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
@@ -25,6 +26,7 @@ import {
 } from "./core/domain.js";
 
 export interface AppOptions {
+  chat?: ChatService;
   db: DB;
   secret: string;
   testing?: boolean;
@@ -37,6 +39,7 @@ export async function createApp({
   testing = false,
   sendRecovery,
   firebase,
+  chat = createChatService(process.env.OPENROUTER_API_KEY),
 }: AppOptions) {
   if (secret.length < 32)
     throw new Error("JWT_SECRET must contain at least 32 characters.");
@@ -84,7 +87,10 @@ export async function createApp({
     );
     if (session?.firebase_uid) {
       if (!firebase) throw fail(503, "Account service is not configured.");
-      await firebase.assertSession(session.firebase_uid, Number(session.firebase_auth_time));
+      await firebase.assertSession(
+        session.firebase_uid,
+        Number(session.firebase_auth_time),
+      );
     }
     if (!session)
       throw fail(401, "Your session has ended. Please sign in again.");
@@ -109,11 +115,25 @@ export async function createApp({
       refresh_token: refresh,
     };
   }
-  async function firebaseUser(identity: FirebaseIdentity, name = "Friend", timezone = "UTC") {
-    const [existing] = await db.query("SELECT * FROM users WHERE firebase_uid=$1", [identity.uid]);
+  async function firebaseUser(
+    identity: FirebaseIdentity,
+    name = "Friend",
+    timezone = "UTC",
+  ) {
+    const [existing] = await db.query(
+      "SELECT * FROM users WHERE firebase_uid=$1",
+      [identity.uid],
+    );
     if (existing) return existing;
-    const [collision] = await db.query("SELECT id FROM users WHERE LOWER(email)=$1", [identity.email]);
-    if (collision) throw fail(409, "This email belongs to an existing account. Contact support to link it.");
+    const [collision] = await db.query(
+      "SELECT id FROM users WHERE LOWER(email)=$1",
+      [identity.email],
+    );
+    if (collision)
+      throw fail(
+        409,
+        "This email belongs to an existing account. Contact support to link it.",
+      );
     const [user] = await db.query(
       "INSERT INTO users(id,email,firebase_uid,display_name,timezone) VALUES($1,$2,$3,$4,$5) ON CONFLICT(firebase_uid) DO UPDATE SET updated_at=NOW() RETURNING *",
       [randomUUID(), identity.email, identity.uid, name, timezone],
@@ -195,6 +215,15 @@ export async function createApp({
       },
     ];
     return {
+      today_events: {
+        date: today,
+        keys: (
+          await db.query(
+            "SELECT event_key FROM xp_events WHERE user_id=$1 AND log_date=$2",
+            [uid, today],
+          )
+        ).map((e) => e.event_key),
+      },
       xp: count,
       ...level,
       streak: streakDays(dates, today),
@@ -203,7 +232,11 @@ export async function createApp({
     };
   }
   // Liveness never queries Neon: scheduled probes must not keep its compute awake.
-  const liveness = async () => ({ status: "ok", ai: "on-device", version: 2 });
+  const liveness = async () => ({
+    status: "ok",
+    ai: "optional-online-chat",
+    version: 2,
+  });
   app.get("/health", liveness);
   app.get("/ping", { logLevel: "silent" }, liveness);
   app.get("/ready", async () => {
@@ -232,7 +265,11 @@ export async function createApp({
     }
     if (firebase) {
       const identity = await firebase.register(body.email, body.password);
-      const user = await firebaseUser(identity, body.display_name, body.timezone);
+      const user = await firebaseUser(
+        identity,
+        body.display_name,
+        body.timezone,
+      );
       return reply.code(201).send(await issue(user, identity.authTime));
     }
     const [user] = await db.query(
@@ -310,9 +347,16 @@ export async function createApp({
       .object({ refresh_token: z.string().min(20).max(256) })
       .parse(req.body);
     if (firebase) {
-      const [session] = await db.query("SELECT s.firebase_auth_time,u.firebase_uid FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.refresh_hash=$1 AND s.expires_at>NOW()", [hashToken(body.refresh_token)]);
-      if (!session?.firebase_uid) throw fail(401, "Session expired. Please sign in again.");
-      await firebase.assertSession(session.firebase_uid, Number(session.firebase_auth_time));
+      const [session] = await db.query(
+        "SELECT s.firebase_auth_time,u.firebase_uid FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.refresh_hash=$1 AND s.expires_at>NOW()",
+        [hashToken(body.refresh_token)],
+      );
+      if (!session?.firebase_uid)
+        throw fail(401, "Session expired. Please sign in again.");
+      await firebase.assertSession(
+        session.firebase_uid,
+        Number(session.firebase_auth_time),
+      );
     }
     const replacement = opaqueToken();
     const [s] = await db.query(
@@ -348,7 +392,11 @@ export async function createApp({
     if (firebase) {
       const body = z.object({ email }).parse(req.body);
       await firebase.recover(body.email);
-      return { mode: "email_link", message: "If an account exists, a password-reset link has been sent. Open the email to choose a new password, then return here to log in." };
+      return {
+        mode: "email_link",
+        message:
+          "If an account exists, a password-reset link has been sent. Open the email to choose a new password, then return here to log in.",
+      };
     }
     if (!sendRecovery && !testing)
       throw fail(
@@ -380,7 +428,8 @@ export async function createApp({
     };
   });
   app.post("/api/auth/reset-password", limited, async (req) => {
-    if (firebase) throw fail(400, "Use the secure password-reset link in your email.");
+    if (firebase)
+      throw fail(400, "Use the secure password-reset link in your email.");
     const body = z
       .object({ token: z.string().min(20).max(256), password })
       .parse(req.body);
@@ -403,6 +452,66 @@ export async function createApp({
     });
     return { ok: true };
   });
+  app.get("/api/v2/chat/status", auth, async () => ({
+    available: chat.available,
+    freeOnly: true,
+  }));
+  app.post(
+    "/api/v2/chat",
+    {
+      ...auth,
+      bodyLimit: 30000,
+      config: {
+        rateLimit: {
+          max: 5,
+          timeWindow: "1 minute",
+          keyGenerator: (req: any) => req.user.sub,
+        },
+      },
+    },
+    async (req, reply) => {
+      const b = chatInput.parse(req.body),
+        uid = userId(req);
+      let context: unknown = { date: b.date, diaryShared: false };
+      if (b.includeDiary) {
+        const user = await getUser(uid);
+        const foods = await db.query(
+          "SELECT name,meal_type,calories,protein_g,carbs_g,fat_g,quantity,serving_unit FROM entries_v2 WHERE user_id=$1 AND log_date=$2 AND deleted_at IS NULL ORDER BY created_at LIMIT 60",
+          [uid, b.date],
+        );
+        const [water] = await db.query(
+          "SELECT COALESCE(SUM(amount_ml),0)::int AS ml FROM water_entries WHERE user_id=$1 AND log_date=$2 AND deleted_at IS NULL",
+          [uid, b.date],
+        );
+        context = {
+          date: b.date,
+          diaryShared: true,
+          name: user.display_name,
+          currentWeightKg: user.weight_kg,
+          targetWeightKg: user.weight_goal_kg,
+          timezone: user.timezone,
+          goals: {
+            calories: user.calorie_goal,
+            protein: user.protein_goal_g,
+            carbs: user.carbs_goal_g,
+            fat: user.fat_goal_g,
+            water: user.settings.water_goal_ml,
+          },
+          foods,
+          waterMl: water.ml,
+          activity: "Not available to this chat",
+          logsMayBeIncomplete: true,
+        };
+      }
+      try {
+        return await chat.answer(b.messages, context);
+      } catch (e: any) {
+        return reply
+          .code(e.statusCode === 429 ? 429 : 503)
+          .send({ error: e.message });
+      }
+    },
+  );
   app.get("/api/users/me", auth, async (req) => ({
     user: safeUser(await getUser(userId(req))),
   }));
@@ -484,7 +593,8 @@ export async function createApp({
     if (user.firebase_uid) {
       if (!firebase) throw fail(503, "Account service is not configured.");
       const identity = await firebase.login(user.email, confirmation);
-      if (identity.uid !== user.firebase_uid) throw fail(401, "Confirm your password to delete your account.");
+      if (identity.uid !== user.firebase_uid)
+        throw fail(401, "Confirm your password to delete your account.");
       await firebase.remove(user.firebase_uid);
     } else if (
       !user.password_hash ||
@@ -557,8 +667,19 @@ export async function createApp({
         return row;
       }
       const user = await getUser(uid, tx);
-      if (b.log_date === localDay(user.timezone))
+      if (b.log_date === localDay(user.timezone)) {
+        // Serialize daily food awards across devices; an entry retry never reaches this branch.
+        await tx.query("SELECT id FROM users WHERE id=$1 FOR NO KEY UPDATE", [
+          uid,
+        ]);
         awarded = await xp(tx, uid, b.log_date, "meal:" + b.meal_type, 25);
+        const [earned] = await tx.query(
+          "SELECT COUNT(*)::int AS count FROM xp_events WHERE user_id=$1 AND log_date=$2 AND event_key LIKE 'food:%'",
+          [uid, b.log_date],
+        );
+        if (earned.count < 20)
+          awarded += await xp(tx, uid, b.log_date, "food:" + id, 10);
+      }
       return row;
     });
     return reply

@@ -1,0 +1,460 @@
+{
+  "2708347": {
+    "aliases": [
+      "dosa",
+      "dosai",
+      "plain dosa",
+      "डोसा",
+      "தோசை",
+      "దోసె"
+    ],
+    "indian": true
+  },
+  "2708346": {
+    "aliases": [
+      "idly",
+      "idli",
+      "इडली",
+      "இட்லி",
+      "ఇడ్లీ"
+    ],
+    "indian": true
+  },
+  "2709130": {
+    "aliases": [
+      "medu vada",
+      "medhu vadai",
+      "vadai",
+      "garelu",
+      "वड़ा"
+    ],
+    "indian": true
+  },
+  "2707713": {
+    "aliases": [
+      "chapati",
+      "chapathi",
+      "chapatti",
+      "roti",
+      "phulka",
+      "fulka",
+      "रोटी",
+      "चपाती"
+    ],
+    "indian": true
+  },
+  "2707715": {
+    "aliases": [
+      "plain paratha",
+      "parantha",
+      "parotta",
+      "पराठा"
+    ],
+    "indian": true
+  },
+  "2707613": {
+    "aliases": [
+      "naan",
+      "nan",
+      "नान"
+    ],
+    "indian": true
+  },
+  "2705740": {
+    "aliases": [
+      "paneer",
+      "panir",
+      "panner",
+      "पनीर"
+    ],
+    "indian": true
+  },
+  "2707430": {
+    "aliases": [
+      "sambar",
+      "sambhar",
+      "sambaar",
+      "சாம்பார்",
+      "సాంబారు"
+    ],
+    "indian": true
+  },
+  "2707427": {
+    "aliases": [
+      "dal",
+      "daal",
+      "dhal",
+      "दाल"
+    ],
+    "indian": true
+  },
+  "2708730": {
+    "aliases": [
+      "samosa",
+      "singara",
+      "समोसा"
+    ],
+    "indian": true
+  },
+  "2708408": {
+    "aliases": [
+      "plain rice",
+      "steamed rice",
+      "chawal",
+      "bhat",
+      "bhaat",
+      "sadam",
+      "annam",
+      "चावल",
+      "சாதம்",
+      "అన్నం",
+      "ভাত"
+    ],
+    "indian": true
+  },
+  "2705385": {
+    "aliases": [
+      "milk",
+      "doodh",
+      "dudh",
+      "paal",
+      "palu",
+      "दूध"
+    ],
+    "indian": true
+  },
+  "171284": {
+    "aliases": [
+      "curd",
+      "dahi",
+      "thayir",
+      "perugu",
+      "दही"
+    ],
+    "indian": true
+  },
+  "2259793": {
+    "aliases": [
+      "curd",
+      "dahi",
+      "thayir",
+      "perugu",
+      "दही"
+    ],
+    "indian": true
+  },
+  "2709224": {
+    "aliases": [
+      "banana",
+      "kela",
+      "kele",
+      "vazhaipazham",
+      "केला"
+    ],
+    "indian": true
+  },
+  "170026": {
+    "aliases": [
+      "potato",
+      "aloo",
+      "alu",
+      "batata",
+      "आलू"
+    ],
+    "indian": true
+  },
+  "2709785": {
+    "aliases": [
+      "brinjal",
+      "baingan",
+      "baigan",
+      "vankaya",
+      "kathirikai",
+      "बैंगन"
+    ],
+    "indian": true
+  },
+  "169228": {
+    "aliases": [
+      "brinjal",
+      "baingan",
+      "baigan",
+      "vankaya",
+      "kathirikai",
+      "बैंगन"
+    ],
+    "indian": true
+  },
+  "2685577": {
+    "aliases": [
+      "brinjal",
+      "baingan",
+      "baigan",
+      "vankaya",
+      "kathirikai",
+      "बैंगन"
+    ],
+    "indian": true
+  },
+  "169260": {
+    "aliases": [
+      "bhindi",
+      "ladies finger",
+      "vendakkai",
+      "bendakaya",
+      "भिंडी"
+    ],
+    "indian": true
+  },
+  "174288": {
+    "aliases": [
+      "besan",
+      "gram flour",
+      "बेसन"
+    ],
+    "indian": true
+  },
+  "168933": {
+    "aliases": [
+      "suji",
+      "sooji",
+      "rava",
+      "rawa",
+      "सूजी"
+    ],
+    "indian": true
+  },
+  "173412": {
+    "aliases": [
+      "ghee",
+      "clarified butter",
+      "घी"
+    ],
+    "indian": true
+  },
+  "172420": {
+    "aliases": [
+      "masoor",
+      "masur",
+      "lentils"
+    ],
+    "indian": true
+  },
+  "172436": {
+    "aliases": [
+      "toor dal raw",
+      "arhar",
+      "tuvar",
+      "tur dal"
+    ],
+    "indian": true
+  },
+  "174256": {
+    "aliases": [
+      "moong raw",
+      "mung",
+      "green gram",
+      "pesara"
+    ],
+    "indian": true
+  },
+  "173756": {
+    "aliases": [
+      "chana raw",
+      "kabuli chana",
+      "chole raw"
+    ],
+    "indian": true
+  },
+  "173744": {
+    "aliases": [
+      "rajma raw",
+      "red kidney beans"
+    ],
+    "indian": true
+  },
+  "168893": {
+    "aliases": [
+      "atta",
+      "whole wheat flour",
+      "आटा"
+    ],
+    "indian": true
+  },
+  "169761": {
+    "aliases": [
+      "maida",
+      "मैदा"
+    ],
+    "indian": true
+  },
+  "168943": {
+    "aliases": [
+      "jowar flour",
+      "jolada flour"
+    ],
+    "indian": true
+  },
+  "169717": {
+    "aliases": [
+      "sabudana",
+      "sago",
+      "javvarisi"
+    ],
+    "indian": true
+  },
+  "169997": {
+    "aliases": [
+      "dhaniya",
+      "kothamalli",
+      "kothimeera"
+    ],
+    "indian": true
+  },
+  "170923": {
+    "aliases": [
+      "jeera",
+      "cumin",
+      "जीरा"
+    ],
+    "indian": true
+  },
+  "172231": {
+    "aliases": [
+      "haldi",
+      "turmeric",
+      "हल्दी"
+    ],
+    "indian": true
+  },
+  "172430": {
+    "aliases": [
+      "groundnut",
+      "mungfali",
+      "moongfali",
+      "peanut"
+    ],
+    "indian": true
+  },
+  "170169": {
+    "aliases": [
+      "nariyal",
+      "thengai",
+      "kobbari",
+      "coconut"
+    ],
+    "indian": true
+  },
+  "169910": {
+    "aliases": [
+      "aam",
+      "mango",
+      "आम"
+    ],
+    "indian": true
+  },
+  "2709614": {
+    "aliases": [
+      "palak",
+      "पालक"
+    ],
+    "indian": true
+  },
+  "168462": {
+    "aliases": [
+      "palak",
+      "पालक"
+    ],
+    "indian": true
+  },
+  "2709777": {
+    "aliases": [
+      "gobi",
+      "gobhi",
+      "phool gobhi"
+    ],
+    "indian": true
+  },
+  "169986": {
+    "aliases": [
+      "gobi",
+      "gobhi",
+      "phool gobhi"
+    ],
+    "indian": true
+  },
+  "2685573": {
+    "aliases": [
+      "gobi",
+      "gobhi",
+      "phool gobhi"
+    ],
+    "indian": true
+  },
+  "169975": {
+    "aliases": [
+      "patta gobhi",
+      "band gobi"
+    ],
+    "indian": true
+  },
+  "168448": {
+    "aliases": [
+      "kaddu",
+      "poosanikai"
+    ],
+    "indian": true
+  },
+  "170419": {
+    "aliases": [
+      "matar",
+      "mutter",
+      "green peas"
+    ],
+    "indian": true
+  },
+  "2709795": {
+    "aliases": [
+      "pyaz",
+      "pyaaz",
+      "kanda"
+    ],
+    "indian": true
+  },
+  "170000": {
+    "aliases": [
+      "pyaz",
+      "pyaaz",
+      "kanda"
+    ],
+    "indian": true
+  },
+  "170457": {
+    "aliases": [
+      "tamatar",
+      "tomato"
+    ],
+    "indian": true
+  },
+  "2706538": {
+    "aliases": [
+      "chicken biryani",
+      "chicken biriyani"
+    ],
+    "indian": true
+  },
+  "2708985": {
+    "aliases": [
+      "veg biryani",
+      "vegetable biriyani"
+    ],
+    "indian": true
+  },
+  "2709631": {
+    "aliases": [
+      "palak paneer",
+      "saag paneer"
+    ],
+    "indian": true
+  }
+}

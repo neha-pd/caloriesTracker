@@ -1,27 +1,29 @@
-# FitLens Android preview
+# FitLens 2.2 Android team build
 
-This is an internal ARM64 test build. It uses the generated development signing key, not a production Play Store identity. Model weights are downloaded separately after consent.
+ARM64, Android 9+, version 2.2.0 / versionCode 6. The dedicated persistent team signing key allows upgrades over team builds 2.1.x. This is an internal test release, not a Play Store release. No AI weights are included or downloaded; the upgrade removes retired model files from the app's private storage.
 
 ## Try the populated account
 
-1. Install the APK, open FitLens and choose **Explore 45-day demo**. No login or running backend is required.
-2. Review Today, Progress and Diary. The fictional data contains 256 food entries and 318 water records across 43 days in a 45-day window.
-3. Open **You → On-device AI**, choose the smaller 450M model and enable its download. Keep the app open until it is ready. No API key is used.
-4. Open **Ask Ember** from Today. Review an incomplete day, then mark it complete and request another review. Change the diary date to test historical days. Reviews use the selected day, not all history at once.
-5. After the model has loaded once, test a review without internet access. Timing and memory use depend on the phone.
-6. Open **You → Home-screen widgets**. Choose a theme, decide whether nutrition should be visible, and add each widget using the launcher's confirmation. Verify food/water shortcuts, values after logging, privacy toggle and cleared data after logout.
-7. Test **Share my day → Daily story / Coach report**. Both sample exports must show DEMO. Share using the installed Android app picker.
+1. Choose **Explore 45-day demo**. Its 256 food entries and 318 water records are fictional and stay local.
+2. Open the first-use guide. Search poha, dosa, rajma or your own food. Add a portion and check that XP increases immediately.
+3. Test Diary editing, water, daily quests and history. Edits and retries must not generate duplicate XP.
+4. Open **You → Home-screen widgets**, select privacy/theme preferences and pin widgets through the launcher.
+5. Test **Share my day → Daily story / Coach report**. Sample exports must show DEMO. Choose WhatsApp/Instagram using the Android share sheet.
 
-Demo data edits survive logout. Re-enter the demo to resume. Deleting the demo account under Privacy removes its local fixture; re-entering creates a new sample. Health integration is disabled for the demo to avoid sending fictional meals to a real health store.
+Demo changes survive logout. Health and online chat are disabled in the demo to avoid sending fictional data to real services.
 
-## Real account and health tests
+## Real account
 
-The current APK connects to https://fitlens-api.onrender.com over HTTPS. Real accounts work without the development Mac. The free server may take time to wake after inactivity. Offline demo and downloaded local AI do not depend on the API. Health Connect must be tested with a real account, compatible device and explicit permissions; actual health records must not be replaced by sample activity.
+The APK connects to https://fitlens-api.onrender.com. Free Render may need time to wake. Food search, cached logs and already scheduled local notifications work without AI.
+
+Connect Health Connect from Home using a real account. Your watch must sync through its companion health app. Test permission denial, actual step/activity imports and confirmed food/water exports on a compatible physical device. Apple Health needs a separately built iPhone app; this APK cannot connect directly to Apple Watch.
+
+Open Chat with Ember, optionally share diary/targets, and ask for a water reminder. Review the draft; only confirmation schedules it. Test notification permission, denied permission recovery, intervals, pause/edit/delete and logout cancellation. Free AI quota is shared and may be exhausted; it never falls back to paid models.
 
 ## Rebuild
 
-From the repo root, set `JAVA_HOME`, `ANDROID_HOME` and optionally `EXPO_PUBLIC_API_URL`, then run `scripts/build-preview-apk.sh`. The script regenerates Android via Expo prebuild, builds ARM64 release, and copies the APK into `artifacts/`. `FITLENS_TEST_BUILD=false` is the default and requires HTTPS. Set it to `true` only for an explicit LAN test. Public store distribution also requires a production signing identity.
+Set `JAVA_HOME`, `ANDROID_HOME`, `FITLENS_KEYSTORE_PATH` and `FITLENS_KEYSTORE_PASSWORD`, then run `scripts/build-preview-apk.sh`. `FITLENS_TEST_BUILD=false` is the default and uses HTTPS. The GitHub **Build team APK** workflow uses repository signing secrets. Signing keys and service credentials must never be committed.
 
-## Team distribution
+## Automated validation
 
-The team APK uses a dedicated persistent signing key, HTTPS API and Android versionCode 3. It is still a testing build, not Play Store distribution. Uninstall an earlier development-signed preview before the first team installation. Future builds from the **Build team APK** GitHub workflow use the same key and can update this team installation (increase versionCode for releases).
+Backend tests cover auth, diary isolation, free-only chat routing and XP idempotency/caps. Browser tests cover account lifecycle, offline demo XP, chat context opt-in, quota errors and reminder draft review. `checks/native-upgrade-smoke.tsx` is an isolated instrumentation entry for model cleanup and native interval schedule counts; it must never be shipped as the app entry point. Physical delivery, OEM background restrictions, watch sync and launcher behavior still require team-device testing.

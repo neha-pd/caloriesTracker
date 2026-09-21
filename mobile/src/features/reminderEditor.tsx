@@ -4,13 +4,10 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "expo-router";
 import { Banner, Button, C, Card, Field, Page, S, Segments, T } from "./ui";
 import { useAuthStore } from "../store/authStore";
-import { useLocalCoach } from "./coach/localModel";
 import {
-  parseReminder,
   localReminderDraft,
   reminderTimes,
   reminderSummary,
-  reminderPrompt,
   validateReminder,
   type Cadence,
   type CustomReminder,
@@ -22,17 +19,24 @@ export default function ReminderEditor() {
       title?: string;
       body?: string;
       hour?: string;
+      minute?: string;
+      cadence?: string;
+      interval?: string;
+      quiet?: string;
     }>(),
     uid = useAuthStore((s) => s.user?.id),
-    focused = useIsFocused(),
-    model = useLocalCoach(focused);
+    focused = useIsFocused();
   const [title, setTitle] = useState(params.title || "My little check-in"),
     [body, setBody] = useState(params.body || "Take a moment for yourself."),
     [hour, setHour] = useState(params.hour || "15"),
-    [minute, setMinute] = useState("00"),
-    [cadence, setCadence] = useState<Cadence>("daily"),
-    [quiet, setQuiet] = useState(true),
-    [interval, setInterval] = useState(""),
+    [minute, setMinute] = useState(params.minute || "00"),
+    [cadence, setCadence] = useState<Cadence>(
+      ["daily", "weekdays", "weekends"].includes(params.cadence || "")
+        ? (params.cadence as Cadence)
+        : "daily",
+    ),
+    [quiet, setQuiet] = useState(params.quiet !== "false"),
+    [interval, setInterval] = useState(params.interval || ""),
     [needsDraft, setNeedsDraft] = useState(false),
     [request, setRequest] = useState(""),
     [existing, setExisting] = useState<CustomReminder>(),
@@ -62,7 +66,7 @@ export default function ReminderEditor() {
         }
       });
   }, [uid, params.id]);
-  async function draft(polish = false) {
+  async function draft() {
     const version = requestVersion.current;
     setBusy(true);
     setError("");
@@ -73,19 +77,7 @@ export default function ReminderEditor() {
           "Describe a reminder, for example “water every 2 hours” or “water at 3 pm on weekdays”.",
         );
       let d = localReminderDraft(request);
-      let wording = "Schedule prepared on this device. No AI download needed.";
-      if (polish && model.ready) {
-        try {
-          d = parseReminder(
-            await model.generate(reminderPrompt(request)),
-            request,
-          );
-          wording = "Local AI wording added.";
-        } catch {
-          wording =
-            "AI wording was unavailable; your local schedule is ready to review.";
-        }
-      }
+      let wording = "Schedule prepared.";
       if (version !== requestVersion.current) return;
       setTitle(d.title);
       setBody(d.body);
@@ -141,7 +133,7 @@ export default function ReminderEditor() {
       title={existing ? "Tune your reminder." : "A nudge that fits you."}
     >
       <Card>
-        <T bold>Describe it to your local coach</T>
+        <T bold>Describe your reminder</T>
         <Field
           label="What should I remind you about?"
           value={request}
@@ -162,17 +154,8 @@ export default function ReminderEditor() {
           loading={busy}
           onPress={() => void draft()}
         />
-        {model.ready && (
-          <Button
-            secondary
-            title="Polish wording with local AI"
-            loading={busy}
-            onPress={() => void draft(true)}
-          />
-        )}
         <T color={C.muted} size={13}>
-          Schedule drafting works immediately, without an AI download. If your
-          local model is ready, it can polish the wording.
+          Describe a time or interval, then review your schedule.
         </T>
         {needsDraft && (
           <Button
@@ -187,7 +170,6 @@ export default function ReminderEditor() {
             }}
           />
         )}
-        {model.error && <Banner error text={model.error.message} />}
       </Card>
       <Card>
         <T bold size={19}>
@@ -301,9 +283,8 @@ export default function ReminderEditor() {
         onPress={() => void save()}
       />
       <T color={C.muted} size={12}>
-        LFM drafts while the app is open. Once saved, your phone schedules the
-        reminder without running AI in the background. Delivery timing can vary
-        with device settings. Reminders stop on logout.
+        Once saved, your phone schedules the reminder in the background.
+        Delivery timing can vary with device settings. Reminders stop on logout.
       </T>
     </Page>
   );

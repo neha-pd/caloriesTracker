@@ -37,6 +37,7 @@ export interface Water {
   deleted_at?: string | null;
 }
 export interface Progress {
+  today_events?: { date: string; keys: string[] };
   xp: number;
   level: number;
   progress: number;

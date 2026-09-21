@@ -73,7 +73,7 @@ test("concurrent retries award once, validation, CORS, refresh logout and tombst
     assert.ok(meals.every((r) => r.statusCode === 200));
     assert.equal(
       meals.reduce((n, r) => n + r.json().awarded_xp, 0),
-      25,
+      35,
     );
     const stale = await Promise.all(
       [1, 2].map((quantity) =>

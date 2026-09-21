@@ -1,359 +1,285 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  AppState,
-  Linking,
-  Platform,
-  Switch,
-  TextInput,
   View,
   ScrollView,
+  TextInput,
+  Switch,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
-import { router, useIsFocused } from "expo-router";
+import { router } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import api, { errorMessage } from "../../lib/api";
 import { useAuthStore } from "../../store/authStore";
 import { useTracker } from "../tracker";
-import { useHealth } from "../health/store";
-import { useLocalInference, type Turn } from "../localInference";
-import { cleanModelText } from "../aiDomain";
-import { useVoice } from "./voice";
-import {
-  boundedHistory,
-  conversationContext,
-  conversationSystem,
-} from "./domain";
-import {
-  Art,
-  Banner,
-  Button,
-  C,
-  Card,
-  Meter,
-  Page,
-  S,
-  Segments,
-  T,
-} from "../ui";
+import { validateReminder } from "../reminderDomain";
+import { Art, Banner, Button, C, Card, S, T, Tap, Icon } from "../ui";
+type Turn = { role: "user" | "assistant"; content: string; reminder?: any };
 export default function Chat() {
-  const focused = useIsFocused(),
-    user = useAuthStore((s) => s.user),
-    tracker = useTracker(),
-    health = useHealth();
-  const model = useLocalInference(focused, "chat");
-  const [input, setInput] = useState(""),
-    [turns, setTurns] = useState<Turn[]>([]),
-    [partial, setPartial] = useState("");
-  const [error, setError] = useState(""),
+  const user = useAuthStore((s) => s.user),
+    date = useTracker((s) => s.date),
+    insets = useSafeAreaInsets();
+  const [turns, setTurns] = useState<Turn[]>([]),
+    [input, setInput] = useState(""),
     [busy, setBusy] = useState(false),
-    [spoken, setSpoken] = useState(true),
-    [language, setLanguage] = useState("en-IN");
-  const scroll = useRef<ScrollView>(null);
-  const [settings, setSettings] = useState(false);
-  const request = useRef(0),
+    [error, setError] = useState(""),
+    [ready, setReady] = useState(false),
+    [checking, setChecking] = useState(true),
+    [diary, setDiary] = useState(false);
+  const scroll = useRef<ScrollView>(null),
+    run = useRef(0),
     pending = useRef(false),
-    finalSpeech = useRef<(text: string) => void>(() => {});
-  const voice = useVoice(focused, setInput, (text) =>
-    finalSpeech.current(text),
-  );
+    abort = useRef<AbortController | null>(null);
   function stop() {
-    if (busy)
-      setTurns((p) => (p[p.length - 1]?.role === "user" ? p.slice(0, -1) : p));
-    request.current++;
-    model.stop();
-    voice.stop();
+    run.current++;
+    abort.current?.abort();
+    pending.current = false;
     setBusy(false);
-    setPartial("");
+  }
+  async function status() {
+    setChecking(true);
+    try {
+      if (user?.id === "fitlens-offline-demo") {
+        setReady(false);
+        return;
+      }
+      const { data } = await api.get("/api/v2/chat/status");
+      setReady(data.available);
+      setError("");
+    } catch (e) {
+      setError(errorMessage(e));
+    } finally {
+      setChecking(false);
+    }
   }
   useEffect(() => {
     stop();
     setTurns([]);
     setInput("");
-    setError("");
-  }, [user?.id, tracker.date]);
-  useEffect(() => {
-    if (!focused) stop();
-    const listener = AppState.addEventListener("change", (state) => {
-      if (state !== "active") stop();
-    });
+    setDiary(false);
+    void status();
     return () => {
-      request.current++;
-      model.stop();
-      voice.stop();
-      listener.remove();
+      run.current++;
+      abort.current?.abort();
     };
-  }, [focused]);
+  }, [user?.id, date]);
   async function send(text = input) {
-    text = text.trim().slice(0, 500);
-    if (!text || !user || !model.ready || pending.current) return;
+    text = text.trim();
+    if (!text || !ready || pending.current) return;
     pending.current = true;
-    voice.stop();
-    const id = ++request.current,
-      history = boundedHistory(turns);
+    const id = ++run.current,
+      controller = new AbortController();
+    abort.current = controller;
+    const next: Turn[] = [...turns, { role: "user", content: text }];
+    setTurns(next);
+    setInput("");
     setBusy(true);
     setError("");
-    setPartial("");
-    setInput("");
-    const next: Turn[] = [...turns, { role: "user", content: text }];
-    setTurns(next.slice(-20));
-    const context = conversationContext(
-      {
-        date: tracker.date,
-        entries: tracker.entries,
-        water: tracker.water,
-        complete: false,
-        goals: {
-          calories: user.calorie_goal,
-          protein: user.protein_goal_g,
-          carbs: user.carbs_goal_g,
-          fat: user.fat_goal_g,
-          water: user.settings.water_goal_ml,
-        },
-      },
-      user,
-      {
-        steps: health.steps,
-        activeCalories: health.activeCalories,
-        lastSync: health.lastSync,
-      },
-    );
     try {
-      const answer = await model.generate(text, {
-        system: conversationSystem(context),
-        history,
-        maxTokens: 320,
-        onToken: (token) => {
-          if (id === request.current) setPartial((p) => p + token);
+      const { data } = await api.post(
+        "/api/v2/chat",
+        {
+          date,
+          includeDiary: diary,
+          messages: next
+            .slice(-11)
+            .map((t) => ({ role: t.role, content: t.content.slice(0, 2000) })),
         },
-      });
-      if (id !== request.current) return;
-      setTurns(
-        [...next, { role: "assistant" as const, content: answer }].slice(-20),
+        { signal: controller.signal, timeout: 60000 },
       );
-      setPartial("");
-      if (spoken) void voice.speak(answer, language);
+      if (id !== run.current) return;
+      let reminder;
+      try {
+        if (data.reminder) reminder = validateReminder(data.reminder);
+      } catch {}
+      setTurns(
+        [
+          ...next,
+          { role: "assistant" as const, content: data.reply, reminder },
+        ].slice(-40),
+      );
     } catch (e) {
-      if (id === request.current) {
-        setError(
-          e instanceof Error ? e.message : "Ember could not answer. Try again.",
-        );
+      if (id === run.current) {
+        setError(errorMessage(e));
         setInput(text);
         setTurns(turns);
       }
     } finally {
-      pending.current = false;
-      if (id === request.current) {
+      if (id === run.current) {
+        pending.current = false;
         setBusy(false);
-        setPartial("");
       }
     }
   }
-  finalSpeech.current = (text) => {
-    if (!pending.current) void send(text);
-  };
+  function draft(r: any) {
+    try {
+      const d = validateReminder(r);
+      router.push({
+        pathname: "/reminder-editor",
+        params: {
+          title: d.title,
+          body: d.body,
+          hour: String(d.hour),
+          minute: String(d.minute),
+          cadence: d.cadence,
+          interval: d.intervalHours ? String(d.intervalHours) : "",
+          quiet: d.quietHours ? "true" : "false",
+        },
+      });
+    } catch {
+      setError("Please choose a reminder time manually.");
+    }
+  }
   return (
-    <Page
-      scrollRef={scroll}
-      onContentSizeChange={() => {
-        if (busy || voice.listening)
-          scroll.current?.scrollToEnd({ animated: true });
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{
+        flex: 1,
+        backgroundColor: "#0009",
+        paddingTop: Math.max(insets.top, 24),
       }}
-      back
-      eyebrow="EMBER · ON YOUR SIDE"
-      title="Let’s talk."
-      subtitle="Speak or type. Your conversation and diary context stay on this device during AI inference."
     >
-      <Card>
-        <View style={S.row}>
-          <Art size={64} />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: C.bg,
+          borderTopLeftRadius: 28,
+          borderTopRightRadius: 28,
+          borderWidth: 1,
+          borderColor: C.border,
+          padding: 20,
+          paddingBottom: Math.max(insets.bottom, 16),
+          maxWidth: 760,
+          width: "100%",
+          alignSelf: "center",
+        }}
+      >
+        <View style={[S.row, { marginBottom: 12 }]}>
+          <Art size={48} />
           <View style={{ flex: 1 }}>
-            <T bold size={21}>
-              A conversation, just for you.
+            <T bold size={23}>
+              Ember
             </T>
-            <T color={C.muted}>
-              Ask about your day, talk through a meal, or find one small next
-              step.
+            <T color={C.muted} size={12}>
+              Your everyday coach · online
             </T>
           </View>
+          <Tap
+            label="Close chat"
+            onPress={() =>
+              router.canGoBack()
+                ? router.back()
+                : router.replace("/(tabs)/dashboard")
+            }
+            style={S.round}
+          >
+            <Icon name="close" />
+          </Tap>
         </View>
-        <T size={12} color={C.muted}>
-          Using your {tracker.date} diary. Logs may be incomplete. This chat
-          stays in memory and clears on logout; the model remembers the most
-          recent two exchanges.
-        </T>
-      </Card>
-      {Platform.OS === "web" ? (
-        <Banner text="Voice and local AI run in the Android/iPhone app. This browser preview does not send conversations to a cloud AI." />
-      ) : !model.ready || settings ? (
-        <Card>
-          <T bold>
-            {model.ready
-              ? "Conversation model downloaded · ready to talk"
-              : model.enabled
-                ? "Downloading conversation model…"
-                : "Give Ember a voice and a mind"}
-          </T>
-          <T color={C.muted} size={13}>
-            This is a separate language model from your food lens. Download once
-            over Wi-Fi; no AI subscription or API key. Only one model runs at a
-            time.
-          </T>
-          <Segments
-            values={[
-              { key: "1.2b", label: "LFM 1.2B · richer chat" },
-              { key: "350m", label: "LFM 350M · lighter" },
-            ]}
-            value={model.model}
-            onChange={(v) => {
-              if (!busy)
-                void model
-                  .configure(false, v)
-                  .catch((e) => setError(String(e)));
-            }}
-          />
-          {model.enabled && !model.ready && <Meter value={model.progress} />}
-          <T color={C.muted} size={12}>
-            {model.model === "350m"
-              ? "About 280 MB plus tokenizer files."
-              : "About 800 MB plus tokenizer files."}{" "}
-            Downloaded files are reused.
-          </T>
-          {model.error && <Banner error text={model.error.message} />}
-          <Button
-            secondary={model.enabled}
-            disabled={busy}
-            title={
-              model.enabled
-                ? "Disable conversation model"
-                : "Download & enable conversation model"
-            }
-            onPress={() =>
-              void model
-                .configure(!model.enabled)
-                .catch((e) => setError(String(e)))
-            }
-          />
-          <Button
-            secondary
-            title="Manage food-photo model"
-            onPress={() =>
-              router.push({ pathname: "/ai", params: { mode: "settings" } })
-            }
-          />
-        </Card>
-      ) : (
-        <Card>
-          <T bold color={C.lime}>
-            Ember is ready · on-device
-          </T>
-          <T color={C.muted} size={12}>
-            Conversation model: {model.model}. Microphone permission is
-            requested when you tap Talk.
-          </T>
-        </Card>
-      )}
-      <Button
-        secondary
-        title={settings ? "Hide AI & voice settings" : "AI & voice settings"}
-        onPress={() => setSettings(!settings)}
-      />
-      {(settings || !model.ready) && (
-        <Card>
+        <ScrollView
+          ref={scroll}
+          contentContainerStyle={{ gap: 14, paddingBottom: 14 }}
+          onContentSizeChange={() =>
+            scroll.current?.scrollToEnd({ animated: true })
+          }
+          keyboardShouldPersistTaps="handled"
+        >
+          {!turns.length && (
+            <Card>
+              <T bold size={20}>
+                A little support for your day.
+              </T>
+              <T color={C.muted}>
+                Talk through a meal, understand your diary, or plan a reminder.
+              </T>
+              <T size={12} color={C.muted}>
+                Messages go to OpenRouter and its AI providers. Free capacity is
+                shared and can run out. This conversation clears when you close
+                chat.
+              </T>
+            </Card>
+          )}
           <View style={S.row}>
             <View style={{ flex: 1 }}>
-              <T bold>Speak Ember’s replies</T>
+              <T bold>Use my diary & goals</T>
               <T color={C.muted} size={12}>
-                Uses an installed device voice. You can stop playback anytime.
+                {date} · saved food, water and weight targets. Sync food first
+                for the latest context.
               </T>
             </View>
             <Switch
-              accessibilityLabel="Speak Ember's replies"
-              value={spoken}
+              accessibilityLabel="Share diary with coach"
+              value={diary}
+              disabled={busy}
               onValueChange={(v) => {
-                setSpoken(v);
-                if (!v) voice.stop();
+                setTurns([]);
+                setDiary(v);
               }}
               trackColor={{ true: C.lime, false: C.border }}
             />
           </View>
-          <Segments
-            values={[
-              { key: "en-IN", label: "English · India" },
-              { key: "en-US", label: "English · US" },
-            ]}
-            value={language}
-            onChange={(v) => {
-              voice.stop();
-              setLanguage(v);
-            }}
-          />
-          {Platform.OS !== "web" && (
-            <Button
-              secondary
-              title="Set up offline dictation"
-              onPress={() => void voice.download(language)}
+          {!ready && (
+            <Banner
+              text={
+                checking
+                  ? "Connecting to Ember…"
+                  : user?.id === "fitlens-offline-demo"
+                    ? "This is an offline demo. Sign in to a real account to use online chat."
+                    : "Chat is not connected right now. Food logging and manual reminders still work."
+              }
             />
           )}
-        </Card>
-      )}
-      {!turns.length && (
-        <View style={{ gap: 10 }}>
-          {[
-            "How am I doing today?",
-            "What could I make for dinner?",
-            "Help me build a water habit.",
-          ].map((text) => (
+          {!ready && !checking && user?.id !== "fitlens-offline-demo" && (
             <Button
-              key={text}
               secondary
-              title={text}
-              disabled={!model.ready || busy}
-              onPress={() => void send(text)}
+              title="Retry connection"
+              onPress={() => void status()}
             />
+          )}
+          {!turns.length &&
+            ready &&
+            [
+              "How am I doing today?",
+              "Ideas for an Indian dinner?",
+              "Remind me to drink water every 2 hours",
+            ].map((q) => (
+              <Button
+                key={q}
+                secondary
+                title={q}
+                disabled={busy}
+                onPress={() => void send(q)}
+              />
+            ))}
+          {turns.map((t, i) => (
+            <Card
+              key={i}
+              style={{
+                backgroundColor: t.role === "user" ? C.elevated : C.card,
+                marginLeft: t.role === "user" ? 24 : 0,
+                marginRight: t.role === "assistant" ? 24 : 0,
+              }}
+            >
+              <T bold color={t.role === "user" ? C.lime : C.orange}>
+                {t.role === "user" ? "You" : "Ember"}
+              </T>
+              <T>{t.content}</T>
+              {t.reminder && (
+                <>
+                  <T color={C.muted} size={12}>
+                    Draft only · nothing scheduled yet
+                  </T>
+                  <Button
+                    title="Review reminder"
+                    onPress={() => draft(t.reminder)}
+                  />
+                </>
+              )}
+            </Card>
           ))}
-        </View>
-      )}
-      {turns.map((turn, i) => (
-        <Card
-          key={i}
-          style={{
-            backgroundColor: turn.role === "user" ? C.elevated : C.card,
-          }}
-        >
-          <T bold color={turn.role === "user" ? C.lime : C.orange}>
-            {turn.role === "user" ? "You" : "Ember"}
-          </T>
-          <T>{turn.content}</T>
-          {turn.role === "assistant" && Platform.OS !== "web" && (
-            <Button
-              secondary
-              title="Read aloud"
-              disabled={busy || voice.listening}
-              onPress={() => void voice.speak(turn.content, language)}
-            />
-          )}
-        </Card>
-      ))}
-      {busy && (
-        <Card>
-          <T bold color={C.orange}>
-            Ember is thinking…
-          </T>
-          <T>
-            {cleanModelText(partial) ||
-              "Loading your local model and reading the latest diary."}
-          </T>
-        </Card>
-      )}
-      {error && <Banner error text={error} />}
-      {voice.error && (
-        <>
-          <Banner text={voice.error} />
-          <Button
-            secondary
-            title="Open device settings"
-            onPress={() => void Linking.openSettings()}
-          />
-        </>
-      )}
-      <Card>
+          {busy && <T color={C.lime}>Ember is thinking…</T>}
+          {!!error && <Banner error text={error} />}
+        </ScrollView>
         <TextInput
           accessibilityLabel="Message Ember"
           testID="chat-input"
@@ -362,62 +288,52 @@ export default function Chat() {
           placeholder="What’s on your mind?"
           placeholderTextColor={C.muted}
           multiline
-          maxLength={500}
+          maxLength={2000}
           style={{
             color: C.text,
             fontSize: 16,
-            minHeight: 80,
-            padding: 12,
+            minHeight: 55,
+            maxHeight: 130,
             borderWidth: 1,
             borderColor: C.border,
             borderRadius: 16,
+            padding: 14,
+            marginVertical: 10,
           }}
         />
         <Button
-          title={busy ? "Ember is thinking…" : "Send message"}
-          disabled={!model.ready || !input.trim() || busy || voice.listening}
-          onPress={() => void send()}
+          title={busy ? "Stop" : "Send message"}
+          disabled={!busy && (!ready || !input.trim())}
+          onPress={() => (busy ? stop() : void send())}
         />
-        {Platform.OS !== "web" && (
-          <Button
-            secondary
-            icon="mic-outline"
-            title={voice.listening ? "Finish speaking" : "Talk to Ember"}
-            disabled={!model.ready || busy}
-            onPress={() =>
-              voice.listening ? voice.finish() : void voice.listen(language)
-            }
-          />
-        )}
-        <T color={C.muted} size={12}>
-          Tap Talk, speak, then pause. Your final words are sent to the local
-          model automatically. No audio recording is saved.
+        <View
+          style={[S.row, { justifyContent: "space-between", paddingTop: 12 }]}
+        >
+          <Tap
+            label="Clear conversation"
+            onPress={() => {
+              stop();
+              setTurns([]);
+              setError("");
+            }}
+          >
+            <T color={C.muted} size={12}>
+              Clear chat
+            </T>
+          </Tap>
+          <Tap
+            label="Create reminder manually"
+            onPress={() => router.push("/reminder-editor")}
+          >
+            <T color={C.lime} size={12}>
+              Create reminder
+            </T>
+          </Tap>
+        </View>
+        <T color={C.muted} size={11}>
+          AI can make mistakes. Review suggestions before using them.
         </T>
-        {(busy || voice.listening || voice.speaking) && (
-          <Button secondary title="Stop" onPress={stop} />
-        )}
-      </Card>
-      {turns.length > 0 && (
-        <Button
-          secondary
-          title="Clear conversation"
-          onPress={() => {
-            stop();
-            setTurns([]);
-            setInput("");
-            setError("");
-          }}
-        />
-      )}
-      <Button
-        secondary
-        title="Turn an idea into a reminder"
-        onPress={() => router.push("/reminder-editor")}
-      />
-      <T color={C.muted} size={12}>
-        AI can be mistaken. Review suggestions. Ember does not automatically
-        change your diary, targets or reminders.
-      </T>
-    </Page>
+      </View>
+    </KeyboardAvoidingView>
   );
 }

@@ -1,3 +1,4 @@
+import { xpReward, withXp, xpStreak } from "./xp";
 import { DEMO_ID } from "./demo/data";
 import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,6 +11,8 @@ export type Operation = {
   method: "put" | "patch" | "delete" | "post";
   url: string;
   body?: any;
+  optimisticXp?: number;
+  xpKeys?: string[];
 };
 const emptyProgress: Progress = {
   xp: 0,
@@ -65,6 +68,25 @@ function persist() {
   return disk;
 }
 async function enqueue(op: Operation) {
+  const state = useTracker.getState(),
+    today = localDateKey();
+  const keys =
+    state.progress.today_events?.date === today
+      ? state.progress.today_events.keys
+      : [];
+  const reward = xpReward(op, keys, today);
+  op.optimisticXp = reward.amount;
+  op.xpKeys = reward.keys;
+  if (reward.amount)
+    useTracker.setState({
+      progress: {
+        ...withXp(state.progress, reward.amount),
+        today_events: { date: today, keys: [...keys, ...reward.keys] },
+        dates: [...new Set([today, ...state.progress.dates])],
+        streak: xpStreak([today, ...state.progress.dates], today),
+      },
+      notice: `+${reward.amount} XP · ${state.uid === DEMO_ID ? "Demo progress updated." : "Saved on this device; sync confirms your XP."}`,
+    });
   if (useTracker.getState().uid === DEMO_ID) {
     await persist();
     return;
@@ -113,6 +135,23 @@ export const useTracker = create<Tracker>((set, get) => ({
         set({ ready: true });
       }
     } else set({ ready: true });
+    if (
+      uid === DEMO_ID &&
+      get().progress.today_events?.date !== localDateKey()
+    ) {
+      const today = localDateKey(),
+        p = get().progress;
+      const keys = [
+        ...new Set(
+          get()
+            .entries.filter((e) => e.log_date === today)
+            .map((e) => "meal:" + e.meal_type),
+        ),
+      ];
+      if (get().water.some((w) => w.log_date === today)) keys.push("hydration");
+      if (p.dates.includes(today)) keys.push("check-in");
+      set({ progress: { ...p, today_events: { date: today, keys } } });
+    }
     await get().sync();
   },
   setDate: (date) => set({ date }),
@@ -152,12 +191,33 @@ export const useTracker = create<Tracker>((set, get) => ({
                   e.id === data.entry.id ? data.entry : e,
                 ),
               }));
+            if (op.optimisticXp || data.awarded_xp)
+              set((s) => ({
+                progress: withXp(
+                  s.progress,
+                  Number(data.awarded_xp || 0) - Number(op.optimisticXp || 0),
+                ),
+              }));
             if (data.awarded_xp)
               set({
                 notice: `+${data.awarded_xp} XP · A little win for showing up.`,
               });
           } catch (e: any) {
             if ([400, 404, 409].includes(e?.response?.status)) {
+              if (op.optimisticXp)
+                set((s) => ({
+                  progress: {
+                    ...withXp(s.progress, -op.optimisticXp!),
+                    today_events: s.progress.today_events
+                      ? {
+                          ...s.progress.today_events,
+                          keys: s.progress.today_events.keys.filter(
+                            (k) => !op.xpKeys?.includes(k),
+                          ),
+                        }
+                      : undefined,
+                  },
+                }));
               set({
                 notice:
                   e?.response?.status === 409
@@ -191,7 +251,22 @@ export const useTracker = create<Tracker>((set, get) => ({
               serving_qty: Number(f.serving_qty),
             })),
           });
-        set({ progress: progress.data });
+        const pending = get().queue;
+        set({
+          progress: {
+            ...withXp(
+              progress.data,
+              pending.reduce((n, o) => n + (o.optimisticXp || 0), 0),
+            ),
+            today_events: {
+              date: progress.data.today_events?.date || localDateKey(),
+              keys: [
+                ...(progress.data.today_events?.keys || []),
+                ...pending.flatMap((o) => o.xpKeys || []),
+              ],
+            },
+          },
+        });
         await persist();
       } catch (e) {
         if (get().uid === uid) set({ error: errorMessage(e) });
@@ -308,12 +383,6 @@ export const useTracker = create<Tracker>((set, get) => ({
     });
   },
   checkIn: async () => {
-    if (get().uid === DEMO_ID) {
-      set({
-        notice: "Demo check-in complete · Your sample day is already counted.",
-      });
-      return;
-    }
     if (!get().queue.some((o) => o.url === "/api/v2/check-in"))
       await enqueue({ method: "post", url: "/api/v2/check-in" });
   },

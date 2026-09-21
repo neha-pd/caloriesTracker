@@ -1,0 +1,3118 @@
+{
+  "ingredients": {
+    "rice_dry": {
+      "id": "169756"
+    },
+    "rice": {
+      "id": "2708408"
+    },
+    "brown_rice": {
+      "id": "2708414"
+    },
+    "atta": {
+      "id": "168893"
+    },
+    "maida": {
+      "id": "169761"
+    },
+    "rava": {
+      "id": "168933"
+    },
+    "rice_flour": {
+      "id": "169714"
+    },
+    "besan": {
+      "id": "174288"
+    },
+    "lentil": {
+      "id": "172420"
+    },
+    "toor": {
+      "id": "172436"
+    },
+    "moong": {
+      "id": "174256"
+    },
+    "chana": {
+      "id": "173756"
+    },
+    "rajma": {
+      "id": "173744"
+    },
+    "dal_cooked": {
+      "id": "172421"
+    },
+    "chickpeas": {
+      "id": "2707416"
+    },
+    "millet": {
+      "id": "169702"
+    },
+    "jowar": {
+      "id": "168943"
+    },
+    "daliya": {
+      "id": "170688"
+    },
+    "oats": {
+      "id": "2708489"
+    },
+    "sago": {
+      "id": "169717"
+    },
+    "potato": {
+      "id": "170026"
+    },
+    "boiled_potato": {
+      "id": "170438"
+    },
+    "onion": {
+      "id": "170000"
+    },
+    "tomato": {
+      "id": "170457"
+    },
+    "spinach": {
+      "id": "168462"
+    },
+    "cabbage": {
+      "id": "169975"
+    },
+    "carrot": {
+      "id": "2709660"
+    },
+    "beans": {
+      "id": "169961"
+    },
+    "peas": {
+      "id": "170419"
+    },
+    "cauliflower": {
+      "id": "169986"
+    },
+    "okra": {
+      "id": "169260"
+    },
+    "brinjal": {
+      "id": "169228"
+    },
+    "pumpkin": {
+      "id": "168448"
+    },
+    "mushroom": {
+      "id": "169251"
+    },
+    "corn": {
+      "id": "169998"
+    },
+    "coconut": {
+      "id": "170169"
+    },
+    "peanut": {
+      "id": "172430"
+    },
+    "cashew": {
+      "id": "170162"
+    },
+    "almond": {
+      "id": "170567"
+    },
+    "sesame": {
+      "id": "170150"
+    },
+    "oil": {
+      "id": "172336"
+    },
+    "ghee": {
+      "id": "173412"
+    },
+    "milk": {
+      "id": "2705385"
+    },
+    "curd": {
+      "id": "171284"
+    },
+    "paneer": {
+      "id": "2705740"
+    },
+    "cream": {
+      "id": "170859"
+    },
+    "sugar": {
+      "id": "169655"
+    },
+    "milk_powder": {
+      "id": "173454"
+    },
+    "ricotta": {
+      "id": "170851"
+    },
+    "egg": {
+      "id": "173424"
+    },
+    "chicken": {
+      "id": "2705956"
+    },
+    "fish": {
+      "id": "175177"
+    },
+    "prawn": {
+      "id": "175180"
+    },
+    "lamb": {
+      "id": "174370"
+    },
+    "tofu": {
+      "id": "172475"
+    },
+    "ginger": {
+      "id": "169231"
+    },
+    "garlic": {
+      "id": "169230"
+    },
+    "coriander": {
+      "id": "169997"
+    },
+    "cumin": {
+      "id": "170923"
+    },
+    "turmeric": {
+      "id": "172231"
+    },
+    "spice": {
+      "id": "170924"
+    },
+    "tamarind": {
+      "id": "167763"
+    },
+    "lemon": {
+      "id": "167746"
+    },
+    "lime": {
+      "id": "168156"
+    },
+    "mango": {
+      "id": "169910"
+    },
+    "banana": {
+      "id": "173944"
+    },
+    "dates": {
+      "id": "168191"
+    },
+    "tea": {
+      "id": "173227"
+    },
+    "coffee": {
+      "id": "2710375"
+    },
+    "dosa": {
+      "id": "2708347"
+    },
+    "idli": {
+      "id": "2708346"
+    },
+    "vada": {
+      "id": "2709130"
+    },
+    "roti": {
+      "id": "2707713"
+    },
+    "puffed_rice": {
+      "id": "171651"
+    },
+    "poha": {
+      "id": "169756",
+      "label": "Dry rice nutrient proxy for flattened rice (poha)"
+    }
+  },
+  "recipes": [
+    {
+      "slug": "kanda-poha",
+      "name": "Kanda poha",
+      "region": "West",
+      "category": "Breakfast",
+      "ingredients": {
+        "poha": 80,
+        "onion": 40,
+        "peanut": 10,
+        "oil": 8,
+        "lemon": 10,
+        "water": 130
+      },
+      "yield_g": 250,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "pohe",
+        "aval upma",
+        "flattened rice",
+        "पोहा"
+      ],
+      "note": "Dry rice is a nutrient proxy for flattened rice; this is an approximate recipe, not a measured poha value."
+    },
+    {
+      "slug": "batata-poha",
+      "name": "Batata poha",
+      "region": "West",
+      "category": "Breakfast",
+      "ingredients": {
+        "poha": 80,
+        "potato": 80,
+        "onion": 30,
+        "peanut": 10,
+        "oil": 8,
+        "water": 150
+      },
+      "yield_g": 330,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "aloo poha",
+        "potato poha"
+      ],
+      "note": "Dry rice is a nutrient proxy for flattened rice; oil and cooked water content vary."
+    },
+    {
+      "slug": "vegetable-upma",
+      "name": "Vegetable upma",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rava": 100,
+        "onion": 40,
+        "carrot": 30,
+        "peas": 30,
+        "oil": 10,
+        "water": 250
+      },
+      "yield_g": 400,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "rava upma",
+        "suji upma",
+        "uppittu",
+        "ಉಪ್ಪಿಟ್ಟು"
+      ]
+    },
+    {
+      "slug": "oats-upma",
+      "name": "Oats upma",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "oats": 100,
+        "onion": 40,
+        "carrot": 40,
+        "peas": 30,
+        "oil": 8,
+        "water": 220
+      },
+      "yield_g": 380,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": []
+    },
+    {
+      "slug": "daliya-upma",
+      "name": "Daliya upma",
+      "region": "North",
+      "category": "Breakfast",
+      "ingredients": {
+        "daliya": 100,
+        "onion": 40,
+        "carrot": 40,
+        "peas": 30,
+        "oil": 8,
+        "water": 250
+      },
+      "yield_g": 400,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "broken wheat upma"
+      ]
+    },
+    {
+      "slug": "sabudana-khichdi",
+      "name": "Sabudana khichdi",
+      "region": "West",
+      "category": "Breakfast",
+      "ingredients": {
+        "sago": 100,
+        "potato": 80,
+        "peanut": 20,
+        "oil": 10,
+        "water": 170
+      },
+      "yield_g": 330,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "sago khichdi",
+        "साबूदाना खिचड़ी"
+      ]
+    },
+    {
+      "slug": "ven-pongal",
+      "name": "Ven pongal",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rice_dry": 80,
+        "moong": 35,
+        "ghee": 12,
+        "cashew": 10,
+        "cumin": 2,
+        "water": 350
+      },
+      "yield_g": 450,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "khara pongal",
+        "venpongal"
+      ]
+    },
+    {
+      "slug": "sweet-pongal",
+      "name": "Sweet pongal",
+      "region": "South",
+      "category": "Sweets",
+      "ingredients": {
+        "rice_dry": 80,
+        "moong": 25,
+        "sugar": 60,
+        "ghee": 15,
+        "cashew": 10,
+        "milk": 100,
+        "water": 220
+      },
+      "yield_g": 430,
+      "portion_g": 120,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "sakkarai pongal",
+        "chakkara pongal"
+      ]
+    },
+    {
+      "slug": "rava-idli",
+      "name": "Rava idli",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rava": 100,
+        "curd": 100,
+        "carrot": 20,
+        "oil": 8,
+        "water": 100
+      },
+      "yield_g": 300,
+      "portion_g": 60,
+      "portion_label": "1 idli (approx.)",
+      "aliases": []
+    },
+    {
+      "slug": "rava-dosa",
+      "name": "Rava dosa",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rava": 60,
+        "rice_flour": 40,
+        "maida": 15,
+        "onion": 30,
+        "oil": 12,
+        "water": 240
+      },
+      "yield_g": 260,
+      "portion_g": 100,
+      "portion_label": "1 dosa (approx.)",
+      "aliases": []
+    },
+    {
+      "slug": "masala-dosa",
+      "name": "Masala dosa",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "dosa": 100,
+        "boiled_potato": 70,
+        "onion": 15,
+        "oil": 5
+      },
+      "yield_g": 190,
+      "portion_g": 190,
+      "portion_label": "1 filled dosa (approx.)",
+      "aliases": [
+        "masala dosai",
+        "मसाला डोसा",
+        "மசாலா தோசை"
+      ]
+    },
+    {
+      "slug": "paneer-dosa",
+      "name": "Paneer dosa",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "dosa": 100,
+        "paneer": 50,
+        "onion": 15,
+        "tomato": 15,
+        "oil": 4
+      },
+      "yield_g": 180,
+      "portion_g": 180,
+      "portion_label": "1 filled dosa (approx.)",
+      "aliases": []
+    },
+    {
+      "slug": "onion-uttapam",
+      "name": "Onion uttapam",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "dosa": 150,
+        "onion": 50,
+        "tomato": 20,
+        "oil": 6
+      },
+      "yield_g": 220,
+      "portion_g": 150,
+      "portion_label": "1 uttapam (approx.)",
+      "aliases": [
+        "uttappam",
+        "uthappam"
+      ],
+      "note": "Plain cooked dosa is used as a batter-based nutrient proxy; thicker uttapam retains different amounts of water."
+    },
+    {
+      "slug": "pesarattu",
+      "name": "Pesarattu",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "moong": 100,
+        "rice_dry": 15,
+        "onion": 30,
+        "ginger": 5,
+        "oil": 10,
+        "water": 140
+      },
+      "yield_g": 240,
+      "portion_g": 100,
+      "portion_label": "1 pesarattu (approx.)",
+      "aliases": [
+        "green gram dosa",
+        "pesarattu dosa"
+      ]
+    },
+    {
+      "slug": "adai",
+      "name": "Adai",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rice_dry": 70,
+        "toor": 25,
+        "lentil": 25,
+        "moong": 20,
+        "onion": 40,
+        "oil": 10,
+        "water": 160
+      },
+      "yield_g": 300,
+      "portion_g": 100,
+      "portion_label": "1 adai (approx.)",
+      "aliases": [
+        "adai dosa"
+      ]
+    },
+    {
+      "slug": "appam",
+      "name": "Appam",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rice_flour": 100,
+        "coconut": 30,
+        "sugar": 5,
+        "water": 180
+      },
+      "yield_g": 260,
+      "portion_g": 70,
+      "portion_label": "1 appam (approx.)",
+      "aliases": [
+        "palappam",
+        "vellayappam"
+      ]
+    },
+    {
+      "slug": "idiyappam",
+      "name": "Idiyappam",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rice_flour": 100,
+        "water": 130
+      },
+      "yield_g": 220,
+      "portion_g": 70,
+      "portion_label": "1 nest (approx.)",
+      "aliases": [
+        "string hoppers",
+        "nool puttu"
+      ]
+    },
+    {
+      "slug": "puttu",
+      "name": "Puttu",
+      "region": "South",
+      "category": "Breakfast",
+      "ingredients": {
+        "rice_flour": 100,
+        "coconut": 30,
+        "water": 100
+      },
+      "yield_g": 220,
+      "portion_g": 110,
+      "portion_label": "1 small cylinder (approx.)",
+      "aliases": [
+        "rice puttu"
+      ]
+    },
+    {
+      "slug": "besan-chilla",
+      "name": "Besan chilla",
+      "region": "North",
+      "category": "Breakfast",
+      "ingredients": {
+        "besan": 100,
+        "onion": 40,
+        "tomato": 30,
+        "oil": 10,
+        "water": 120
+      },
+      "yield_g": 240,
+      "portion_g": 100,
+      "portion_label": "1 chilla (approx.)",
+      "aliases": [
+        "cheela",
+        "besan cheela",
+        "बेसन चीला"
+      ]
+    },
+    {
+      "slug": "moong-dal-chilla",
+      "name": "Moong dal chilla",
+      "region": "North",
+      "category": "Breakfast",
+      "ingredients": {
+        "moong": 100,
+        "onion": 30,
+        "ginger": 5,
+        "oil": 10,
+        "water": 150
+      },
+      "yield_g": 250,
+      "portion_g": 100,
+      "portion_label": "1 chilla (approx.)",
+      "aliases": [
+        "moong cheela"
+      ]
+    },
+    {
+      "slug": "jowar-roti",
+      "name": "Jowar roti",
+      "region": "West",
+      "category": "Breads",
+      "ingredients": {
+        "jowar": 100,
+        "water": 100
+      },
+      "yield_g": 170,
+      "portion_g": 55,
+      "portion_label": "1 roti (approx.)",
+      "aliases": [
+        "jolada rotti",
+        "jowar bhakri"
+      ]
+    },
+    {
+      "slug": "bajra-roti",
+      "name": "Bajra roti",
+      "region": "West",
+      "category": "Breads",
+      "ingredients": {
+        "millet": 100,
+        "water": 100
+      },
+      "yield_g": 170,
+      "portion_g": 55,
+      "portion_label": "1 roti (approx.)",
+      "aliases": [
+        "bajri rotla",
+        "bajra bhakri"
+      ],
+      "note": "Assumed flour-and-water recipe. Generic millet is used for bajra; millet varieties differ."
+    },
+    {
+      "slug": "rice-roti",
+      "name": "Rice roti",
+      "region": "South",
+      "category": "Breads",
+      "ingredients": {
+        "rice_flour": 100,
+        "water": 100
+      },
+      "yield_g": 170,
+      "portion_g": 55,
+      "portion_label": "1 roti (approx.)",
+      "aliases": [
+        "akki roti"
+      ]
+    },
+    {
+      "slug": "aloo-paratha",
+      "name": "Aloo paratha",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "boiled_potato": 120,
+        "oil": 15,
+        "water": 65
+      },
+      "yield_g": 250,
+      "portion_g": 125,
+      "portion_label": "1 paratha (approx.)",
+      "aliases": [
+        "aloo parantha"
+      ]
+    },
+    {
+      "slug": "gobi-paratha",
+      "name": "Gobi paratha",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "cauliflower": 120,
+        "oil": 15,
+        "water": 65
+      },
+      "yield_g": 250,
+      "portion_g": 125,
+      "portion_label": "1 paratha (approx.)",
+      "aliases": [
+        "gobi parantha"
+      ]
+    },
+    {
+      "slug": "paneer-paratha",
+      "name": "Paneer paratha",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "paneer": 100,
+        "oil": 15,
+        "water": 65
+      },
+      "yield_g": 250,
+      "portion_g": 125,
+      "portion_label": "1 paratha (approx.)",
+      "aliases": [
+        "paneer parantha"
+      ]
+    },
+    {
+      "slug": "palak-paratha",
+      "name": "Palak paratha",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "spinach": 100,
+        "oil": 15,
+        "water": 65
+      },
+      "yield_g": 250,
+      "portion_g": 125,
+      "portion_label": "1 paratha (approx.)",
+      "aliases": [
+        "palak parantha"
+      ]
+    },
+    {
+      "slug": "matar-paratha",
+      "name": "Matar paratha",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "peas": 100,
+        "oil": 15,
+        "water": 65
+      },
+      "yield_g": 250,
+      "portion_g": 125,
+      "portion_label": "1 paratha (approx.)",
+      "aliases": [
+        "matar parantha"
+      ]
+    },
+    {
+      "slug": "methi-style-greens-thepla",
+      "name": "Methi-style greens thepla",
+      "region": "West",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "spinach": 40,
+        "curd": 30,
+        "oil": 15,
+        "water": 40
+      },
+      "yield_g": 180,
+      "portion_g": 45,
+      "portion_label": "1 thepla (approx.)",
+      "aliases": [
+        "thepla"
+      ],
+      "note": "Spinach is an explicit nutrient proxy for fenugreek leaves; this is a greens-thepla estimate."
+    },
+    {
+      "slug": "poori",
+      "name": "Poori",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "atta": 100,
+        "oil": 20,
+        "water": 60
+      },
+      "yield_g": 160,
+      "portion_g": 32,
+      "portion_label": "1 poori (approx.)",
+      "aliases": [
+        "puri",
+        "पूरी"
+      ]
+    },
+    {
+      "slug": "bhatura",
+      "name": "Bhatura",
+      "region": "North",
+      "category": "Breads",
+      "ingredients": {
+        "maida": 100,
+        "curd": 30,
+        "oil": 25,
+        "water": 35
+      },
+      "yield_g": 160,
+      "portion_g": 80,
+      "portion_label": "1 bhatura (approx.)",
+      "aliases": [
+        "bhature"
+      ]
+    },
+    {
+      "slug": "luchi",
+      "name": "Luchi",
+      "region": "East",
+      "category": "Breads",
+      "ingredients": {
+        "maida": 100,
+        "oil": 20,
+        "water": 45
+      },
+      "yield_g": 150,
+      "portion_g": 30,
+      "portion_label": "1 luchi (approx.)",
+      "aliases": [
+        "luchi bread"
+      ]
+    },
+    {
+      "slug": "dal-tadka",
+      "name": "Dal tadka",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "toor": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "tadka dal",
+        "dal fry",
+        "दाल तड़का"
+      ]
+    },
+    {
+      "slug": "moong-dal",
+      "name": "Moong dal",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "moong": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "mung dal",
+        "yellow moong dal"
+      ]
+    },
+    {
+      "slug": "masoor-dal",
+      "name": "Masoor dal",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "lentil": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "red lentil dal"
+      ]
+    },
+    {
+      "slug": "chana-dal",
+      "name": "Chana dal",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "chana": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "bengal gram dal"
+      ],
+      "note": "Whole chickpeas are used as a nutrient proxy for split chana dal."
+    },
+    {
+      "slug": "toor-dal",
+      "name": "Toor dal",
+      "region": "South",
+      "category": "Dals & beans",
+      "ingredients": {
+        "toor": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "arhar dal",
+        "tuvar dal"
+      ]
+    },
+    {
+      "slug": "rajma-masala",
+      "name": "Rajma masala",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "rajma": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "rajma curry",
+        "राजमा"
+      ]
+    },
+    {
+      "slug": "chole-masala",
+      "name": "Chole masala",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "chana": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "chana masala",
+        "choley",
+        "छोले"
+      ]
+    },
+    {
+      "slug": "kadala-curry",
+      "name": "Kadala curry",
+      "region": "South",
+      "category": "Dals & beans",
+      "ingredients": {
+        "chana": 100,
+        "onion": 60,
+        "tomato": 100,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 3,
+        "water": 350,
+        "coconut": 30
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "black chickpea curry"
+      ]
+    },
+    {
+      "slug": "dal-palak",
+      "name": "Dal palak",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "lentil": 100,
+        "spinach": 150,
+        "onion": 50,
+        "tomato": 80,
+        "oil": 10,
+        "water": 350
+      },
+      "yield_g": 600,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "palak dal"
+      ]
+    },
+    {
+      "slug": "dal-makhani",
+      "name": "Dal makhani",
+      "region": "North",
+      "category": "Dals & beans",
+      "ingredients": {
+        "lentil": 80,
+        "rajma": 30,
+        "tomato": 100,
+        "cream": 40,
+        "ghee": 15,
+        "water": 350
+      },
+      "yield_g": 500,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "maa ki dal"
+      ],
+      "note": "Lentils are a nutrient proxy for whole urad in this recipe estimate. Cream and butter amounts vary widely."
+    },
+    {
+      "slug": "panchmel-dal",
+      "name": "Panchmel dal",
+      "region": "West",
+      "category": "Dals & beans",
+      "ingredients": {
+        "toor": 30,
+        "moong": 30,
+        "lentil": 30,
+        "chana": 30,
+        "oil": 12,
+        "tomato": 100,
+        "water": 400
+      },
+      "yield_g": 600,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "panchratna dal"
+      ]
+    },
+    {
+      "slug": "gujarati-dal",
+      "name": "Gujarati dal",
+      "region": "West",
+      "category": "Dals & beans",
+      "ingredients": {
+        "toor": 100,
+        "tomato": 80,
+        "sugar": 15,
+        "peanut": 15,
+        "oil": 8,
+        "tamarind": 10,
+        "water": 450
+      },
+      "yield_g": 600,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "gujarati toor dal"
+      ]
+    },
+    {
+      "slug": "bengali-cholar-dal",
+      "name": "Bengali cholar dal",
+      "region": "East",
+      "category": "Dals & beans",
+      "ingredients": {
+        "chana": 100,
+        "coconut": 20,
+        "sugar": 10,
+        "ghee": 10,
+        "water": 350
+      },
+      "yield_g": 450,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "cholar dal"
+      ],
+      "note": "Whole chickpeas are a nutrient proxy for split chana dal."
+    },
+    {
+      "slug": "usal",
+      "name": "Usal",
+      "region": "West",
+      "category": "Dals & beans",
+      "ingredients": {
+        "moong": 100,
+        "onion": 70,
+        "tomato": 100,
+        "oil": 12,
+        "spice": 4,
+        "water": 300
+      },
+      "yield_g": 480,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "matki usal"
+      ],
+      "note": "Mung beans are a nutrient proxy for moth beans; assumed dry-bean recipe, not measured sprouts."
+    },
+    {
+      "slug": "sundal",
+      "name": "Sundal",
+      "region": "South",
+      "category": "Dals & beans",
+      "ingredients": {
+        "chickpeas": 200,
+        "coconut": 20,
+        "oil": 5
+      },
+      "yield_g": 225,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "chana sundal"
+      ]
+    },
+    {
+      "slug": "moong-khichdi",
+      "name": "Moong khichdi",
+      "region": "North",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice_dry": 80,
+        "moong": 40,
+        "ghee": 10,
+        "water": 450
+      },
+      "yield_g": 500,
+      "portion_g": 200,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "dal khichdi",
+        "khichadi",
+        "खिचड़ी"
+      ]
+    },
+    {
+      "slug": "vegetable-khichdi",
+      "name": "Vegetable khichdi",
+      "region": "North",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice_dry": 80,
+        "moong": 40,
+        "carrot": 50,
+        "peas": 40,
+        "ghee": 10,
+        "water": 450
+      },
+      "yield_g": 580,
+      "portion_g": 200,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "veg khichdi"
+      ]
+    },
+    {
+      "slug": "bisi-bele-bath",
+      "name": "Bisi bele bath",
+      "region": "South",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice_dry": 80,
+        "toor": 40,
+        "carrot": 50,
+        "beans": 40,
+        "tomato": 50,
+        "tamarind": 10,
+        "ghee": 12,
+        "spice": 5,
+        "water": 400
+      },
+      "yield_g": 580,
+      "portion_g": 200,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "bisibelebath",
+        "bisi bele bhath"
+      ]
+    },
+    {
+      "slug": "jeera-rice",
+      "name": "Jeera rice",
+      "region": "North",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "cumin": 2,
+        "ghee": 8
+      },
+      "yield_g": 245,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "cumin rice"
+      ]
+    },
+    {
+      "slug": "lemon-rice",
+      "name": "Lemon rice",
+      "region": "South",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "lemon": 20,
+        "peanut": 15,
+        "oil": 8
+      },
+      "yield_g": 278,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "chitranna",
+        "nimbu rice"
+      ]
+    },
+    {
+      "slug": "tomato-rice",
+      "name": "Tomato rice",
+      "region": "South",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "tomato": 100,
+        "onion": 40,
+        "oil": 10
+      },
+      "yield_g": 385,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "thakkali sadam"
+      ]
+    },
+    {
+      "slug": "tamarind-rice",
+      "name": "Tamarind rice",
+      "region": "South",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "tamarind": 20,
+        "peanut": 15,
+        "oil": 10
+      },
+      "yield_g": 280,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "puliyodharai",
+        "pulihora",
+        "puli sadam"
+      ]
+    },
+    {
+      "slug": "coconut-rice",
+      "name": "Coconut rice",
+      "region": "South",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "coconut": 40,
+        "oil": 8
+      },
+      "yield_g": 283,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "thengai sadam"
+      ]
+    },
+    {
+      "slug": "curd-rice",
+      "name": "Curd rice",
+      "region": "South",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "curd": 150,
+        "milk": 30,
+        "oil": 4
+      },
+      "yield_g": 419,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "thayir sadam",
+        "daddojanam",
+        "दही चावल"
+      ]
+    },
+    {
+      "slug": "peas-pulao",
+      "name": "Peas pulao",
+      "region": "North",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "peas": 70,
+        "onion": 40,
+        "ghee": 8
+      },
+      "yield_g": 353,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "matar pulao"
+      ]
+    },
+    {
+      "slug": "vegetable-pulao",
+      "name": "Vegetable pulao",
+      "region": "North",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "carrot": 40,
+        "peas": 40,
+        "beans": 40,
+        "onion": 30,
+        "oil": 10
+      },
+      "yield_g": 395,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "veg pulav",
+        "vegetable pulav"
+      ]
+    },
+    {
+      "slug": "kashmiri-pulao",
+      "name": "Kashmiri pulao",
+      "region": "North",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "almond": 15,
+        "cashew": 15,
+        "sugar": 10,
+        "ghee": 10
+      },
+      "yield_g": 285,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kashmiri rice"
+      ]
+    },
+    {
+      "slug": "egg-fried-rice",
+      "name": "Egg fried rice",
+      "region": "Indo-Chinese",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "egg": 100,
+        "carrot": 40,
+        "onion": 30,
+        "oil": 10
+      },
+      "yield_g": 415,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "anda fried rice"
+      ]
+    },
+    {
+      "slug": "vegetable-fried-rice",
+      "name": "Vegetable fried rice",
+      "region": "Indo-Chinese",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 250,
+        "carrot": 50,
+        "beans": 40,
+        "peas": 40,
+        "onion": 30,
+        "oil": 10
+      },
+      "yield_g": 405,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "veg fried rice"
+      ]
+    },
+    {
+      "slug": "paneer-biryani",
+      "name": "Paneer biryani",
+      "region": "India",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 300,
+        "onion": 80,
+        "tomato": 60,
+        "curd": 50,
+        "oil": 15,
+        "spice": 5,
+        "paneer": 100
+      },
+      "yield_g": 570,
+      "portion_g": 250,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "paneer biriyani"
+      ]
+    },
+    {
+      "slug": "mushroom-biryani",
+      "name": "Mushroom biryani",
+      "region": "India",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 300,
+        "onion": 80,
+        "tomato": 60,
+        "curd": 50,
+        "oil": 15,
+        "spice": 5,
+        "mushroom": 150
+      },
+      "yield_g": 620,
+      "portion_g": 250,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "mushroom biriyani"
+      ]
+    },
+    {
+      "slug": "egg-biryani",
+      "name": "Egg biryani",
+      "region": "India",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 300,
+        "onion": 80,
+        "tomato": 60,
+        "curd": 50,
+        "oil": 15,
+        "spice": 5,
+        "egg": 100
+      },
+      "yield_g": 570,
+      "portion_g": 250,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "egg biriyani"
+      ]
+    },
+    {
+      "slug": "hyderabadi-chicken-biryani",
+      "name": "Hyderabadi chicken biryani",
+      "region": "India",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 300,
+        "onion": 80,
+        "tomato": 60,
+        "curd": 50,
+        "oil": 15,
+        "spice": 5,
+        "chicken": 130
+      },
+      "yield_g": 600,
+      "portion_g": 250,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "hyderabadi chicken biriyani"
+      ]
+    },
+    {
+      "slug": "vegetable-dum-biryani",
+      "name": "Vegetable dum biryani",
+      "region": "India",
+      "category": "Rice dishes",
+      "ingredients": {
+        "rice": 300,
+        "onion": 80,
+        "tomato": 60,
+        "curd": 50,
+        "oil": 15,
+        "spice": 5,
+        "carrot": 50,
+        "peas": 50,
+        "cauliflower": 80
+      },
+      "yield_g": 650,
+      "portion_g": 250,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "vegetable dum biriyani"
+      ]
+    },
+    {
+      "slug": "aloo-gobi",
+      "name": "Aloo gobi",
+      "region": "North",
+      "category": "Vegetables",
+      "ingredients": {
+        "cauliflower": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "potato": 180
+      },
+      "yield_g": 495,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "aloo gobhi"
+      ]
+    },
+    {
+      "slug": "bhindi-masala",
+      "name": "Bhindi masala",
+      "region": "North",
+      "category": "Vegetables",
+      "ingredients": {
+        "okra": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3
+      },
+      "yield_g": 315,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "okra masala",
+        "भिंडी"
+      ]
+    },
+    {
+      "slug": "baingan-bharta",
+      "name": "Baingan bharta",
+      "region": "North",
+      "category": "Vegetables",
+      "ingredients": {
+        "brinjal": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3
+      },
+      "yield_g": 315,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "baigan bharta"
+      ]
+    },
+    {
+      "slug": "aloo-matar",
+      "name": "Aloo matar",
+      "region": "North",
+      "category": "Vegetables",
+      "ingredients": {
+        "potato": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "peas": 120
+      },
+      "yield_g": 435,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "aloo mutter"
+      ]
+    },
+    {
+      "slug": "aloo-palak",
+      "name": "Aloo palak",
+      "region": "North",
+      "category": "Vegetables",
+      "ingredients": {
+        "spinach": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "potato": 180
+      },
+      "yield_g": 495,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "palak aloo"
+      ]
+    },
+    {
+      "slug": "cabbage-sabzi",
+      "name": "Cabbage sabzi",
+      "region": "India",
+      "category": "Vegetables",
+      "ingredients": {
+        "cabbage": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "peas": 50
+      },
+      "yield_g": 365,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "patta gobhi",
+        "band gobi"
+      ]
+    },
+    {
+      "slug": "beans-poriyal",
+      "name": "Beans poriyal",
+      "region": "South",
+      "category": "Vegetables",
+      "ingredients": {
+        "beans": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "coconut": 30
+      },
+      "yield_g": 345,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "beans thoran"
+      ]
+    },
+    {
+      "slug": "carrot-poriyal",
+      "name": "Carrot poriyal",
+      "region": "South",
+      "category": "Vegetables",
+      "ingredients": {
+        "carrot": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "coconut": 30
+      },
+      "yield_g": 345,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "carrot thoran"
+      ]
+    },
+    {
+      "slug": "cabbage-thoran",
+      "name": "Cabbage thoran",
+      "region": "South",
+      "category": "Vegetables",
+      "ingredients": {
+        "cabbage": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "coconut": 40
+      },
+      "yield_g": 355,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "cabbage poriyal"
+      ]
+    },
+    {
+      "slug": "pumpkin-sabzi",
+      "name": "Pumpkin sabzi",
+      "region": "India",
+      "category": "Vegetables",
+      "ingredients": {
+        "pumpkin": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3
+      },
+      "yield_g": 315,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kaddu sabzi"
+      ]
+    },
+    {
+      "slug": "mushroom-masala",
+      "name": "Mushroom masala",
+      "region": "North",
+      "category": "Vegetables",
+      "ingredients": {
+        "mushroom": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3
+      },
+      "yield_g": 315,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kadai mushroom"
+      ]
+    },
+    {
+      "slug": "potato-roast",
+      "name": "Potato roast",
+      "region": "South",
+      "category": "Vegetables",
+      "ingredients": {
+        "potato": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3
+      },
+      "yield_g": 315,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "urulai roast"
+      ]
+    },
+    {
+      "slug": "mixed-vegetable-sabzi",
+      "name": "Mixed vegetable sabzi",
+      "region": "India",
+      "category": "Vegetables",
+      "ingredients": {
+        "cauliflower": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "carrot": 80,
+        "beans": 80,
+        "peas": 60
+      },
+      "yield_g": 535,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "mix veg sabzi"
+      ]
+    },
+    {
+      "slug": "aloo-posto",
+      "name": "Aloo posto",
+      "region": "East",
+      "category": "Vegetables",
+      "ingredients": {
+        "potato": 250,
+        "onion": 50,
+        "tomato": 60,
+        "oil": 12,
+        "spice": 3,
+        "sesame": 30
+      },
+      "yield_g": 345,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "potato posto"
+      ],
+      "note": "Sesame is a nutrient proxy for poppy seeds in this approximate recipe."
+    },
+    {
+      "slug": "matar-paneer",
+      "name": "Matar paneer",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "peas": 100,
+        "water": 100
+      },
+      "yield_g": 384,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "matar panir"
+      ]
+    },
+    {
+      "slug": "kadai-paneer",
+      "name": "Kadai paneer",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "tomato": 100,
+        "onion": 60,
+        "water": 100
+      },
+      "yield_g": 444,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kadai panir"
+      ]
+    },
+    {
+      "slug": "paneer-butter-masala",
+      "name": "Paneer butter masala",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "cream": 50,
+        "ghee": 15,
+        "cashew": 15,
+        "water": 100
+      },
+      "yield_g": 364,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "panir butter masala"
+      ]
+    },
+    {
+      "slug": "shahi-paneer",
+      "name": "Shahi paneer",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "cream": 50,
+        "cashew": 30,
+        "water": 100
+      },
+      "yield_g": 364,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "shahi panir"
+      ]
+    },
+    {
+      "slug": "paneer-bhurji",
+      "name": "Paneer bhurji",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "onion": 70,
+        "tomato": 70
+      },
+      "yield_g": 324,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "panir bhurji"
+      ]
+    },
+    {
+      "slug": "palak-paneer",
+      "name": "Palak paneer",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "spinach": 250,
+        "water": 100
+      },
+      "yield_g": 534,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "palak panir"
+      ]
+    },
+    {
+      "slug": "paneer-tikka",
+      "name": "Paneer tikka",
+      "region": "North",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "paneer": 200,
+        "oil": 10,
+        "ginger": 5,
+        "garlic": 5,
+        "spice": 4,
+        "curd": 70,
+        "onion": 60
+      },
+      "yield_g": 314,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "panir tikka"
+      ]
+    },
+    {
+      "slug": "kadhi-pakora",
+      "name": "Kadhi pakora",
+      "region": "North",
+      "category": "Curries",
+      "ingredients": {
+        "curd": 200,
+        "besan": 70,
+        "onion": 40,
+        "oil": 20,
+        "water": 350,
+        "spice": 4
+      },
+      "yield_g": 600,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "punjabi kadhi",
+        "kadi pakoda"
+      ]
+    },
+    {
+      "slug": "gujarati-kadhi",
+      "name": "Gujarati kadhi",
+      "region": "West",
+      "category": "Curries",
+      "ingredients": {
+        "curd": 200,
+        "besan": 25,
+        "sugar": 15,
+        "ghee": 8,
+        "water": 300
+      },
+      "yield_g": 500,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": []
+    },
+    {
+      "slug": "vegetable-korma",
+      "name": "Vegetable korma",
+      "region": "India",
+      "category": "Curries",
+      "ingredients": {
+        "cauliflower": 100,
+        "carrot": 70,
+        "peas": 70,
+        "beans": 70,
+        "coconut": 40,
+        "cashew": 20,
+        "oil": 12,
+        "water": 150,
+        "spice": 4
+      },
+      "yield_g": 550,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "veg kurma"
+      ]
+    },
+    {
+      "slug": "avial",
+      "name": "Avial",
+      "region": "South",
+      "category": "Vegetables",
+      "ingredients": {
+        "carrot": 100,
+        "beans": 100,
+        "pumpkin": 150,
+        "potato": 100,
+        "coconut": 60,
+        "curd": 100,
+        "oil": 10,
+        "water": 100
+      },
+      "yield_g": 650,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "aviyal"
+      ],
+      "note": "Assumed mixed-vegetable selection; traditional vegetable combinations vary by region."
+    },
+    {
+      "slug": "vegetable-stew",
+      "name": "Vegetable stew",
+      "region": "South",
+      "category": "Curries",
+      "ingredients": {
+        "potato": 150,
+        "carrot": 100,
+        "beans": 80,
+        "peas": 50,
+        "coconut": 50,
+        "milk": 100,
+        "water": 200
+      },
+      "yield_g": 650,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kerala stew",
+        "ishtu"
+      ],
+      "note": "Whole coconut and milk used in this home-style approximation; coconut milk strength varies."
+    },
+    {
+      "slug": "rasam",
+      "name": "Rasam",
+      "region": "South",
+      "category": "Curries",
+      "ingredients": {
+        "tomato": 120,
+        "tamarind": 15,
+        "toor": 20,
+        "oil": 5,
+        "spice": 4,
+        "water": 500
+      },
+      "yield_g": 600,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "tomato rasam",
+        "saaru",
+        "charu"
+      ]
+    },
+    {
+      "slug": "egg-curry",
+      "name": "Egg curry",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "egg": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "water": 120
+      },
+      "yield_g": 556,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "anda curry"
+      ]
+    },
+    {
+      "slug": "chicken-tikka-masala",
+      "name": "Chicken tikka masala",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "chicken": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "cream": 40,
+        "water": 120
+      },
+      "yield_g": 596,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "chicken tikka masala"
+      ]
+    },
+    {
+      "slug": "butter-chicken",
+      "name": "Butter chicken",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "chicken": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "cream": 50,
+        "ghee": 15,
+        "water": 120
+      },
+      "yield_g": 621,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "butter chicken"
+      ]
+    },
+    {
+      "slug": "chicken-korma",
+      "name": "Chicken korma",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "chicken": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "cashew": 30,
+        "curd": 80,
+        "water": 120
+      },
+      "yield_g": 666,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "chicken korma"
+      ]
+    },
+    {
+      "slug": "pepper-chicken",
+      "name": "Pepper chicken",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "chicken": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "water": 120
+      },
+      "yield_g": 556,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "pepper chicken"
+      ]
+    },
+    {
+      "slug": "fish-curry",
+      "name": "Fish curry",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "fish": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "tamarind": 15,
+        "water": 120
+      },
+      "yield_g": 571,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "fish curry"
+      ]
+    },
+    {
+      "slug": "prawn-curry",
+      "name": "Prawn curry",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "prawn": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5,
+        "coconut": 40,
+        "water": 120
+      },
+      "yield_g": 596,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "prawn curry"
+      ]
+    },
+    {
+      "slug": "egg-bhurji",
+      "name": "Egg bhurji",
+      "region": "India",
+      "category": "Paneer & protein",
+      "ingredients": {
+        "egg": 250,
+        "onion": 80,
+        "tomato": 120,
+        "oil": 15,
+        "ginger": 8,
+        "garlic": 8,
+        "spice": 5
+      },
+      "yield_g": 436,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "anda bhurji"
+      ]
+    },
+    {
+      "slug": "coconut-chutney",
+      "name": "Coconut chutney",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "coconut": 100,
+        "chickpeas": 30,
+        "oil": 5,
+        "water": 100
+      },
+      "yield_g": 225,
+      "portion_g": 30,
+      "portion_label": "2 tablespoons (approx.)",
+      "aliases": [
+        "thengai chutney",
+        "nariyal chutney"
+      ]
+    },
+    {
+      "slug": "peanut-chutney",
+      "name": "Peanut chutney",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "peanut": 80,
+        "tamarind": 10,
+        "oil": 5,
+        "water": 120
+      },
+      "yield_g": 205,
+      "portion_g": 30,
+      "portion_label": "2 tablespoons (approx.)",
+      "aliases": [
+        "groundnut chutney"
+      ]
+    },
+    {
+      "slug": "tomato-chutney",
+      "name": "Tomato chutney",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "tomato": 200,
+        "onion": 60,
+        "oil": 10,
+        "water": 30
+      },
+      "yield_g": 290,
+      "portion_g": 30,
+      "portion_label": "2 tablespoons (approx.)",
+      "aliases": [
+        "thakkali chutney"
+      ]
+    },
+    {
+      "slug": "coriander-chutney",
+      "name": "Coriander chutney",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "coriander": 60,
+        "lemon": 20,
+        "peanut": 10,
+        "water": 40
+      },
+      "yield_g": 120,
+      "portion_g": 30,
+      "portion_label": "2 tablespoons (approx.)",
+      "aliases": [
+        "green chutney",
+        "dhaniya chutney"
+      ]
+    },
+    {
+      "slug": "tamarind-chutney",
+      "name": "Tamarind chutney",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "tamarind": 50,
+        "sugar": 60,
+        "water": 150
+      },
+      "yield_g": 250,
+      "portion_g": 30,
+      "portion_label": "2 tablespoons (approx.)",
+      "aliases": [
+        "imli chutney"
+      ]
+    },
+    {
+      "slug": "boondi-style-raita",
+      "name": "Boondi-style raita",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "curd": 200,
+        "cumin": 1,
+        "besan": 30,
+        "oil": 8
+      },
+      "yield_g": 239,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "boondi-style raitha"
+      ]
+    },
+    {
+      "slug": "onion-raita",
+      "name": "Onion raita",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "curd": 200,
+        "cumin": 1,
+        "onion": 60
+      },
+      "yield_g": 261,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "onion raitha"
+      ]
+    },
+    {
+      "slug": "tomato-raita",
+      "name": "Tomato raita",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "curd": 200,
+        "cumin": 1,
+        "tomato": 80
+      },
+      "yield_g": 281,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "tomato raitha"
+      ]
+    },
+    {
+      "slug": "carrot-raita",
+      "name": "Carrot raita",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "curd": 200,
+        "cumin": 1,
+        "carrot": 70
+      },
+      "yield_g": 271,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "carrot raitha"
+      ]
+    },
+    {
+      "slug": "palak-raita",
+      "name": "Palak raita",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "curd": 200,
+        "cumin": 1,
+        "spinach": 80
+      },
+      "yield_g": 281,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "palak raitha"
+      ]
+    },
+    {
+      "slug": "kachumber-salad",
+      "name": "Kachumber salad",
+      "region": "India",
+      "category": "Sides",
+      "ingredients": {
+        "onion": 80,
+        "tomato": 120,
+        "carrot": 80,
+        "lemon": 20
+      },
+      "yield_g": 300,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kachumbar salad"
+      ]
+    },
+    {
+      "slug": "chana-chaat",
+      "name": "Chana chaat",
+      "region": "India",
+      "category": "Snacks",
+      "ingredients": {
+        "chickpeas": 200,
+        "onion": 50,
+        "tomato": 60,
+        "boiled_potato": 80,
+        "lemon": 20,
+        "spice": 2
+      },
+      "yield_g": 410,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "chole chaat"
+      ]
+    },
+    {
+      "slug": "aloo-chaat",
+      "name": "Aloo chaat",
+      "region": "North",
+      "category": "Snacks",
+      "ingredients": {
+        "boiled_potato": 250,
+        "onion": 40,
+        "oil": 15,
+        "lemon": 20,
+        "spice": 3
+      },
+      "yield_g": 320,
+      "portion_g": 150,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": []
+    },
+    {
+      "slug": "bhel-puri",
+      "name": "Bhel puri",
+      "region": "West",
+      "category": "Snacks",
+      "ingredients": {
+        "puffed_rice": 40,
+        "peanut": 15,
+        "onion": 40,
+        "tomato": 40,
+        "boiled_potato": 50,
+        "tamarind": 10,
+        "sugar": 10
+      },
+      "yield_g": 200,
+      "portion_g": 100,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "bhelpuri"
+      ]
+    },
+    {
+      "slug": "sev-puri",
+      "name": "Sev puri",
+      "region": "West",
+      "category": "Snacks",
+      "ingredients": {
+        "maida": 50,
+        "besan": 25,
+        "oil": 20,
+        "boiled_potato": 70,
+        "onion": 30,
+        "tamarind": 15,
+        "sugar": 15,
+        "water": 30
+      },
+      "yield_g": 220,
+      "portion_g": 110,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "sevpuri"
+      ]
+    },
+    {
+      "slug": "dahi-vada",
+      "name": "Dahi vada",
+      "region": "North",
+      "category": "Snacks",
+      "ingredients": {
+        "vada": 100,
+        "curd": 150,
+        "tamarind": 15,
+        "sugar": 10
+      },
+      "yield_g": 275,
+      "portion_g": 140,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "dahi bhalla",
+        "thayir vadai"
+      ]
+    },
+    {
+      "slug": "khaman-dhokla",
+      "name": "Khaman dhokla",
+      "region": "West",
+      "category": "Snacks",
+      "ingredients": {
+        "besan": 100,
+        "curd": 50,
+        "sugar": 15,
+        "oil": 12,
+        "water": 180
+      },
+      "yield_g": 320,
+      "portion_g": 80,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "dhokla",
+        "khaman"
+      ]
+    },
+    {
+      "slug": "onion-pakora",
+      "name": "Onion pakora",
+      "region": "India",
+      "category": "Snacks",
+      "ingredients": {
+        "besan": 100,
+        "onion": 150,
+        "oil": 30,
+        "water": 80
+      },
+      "yield_g": 270,
+      "portion_g": 75,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "kanda bhaji",
+        "onion pakoda"
+      ]
+    },
+    {
+      "slug": "palak-pakora",
+      "name": "Palak pakora",
+      "region": "India",
+      "category": "Snacks",
+      "ingredients": {
+        "besan": 100,
+        "spinach": 150,
+        "oil": 30,
+        "water": 80
+      },
+      "yield_g": 270,
+      "portion_g": 75,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "palak pakoda"
+      ]
+    },
+    {
+      "slug": "aloo-tikki",
+      "name": "Aloo tikki",
+      "region": "North",
+      "category": "Snacks",
+      "ingredients": {
+        "boiled_potato": 250,
+        "peas": 40,
+        "besan": 20,
+        "oil": 20
+      },
+      "yield_g": 300,
+      "portion_g": 75,
+      "portion_label": "1 tikki (approx.)",
+      "aliases": [
+        "potato tikki"
+      ]
+    },
+    {
+      "slug": "pav-bhaji-vegetables",
+      "name": "Pav bhaji vegetables",
+      "region": "West",
+      "category": "Vegetables",
+      "ingredients": {
+        "boiled_potato": 180,
+        "cauliflower": 100,
+        "peas": 60,
+        "tomato": 150,
+        "onion": 80,
+        "ghee": 20,
+        "spice": 5
+      },
+      "yield_g": 550,
+      "portion_g": 180,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "bhaji for pav bhaji"
+      ],
+      "note": "Vegetable bhaji only; log the pav bread separately."
+    },
+    {
+      "slug": "vegetable-momos",
+      "name": "Vegetable momos",
+      "region": "North-East",
+      "category": "Snacks",
+      "ingredients": {
+        "maida": 100,
+        "cabbage": 150,
+        "carrot": 60,
+        "onion": 50,
+        "oil": 8,
+        "water": 100
+      },
+      "yield_g": 400,
+      "portion_g": 40,
+      "portion_label": "1 momo (approx.)",
+      "aliases": [
+        "veg momo"
+      ]
+    },
+    {
+      "slug": "chicken-momos",
+      "name": "Chicken momos",
+      "region": "North-East",
+      "category": "Snacks",
+      "ingredients": {
+        "maida": 100,
+        "chicken": 150,
+        "onion": 50,
+        "oil": 8,
+        "water": 100
+      },
+      "yield_g": 370,
+      "portion_g": 40,
+      "portion_label": "1 momo (approx.)",
+      "aliases": [
+        "chicken momo"
+      ]
+    },
+    {
+      "slug": "vegetable-cutlet",
+      "name": "Vegetable cutlet",
+      "region": "India",
+      "category": "Snacks",
+      "ingredients": {
+        "boiled_potato": 200,
+        "carrot": 60,
+        "peas": 60,
+        "maida": 30,
+        "oil": 20
+      },
+      "yield_g": 330,
+      "portion_g": 80,
+      "portion_label": "1 small katori (approx.)",
+      "aliases": [
+        "veg cutlet"
+      ]
+    },
+    {
+      "slug": "rice-kheer",
+      "name": "Rice kheer",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "rice_dry": 60,
+        "milk": 600,
+        "sugar": 60,
+        "almond": 15
+      },
+      "yield_g": 655,
+      "portion_g": 120,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "payasam",
+        "chawal kheer"
+      ]
+    },
+    {
+      "slug": "suji-halwa",
+      "name": "Suji halwa",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "rava": 100,
+        "ghee": 40,
+        "sugar": 80,
+        "water": 250
+      },
+      "yield_g": 455,
+      "portion_g": 100,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "sheera",
+        "rava kesari"
+      ]
+    },
+    {
+      "slug": "carrot-halwa",
+      "name": "Carrot halwa",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "carrot": 400,
+        "milk": 400,
+        "sugar": 80,
+        "ghee": 30
+      },
+      "yield_g": 830,
+      "portion_g": 100,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "gajar halwa",
+        "gajar ka halwa"
+      ]
+    },
+    {
+      "slug": "besan-ladoo",
+      "name": "Besan ladoo",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "besan": 100,
+        "ghee": 40,
+        "sugar": 70
+      },
+      "yield_g": 210,
+      "portion_g": 35,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "besan laddu"
+      ]
+    },
+    {
+      "slug": "coconut-ladoo",
+      "name": "Coconut ladoo",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "coconut": 150,
+        "milk_powder": 50,
+        "sugar": 70
+      },
+      "yield_g": 270,
+      "portion_g": 35,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "nariyal laddu"
+      ]
+    },
+    {
+      "slug": "peanut-chikki",
+      "name": "Peanut chikki",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "peanut": 100,
+        "sugar": 100
+      },
+      "yield_g": 200,
+      "portion_g": 25,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "groundnut chikki"
+      ]
+    },
+    {
+      "slug": "til-ladoo",
+      "name": "Til ladoo",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "sesame": 100,
+        "sugar": 100
+      },
+      "yield_g": 200,
+      "portion_g": 25,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "til laddu"
+      ]
+    },
+    {
+      "slug": "kaju-katli",
+      "name": "Kaju katli",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "cashew": 100,
+        "sugar": 70,
+        "water": 30
+      },
+      "yield_g": 185,
+      "portion_g": 20,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "kaju barfi"
+      ]
+    },
+    {
+      "slug": "milk-peda",
+      "name": "Milk peda",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "milk_powder": 100,
+        "milk": 80,
+        "sugar": 70,
+        "ghee": 10
+      },
+      "yield_g": 245,
+      "portion_g": 25,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "doodh peda"
+      ]
+    },
+    {
+      "slug": "sandesh",
+      "name": "Sandesh",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "ricotta": 200,
+        "sugar": 60
+      },
+      "yield_g": 260,
+      "portion_g": 35,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "sondesh"
+      ],
+      "note": "Sugar quantities are explicit; jaggery variants are not nutritionally identical. Ricotta is a nutrient proxy for chhena in sandesh."
+    },
+    {
+      "slug": "shrikhand",
+      "name": "Shrikhand",
+      "region": "India",
+      "category": "Sweets",
+      "ingredients": {
+        "curd": 250,
+        "sugar": 60,
+        "almond": 10
+      },
+      "yield_g": 320,
+      "portion_g": 100,
+      "portion_label": "1 portion (approx.)",
+      "aliases": [
+        "shrikand"
+      ]
+    },
+    {
+      "slug": "milk-chai",
+      "name": "Milk chai",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "tea": 100,
+        "milk": 100,
+        "sugar": 10
+      },
+      "yield_g": 210,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "chai",
+        "doodh chai",
+        "चाय"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "masala-chai",
+      "name": "Masala chai",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "tea": 100,
+        "milk": 100,
+        "sugar": 10,
+        "ginger": 4
+      },
+      "yield_g": 214,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "adrak chai"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "unsweetened-milk-chai",
+      "name": "Unsweetened milk chai",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "tea": 100,
+        "milk": 100
+      },
+      "yield_g": 200,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "chai without sugar"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "filter-coffee-with-milk",
+      "name": "Filter coffee with milk",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "coffee": 70,
+        "milk": 130,
+        "sugar": 10
+      },
+      "yield_g": 210,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "filter kaapi"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "sweet-lassi",
+      "name": "Sweet lassi",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "curd": 180,
+        "milk": 50,
+        "sugar": 25,
+        "water": 50
+      },
+      "yield_g": 305,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "meethi lassi"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "mango-lassi",
+      "name": "Mango lassi",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "curd": 150,
+        "mango": 100,
+        "sugar": 15,
+        "water": 50
+      },
+      "yield_g": 315,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "aam lassi"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "salted-lassi",
+      "name": "Salted lassi",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "curd": 180,
+        "water": 100,
+        "cumin": 1
+      },
+      "yield_g": 281,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "namkeen lassi"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "chaas",
+      "name": "Chaas",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "curd": 100,
+        "water": 200,
+        "cumin": 1
+      },
+      "yield_g": 301,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "buttermilk",
+        "chhach",
+        "chaach",
+        "mor"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "nimbu-pani",
+      "name": "Nimbu pani",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "lemon": 30,
+        "sugar": 20,
+        "water": 250
+      },
+      "yield_g": 300,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "lemon shikanji"
+      ],
+      "note": "Weight-based portion. A 200 g drink is not assumed to equal exactly 200 ml."
+    },
+    {
+      "slug": "sattu-style-drink",
+      "name": "Sattu-style drink",
+      "region": "India",
+      "category": "Drinks",
+      "ingredients": {
+        "besan": 40,
+        "sugar": 15,
+        "water": 250
+      },
+      "yield_g": 305,
+      "portion_g": 200,
+      "portion_label": "1 glass/cup (approx. 200 g)",
+      "aliases": [
+        "sattu sharbat"
+      ],
+      "note": "Besan is a nutrient proxy for roasted sattu flour. This is a recipe estimate."
+    }
+  ]
+}

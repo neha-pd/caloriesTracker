@@ -86,8 +86,8 @@ export function NotificationPermissionCard() {
     <Card>
       <T bold>Notification permission · {status}</T>
       <T color={C.muted} size={13}>
-        Your phone delivers scheduled reminders. AI downloads, camera access and
-        microphone access are separate settings.
+        Your phone delivers scheduled reminders. Health connection is optional
+        and has its own permission.
       </T>
       {Platform.OS !== "web" && (
         <>
@@ -161,9 +161,8 @@ export default function NotificationSetup() {
             Enable reminders so Ember can nudge you even when the app is closed.
           </T>
           <T color={C.muted}>
-            On the next screen, allow notifications and send a test. Camera and
-            microphone permissions are requested when you use them. Each local
-            AI model asks before downloading.
+            On the next screen, allow notifications and send a test. Device
+            connection asks for health permission when you choose to connect.
           </T>
           <Button
             title="Set up notifications"

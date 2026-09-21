@@ -20,14 +20,18 @@ with sync_playwright() as p:
  assert len(set(e['log_date'] for e in data['entries']))==43
  assert len(data['water'])>300
  page.screenshot(path=str(out/'demo-dashboard.png'),full_page=True)
- page.get_by_test_id('daily-coach').click()
- expect(page.get_by_text('This is a partial log.',exact=False)).to_be_visible()
- page.get_by_role('button',name='Talk to Ember · voice & chat',exact=True).click()
- expect(page.get_by_text('Voice and local AI run in the Android/iPhone app.',exact=False)).to_be_visible()
+ page.get_by_test_id('tab-add').click();page.get_by_test_id('food-search').fill('poha')
+ page.get_by_text('Kanda poha',exact=True).click()
+ page.get_by_test_id('food-confirm').click()
+ after=page.evaluate('JSON.parse(localStorage.getItem("fitlens:data:fitlens-offline-demo"))')
+ assert after['progress']['xp']>data['progress']['xp']
+ page.get_by_role('button',name='Go home',exact=True).click()
+ page.get_by_test_id('talk-ember').click()
+ expect(page.get_by_text('This is an offline demo. Sign in to a real account to use online chat.',exact=True)).to_be_visible()
  expect(page.get_by_test_id('chat-input')).to_be_visible()
  expect(page.get_by_role('button',name='Send message',exact=True)).to_be_disabled()
  page.screenshot(path=str(out/'demo-chat.png'),full_page=True)
- page.get_by_role('button',name='Go home',exact=True).click()
+ page.get_by_role('button',name='Close chat',exact=True).click()
  page.get_by_test_id('tab-profile').click()
  expect(page.get_by_text('Offline demo',exact=True)).to_be_visible()
  page.get_by_role('button',name='Home-screen widgets',exact=True).click()

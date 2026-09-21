@@ -1,3 +1,4 @@
+import { removeRetiredModels } from "../src/features/retiredModels";
 import React, { useEffect } from "react";
 import { Stack, router, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
@@ -12,7 +13,6 @@ import { useTracker } from "../src/features/tracker";
 import { useHealth } from "../src/features/health/store";
 import "../src/features/reminders";
 import { WidgetBridge } from "../src/features/widgets";
-import NotificationSetup from "../src/features/notificationSetup";
 import NotificationBridge from "../src/features/notificationBridge";
 import { C } from "../src/features/ui";
 const client = new QueryClient();
@@ -25,6 +25,7 @@ export default function Layout() {
   const segments = useSegments();
   useEffect(() => {
     void auth.loadSession();
+    void removeRetiredModels();
   }, []);
   useEffect(() => {
     if (auth.isLoading) return;
@@ -89,14 +90,21 @@ export default function Layout() {
       <QueryClientProvider client={client}>
         <StatusBar style="light" />
         <NotificationBridge />
-        <NotificationSetup />
         <WidgetBridge />
         <Stack
           screenOptions={{
             headerShown: false,
             contentStyle: { backgroundColor: C.bg },
           }}
-        />
+        >
+          <Stack.Screen
+            name="chat"
+            options={{
+              presentation: "transparentModal",
+              contentStyle: { backgroundColor: "transparent" },
+            }}
+          />
+        </Stack>
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

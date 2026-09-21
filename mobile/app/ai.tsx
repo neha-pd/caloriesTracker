@@ -1,3 +1,4 @@
-import React from "react";
-import AI from "../src/features/ai";
-export default AI;
+import { Redirect } from "expo-router";
+export default function RemovedScan() {
+  return <Redirect href="/log" />;
+}

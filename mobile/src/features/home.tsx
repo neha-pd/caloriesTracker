@@ -1,5 +1,7 @@
+import { GuidePrompt } from "./guide";
+import { useHealth } from "./health/store";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { router } from "expo-router";
 import {
@@ -130,6 +132,7 @@ export function Macros({ compact = false }: { compact?: boolean }) {
   );
 }
 export function Dashboard() {
+  const health = useHealth();
   const s = useTracker(),
     u = useAuthStore((x) => x.user);
   const entries = s.entries.filter(
@@ -162,7 +165,65 @@ export function Dashboard() {
       {u?.id === "fitlens-offline-demo" && (
         <Banner text="DEMO · 45 days of fictional sample data, stored only on this device." />
       )}
+      <Card style={{ backgroundColor: C.elevated }}>
+        <View style={S.row}>
+          <Icon name="watch-outline" color={C.lime} />
+          <View style={{ flex: 1 }}>
+            <T bold>
+              {health.enabled
+                ? "Your device is connected"
+                : "Connect your device"}
+            </T>
+            <T size={12} color={C.muted}>
+              {Platform.OS === "ios" ? "Apple Health" : "Health Connect"} ·
+              steps and activity in one place
+            </T>
+          </View>
+        </View>
+        {health.enabled && (
+          <T color={C.muted}>
+            {health.steps == null
+              ? "Steps unavailable"
+              : health.steps.toLocaleString() + " steps"}{" "}
+            ·{" "}
+            {health.activeCalories == null
+              ? "Activity unavailable"
+              : Math.round(health.activeCalories) + " active kcal"}
+          </T>
+        )}
+        <Button
+          title={health.enabled ? "Device & sync settings" : "Connect device"}
+          secondary
+          loading={health.busy}
+          onPress={() =>
+            health.enabled || Platform.OS === "web"
+              ? router.push("/health")
+              : void health.connect()
+          }
+          testID="home-connect-device"
+        />
+        {health.error && <Banner error text={health.error} />}
+      </Card>
+      <GuidePrompt />
       <DatePicker />
+      <View style={S.two}>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Add food"
+            icon="add"
+            onPress={() => router.push("/log")}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button
+            title="Chat with Ember"
+            icon="chatbubble-outline"
+            secondary
+            onPress={() => router.push("/chat")}
+            testID="talk-ember"
+          />
+        </View>
+      </View>
       <Button
         title="Share my day"
         icon="share-outline"
@@ -170,25 +231,6 @@ export function Dashboard() {
         onPress={() => router.push("/share")}
         testID="share-day"
       />
-      <View style={{ flexDirection: "row", gap: 12 }}>
-        <View style={{ flex: 1 }}>
-          <Button
-            title="Daily review"
-            icon="sparkles-outline"
-            secondary
-            onPress={() => router.push("/coach")}
-            testID="daily-coach"
-          />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Button
-            title="Talk to Ember"
-            icon="mic-outline"
-            onPress={() => router.push("/chat")}
-            testID="talk-ember"
-          />
-        </View>
-      </View>
       <SyncBanner />
       <Card
         style={{
@@ -618,7 +660,9 @@ export function Quests() {
           Make a little note
         </T>
         <T color={C.muted}>
-          Log a meal. +25 XP for each meal category, once per day.
+          Add food today: +10 XP for each new entry (first 20 daily), plus +25
+          XP for the first entry in each meal category. Edits and retries earn
+          no extra XP.
         </T>
         <Button
           secondary

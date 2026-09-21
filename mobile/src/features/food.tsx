@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import * as Crypto from "expo-crypto";
@@ -15,7 +15,7 @@ import {
   Segments,
   T,
 } from "./ui";
-import { searchFoods, findFood, foods } from "./catalog";
+import { searchFoods, findFood, foods, indianFoodCount } from "./catalog";
 import { useTracker } from "./tracker";
 import type { Meal, Food } from "./types";
 const meals = [
@@ -33,29 +33,39 @@ export function LogFood() {
     s = useTracker();
   const [query, setQuery] = useState(params.query || ""),
     [meal, setMeal] = useState<Meal>((params.meal as Meal) || "lunch");
-  const results = useMemo(() => searchFoods(query, s.foods), [query, s.foods]);
+  const [scope, setScope] = useState<"all" | "india" | "saved">("all"),
+    [limit, setLimit] = useState(30);
+  useEffect(() => setLimit(30), [query, scope]);
+  const results = useMemo(
+    () => searchFoods(query, s.foods, limit + 1, scope),
+    [query, s.foods, limit, scope],
+  );
   return (
     <Page
       back
       eyebrow="MAKE A LITTLE NOTE"
       title="What’s on your plate?"
-      subtitle="Search your offline food library or let your camera help."
+      subtitle="Search, choose your portion, and add. Your food library works offline."
     >
       <Segments
         values={meals}
         value={meal}
         onChange={(v) => setMeal(v as Meal)}
       />
-      <Button
-        title="Scan a meal"
-        icon="camera-outline"
-        onPress={() => router.push({ pathname: "/scan", params: { meal } })}
+      <Segments
+        values={[
+          { key: "all", label: "All foods" },
+          { key: "india", label: "Indian" },
+          { key: "saved", label: "My foods" },
+        ]}
+        value={scope}
+        onChange={(v) => setScope(v as typeof scope)}
       />
       <Field
         label="Find a food"
         value={query}
         onChange={setQuery}
-        placeholder="Try rice, banana, chicken…"
+        placeholder="Try dosa, poha, roti, biryani…"
         testID="food-search"
       />
       <RowLink
@@ -68,11 +78,11 @@ export function LogFood() {
       />
       <T size={12} color={C.muted}>
         {query
-          ? `${results.length}${results.length === 30 ? "+" : ""} matches`
-          : "A few everyday favorites"}{" "}
-        · USDA & your saved foods
+          ? `${Math.min(results.length, limit)}${results.length > limit ? "+" : ""} matches`
+          : `${foods.length.toLocaleString()} foods · ${indianFoodCount} Indian entries`}{" "}
+        · Offline library
       </T>
-      {results.map((f) => (
+      {results.slice(0, limit).map((f) => (
         <Card
           key={f.id}
           onPress={() =>
@@ -90,11 +100,28 @@ export function LogFood() {
                 {Math.round(f.calories)} kcal per {f.serving_qty}{" "}
                 {f.serving_unit}
               </T>
+              {f.estimated && (
+                <T size={11} color={C.orange}>
+                  Home-style recipe estimate
+                </T>
+              )}
             </View>
             <Icon name="add-circle" />
           </View>
         </Card>
       ))}
+      {results.length > limit && (
+        <Button
+          secondary
+          title="Show more foods"
+          onPress={() => setLimit((v) => v + 30)}
+        />
+      )}
+      <Button
+        secondary
+        title="Food sources & estimates"
+        onPress={() => router.push("/food-sources")}
+      />
       {results.length === 0 && (
         <T color={C.muted}>
           Try a simpler food name, or add the details from its label.
@@ -123,7 +150,7 @@ export function FoodDetail() {
       </Page>
     );
   const q = Number(quantity),
-    portions = foods.find((f) => f.id === id)?.portions || [];
+    portions = food.portions || [];
   async function add() {
     if (!Number.isFinite(q) || q <= 0 || q > 100) {
       setError("Choose a portion between 0 and 100 servings.");
@@ -180,6 +207,9 @@ export function FoodDetail() {
           ))}
         </View>
       </Card>
+      {food.estimated && (
+        <Banner text="Recipe estimate: cooking oil, ingredient choices and water content change the values. Review the recipe assumptions below." />
+      )}
       <Field
         label={`Servings · 1 = ${food.serving_qty} ${food.serving_unit}`}
         value={quantity}
@@ -199,6 +229,19 @@ export function FoodDetail() {
                 setQuantity(String(Math.round((p.grams / 100) * 1000) / 1000))
               }
             />
+          ))}
+        </Card>
+      )}
+      {food.recipe && (
+        <Card>
+          <T bold>Recipe assumptions · {food.recipe.yield_g} g cooked batch</T>
+          <T size={12} color={C.muted}>
+            {food.recipe.note}
+          </T>
+          {food.recipe.ingredients.map((i, n) => (
+            <T size={12} key={n}>
+              {i.grams} g · {i.name}
+            </T>
           ))}
         </Card>
       )}
