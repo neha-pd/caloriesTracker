@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {releaseManifest, createReleaseLookup} from '../src/core/releases';
+import {releaseManifest, createReleaseLookup, releaseFromPublicPage} from '../src/core/releases';
 import {validRelease, needsUpdate} from '../../mobile/src/features/updates/domain';
 const version='2.5.0', tag='v2.5.0-team.1', name='FitLens-2.5.0-team-arm64.apk';
 const url=`https://github.com/neha-pd/caloriesTracker/releases/download/${tag}/${name}`;
@@ -22,4 +22,20 @@ test('release checks share and cache one request; outages do not invent a requir
  const lookup=createReleaseLookup((async()=>{calls++;return {ok:true,json:async()=>release} as Response;}) as typeof fetch);
  const results=await Promise.all([lookup(),lookup(),lookup()]);assert.equal(calls,1);assert.deepEqual(results[0],results[2]);await lookup();assert.equal(calls,1);
  const offline=createReleaseLookup((async()=>{throw Error('offline')}) as typeof fetch);assert.equal(await offline(),null);
+});
+
+test('public release fallback discovers complete APKs when shared hosting hits the API quota',async()=>{
+ let calls=0;
+ const fetcher=(async(input:any)=>{
+  calls++;
+  if(String(input).includes('api.github.com'))return {ok:false,status:403} as Response;
+  if(String(input).endsWith('/latest'))return {ok:true,url:'https://github.com/neha-pd/caloriesTracker/releases/tag/'+tag} as Response;
+  return {ok:true,headers:new Headers({'content-length':'95'})} as Response;
+ }) as typeof fetch;
+ const lookup=createReleaseLookup(fetcher);assert.deepEqual(await lookup(),{version,url,required:true});assert.equal(calls,4);
+ await lookup();assert.equal(calls,4);
+ const bad=(async()=>({ok:true,url:'https://evil.example/releases/tag/'+tag})) as typeof fetch;
+ assert.equal(await releaseFromPublicPage(bad),null);
+ const missing=(async(input:any)=>String(input).endsWith('/latest')?{ok:true,url:'https://github.com/neha-pd/caloriesTracker/releases/tag/'+tag}:{ok:false,headers:new Headers()}) as typeof fetch;
+ assert.equal(await releaseFromPublicPage(missing),null);
 });

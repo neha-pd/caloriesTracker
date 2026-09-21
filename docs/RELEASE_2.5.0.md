@@ -16,8 +16,8 @@ The backend checks GitHub's latest published release, caches results for five mi
 
 Publish only after CI and production checks pass and both signed assets are uploaded. Mark the release as latest. The required update becomes discoverable without another backend deploy (allow up to five minutes for caches). To withdraw a broken requirement, mark the prior good release as latest; affected devices need to reconnect for that change. Do not delete their app data.
 
-If the app has never learned of an update and it is offline, it remains usable. A known required update is retained offline until installed or a valid server response withdraws it. No credentials are required for release discovery and no external APK hosts are accepted.
+If the app has never learned of an update and it is offline, it remains usable. A known required update is retained offline until installed or a valid server response withdraws it. The public GitHub release redirect and asset checks provide a fallback if the GitHub API is unavailable or rate-limited on shared hosting. No credentials are required for release discovery and no external APK hosts are accepted.
 
 ## Verification
 
-36 automated tests cover existing behavior and complete-release validation, numeric version ordering, request caching and outage behavior. Browser checks cover manual activity, the simplified summary, separate goals, collapsed history imports, friendly connection details and existing diary/fitness flows. An isolated Android APK exercises the real update screen, offline cache across restart and the Android Back button. The production build uses the existing signing key and updates over 2.4.0.
+37 automated tests cover existing behavior and complete-release validation, numeric version ordering, request caching and outage behavior. Browser checks cover manual activity, the simplified summary, separate goals, collapsed history imports, friendly connection details and existing diary/fitness flows. An isolated Android APK exercises the real update screen, offline cache across restart and the Android Back button. The production build uses the existing signing key and updates over 2.4.0.
