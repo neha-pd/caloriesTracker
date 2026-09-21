@@ -2,7 +2,7 @@
 
 - Web app: https://fitlens-kpph.onrender.com
 - API: https://fitlens-api.onrender.com
-- Source branch: `codex/fitlens-revamp`
+- Source branch: `main` (also pushed to `codex/fitlens-revamp`)
 - Render workspace: Neha's workspace. API uses the **free** Node service in Singapore; web uses static hosting. Automatic deploys are disabled so releases can be checked before deployment.
 - PostgreSQL: the user-provided Neon production database, using its pooled TLS connection. No Render database or ephemeral local database is used.
 - Authentication: Firebase project `fitlens-b37f6`, Email/Password on Spark. No cloud AI service is used.
@@ -32,3 +32,16 @@ FITLENS_WEB_URL=https://fitlens-kpph.onrender.com FITLENS_API_URL=https://fitlen
 Build an Android preview using `EXPO_PUBLIC_API_URL=https://fitlens-api.onrender.com` and `FITLENS_TEST_BUILD=false`; HTTPS is required. Use the current APK rather than the older LAN-only build.
 
 Free plans have usage caps and can suspend service when allowances are exhausted. Render's free API sleeps after inactivity and can take time to wake. No paid plan or billing upgrade was enabled. The native LFM model downloads once after consent and then runs on device. Physical-phone health, LFM, notification and widget acceptance tests remain separate from cloud/browser checks.
+
+## GitHub workflows and keeping free compute idle
+
+The default `main` branch now contains four workflows:
+
+- **FitLens CI:** typechecks, backend/domain tests, web export, isolated browser account lifecycle and offline demo checks. It needs no production credentials.
+- **Deploy tested main:** deploys the exact successful CI commit to both existing Render services, waits for them to become live and checks readiness. Render's own automatic deploy is disabled to avoid deploying before CI.
+- **Build team APK:** manual signed ARM64 build. Keystore/password are GitHub Actions secrets. The artifact is available from the run for 14 days; releases provide the persistent team download.
+- **API uptime check:** best-effort GET `/ping` every ten minutes. The endpoint is silent in application request logging and performs no database query. `/health` is also process-only; `/ready` checks Neon and is used at deployment, not on the frequent uptime schedule.
+
+This avoids background checks continuously waking Neon. Render still counts awake API time toward the workspace's free instance-hour allowance. GitHub can delay schedules and disables schedules in inactive public repositories; this is not an always-on SLA. No paid runner, Render plan or billing upgrade is configured.
+
+Keep `.data/fitlens-team.p12` and its password backed up privately. Never commit signing material. This key is distinct from the earlier development-signed APK; uninstall that older preview once before installing the team build. Subsequent team builds use the same key.

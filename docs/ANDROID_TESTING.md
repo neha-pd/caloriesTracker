@@ -21,3 +21,7 @@ The current APK connects to https://fitlens-api.onrender.com over HTTPS. Real ac
 ## Rebuild
 
 From the repo root, set `JAVA_HOME`, `ANDROID_HOME` and optionally `EXPO_PUBLIC_API_URL`, then run `scripts/build-preview-apk.sh`. The script regenerates Android via Expo prebuild, builds ARM64 release, and copies the APK into `artifacts/`. `FITLENS_TEST_BUILD=false` is the default and requires HTTPS. Set it to `true` only for an explicit LAN test. Public store distribution also requires a production signing identity.
+
+## Team distribution
+
+The team APK uses a dedicated persistent signing key, HTTPS API and Android versionCode 3. It is still a testing build, not Play Store distribution. Uninstall an earlier development-signed preview before the first team installation. Future builds from the **Build team APK** GitHub workflow use the same key and can update this team installation (increase versionCode for releases).
