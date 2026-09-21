@@ -80,7 +80,7 @@ export function Profile() {
         <RowLink
           title="Health & watch sync"
           icon="heart-outline"
-          onPress={() => router.push("/health")}
+          onPress={() => router.push("/watch-settings")}
         />
         <RowLink
           title="Home-screen widgets"

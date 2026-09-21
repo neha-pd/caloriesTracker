@@ -121,7 +121,7 @@ export default function SmartNudges() {
         <Button
           secondary
           title="Choose my step goal"
-          onPress={() => router.push("/health")}
+          onPress={() => router.push("/movement-goals")}
         />
       </Card>
       <Card>
@@ -196,7 +196,7 @@ export default function SmartNudges() {
         <Button
           secondary
           title="Health & watch sync"
-          onPress={() => router.push("/health")}
+          onPress={() => router.push("/watch-settings")}
         />
       </Card>
       <Card>

@@ -1,9 +1,11 @@
+import { Switch, View } from "react-native";
+import { useHealth } from "../health/store";
 import { DateTimeField } from "../pickers";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import * as Crypto from "expo-crypto";
 import { useTracker } from "../tracker";
-import { Banner, Button, Card, Field, Page, Segments, T, C } from "../ui";
+import { Banner, Button, Card, Field, Page, Segments, T, C, Tap } from "../ui";
 import { localDateKey } from "../../lib/dates";
 export default function ActivityEditor() {
   const t = useTracker(),
@@ -38,6 +40,9 @@ export default function ActivityEditor() {
     ),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
+  const watchDay = useHealth((s) => s.days[date]);
+  const hasWatchCalories = watchDay?.activeCalories != null || watchDay?.totalCalories != null;
+  const [adjustCalories, setAdjustCalories] = useState(false);
   async function save() {
     setError("");
     setBusy(true);
@@ -104,8 +109,8 @@ export default function ActivityEditor() {
   return (
     <Page
       back
-      title={existing ? "Edit your record" : "A little movement counts."}
-      subtitle="Keep your food and fitness together."
+      title={existing ? "Edit your record" : kind === "weight" ? "Log your weight" : "Log your activity"}
+      subtitle={kind === "weight" ? "A small check-in on your progress." : "Add an activity you did. Watch workouts sync separately."}
     >
       {!existing && (
         <Segments
@@ -160,24 +165,22 @@ export default function ActivityEditor() {
             onChange={setCalories}
             keyboard="decimal-pad"
           />
-          <Card>
-            <T bold>Was this captured by your watch?</T>
-            <Segments
-              value={policy}
-              onChange={(v) => setPolicy(v as any)}
-              values={[
-                { key: "auto", label: "Auto" },
-                { key: "included", label: "Included" },
-                { key: "additional", label: "Not captured" },
-              ]}
-            />
-            <T color={C.muted} size={12}>
-              Auto uses your watch totals when available, so this activity is
-              not counted twice. Choose Not captured only if your device missed
-              this workout. Calories you enter are estimates; blank means
-              unknown.
-            </T>
-          </Card>
+          <T color={C.muted} size={12}>
+            Leave calories blank if you don’t know them. Your activity and minutes will still be saved.
+          </T>
+          {(hasWatchCalories || policy !== "auto") && (
+            <>
+              <Tap label={adjustCalories ? "Hide calorie adjustment" : "Adjust calorie counting"} onPress={() => setAdjustCalories(!adjustCalories)} style={{paddingVertical: 8}}><T color={C.muted} size={13}>{adjustCalories ? "Hide calorie adjustment" : "Adjust calorie counting"}</T></Tap>
+              {adjustCalories && <Card>
+                <T bold>{hasWatchCalories ? "Your watch already reports calories for this day." : "How this activity affects your calories"}</T>
+                <T color={C.muted} size={12}>We use that total so the same activity isn’t counted twice. Turn this on only if you did this activity without your watch.</T>
+                <View style={{flexDirection: "row", alignItems: "center", gap: 12}}>
+                  <View style={{flex: 1}}><T>Add these calories to my watch total</T></View>
+                  <Switch accessibilityLabel="Add these calories to my watch total" value={policy === "additional"} onValueChange={(v) => setPolicy(v ? "additional" : "auto")} />
+                </View>
+              </Card>}
+            </>
+          )}
           <Field label="Notes · optional" value={notes} onChange={setNotes} />
         </>
       )}

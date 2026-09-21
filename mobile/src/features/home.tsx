@@ -202,7 +202,7 @@ export function Dashboard() {
           onPress={() =>
             (health.enabled && health.permissionVersion >= 2) ||
             Platform.OS === "web"
-              ? router.push("/health")
+              ? router.push("/watch-settings")
               : void health.connect()
           }
           testID="home-connect-device"

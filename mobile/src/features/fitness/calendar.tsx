@@ -270,15 +270,11 @@ export default function Calendar() {
           <T>
             {w.minutes} min ·{" "}
             {w.calories == null
-              ? "Calories unknown"
+              ? "No calories entered"
               : w.calories + " kcal estimate"}
           </T>
           <T size={12} color={C.muted}>
-            {w.energyPolicy === "additional"
-              ? "Marked as not captured by watch"
-              : w.energyPolicy === "included"
-                ? "Included in watch totals"
-                : "Auto · watch totals take priority"}
+            Added by you
           </T>
           <Button
             secondary

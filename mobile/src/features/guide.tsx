@@ -58,7 +58,7 @@ export default function Guide() {
     ],
     [
       "Food and movement, together.",
-      "Home rings show food, active burn and workout time. Total burn includes resting energy when your device supplies it. Tap + to log a workout or weigh-in. Auto prevents manual workouts being added on top of watch totals; choose Not captured only when your watch missed it. Choose your own step goal to see progress and a little celebration. Tap the date to jump with a calendar picker. Progress opens a month calendar or year view; share either period as a PNG. Missing readings stay unknown.",
+      "Home rings show food, active burn and workout time. Total burn includes resting energy when your device supplies it. Tap + to log a workout or weigh-in. Just enter an activity name, time and duration. Calories are optional. When watch calories are available, we use them to avoid counting the same activity twice. Choose your own step goal to see progress and a little celebration. Tap the date to jump with a calendar picker. Progress opens a month calendar or year view; share either period as a PNG. Missing readings stay unknown.",
     ],
     [
       "Meet Ember.",

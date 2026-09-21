@@ -1,3 +1,4 @@
+import UpdateGate from "../src/features/updates/gate";
 import NudgeBridge from "../src/features/nudges/bridge";
 import { removeRetiredModels } from "../src/features/retiredModels";
 import React, { useEffect } from "react";
@@ -90,6 +91,7 @@ export default function Layout() {
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: C.bg }}>
       <QueryClientProvider client={client}>
         <StatusBar style="light" />
+        <UpdateGate />
         <NotificationBridge />
         <NudgeBridge />
         <WidgetBridge />

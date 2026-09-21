@@ -102,7 +102,7 @@ export default function DailyEnergy() {
                   ? "Not recorded"
                   : m.goal
                     ? `of ${m.goal}`
-                    : "Goal optional"}
+                    : "No goal set"}
               </T>
             </View>
           ))}
@@ -117,8 +117,8 @@ export default function DailyEnergy() {
         </View>
         <T size={12} color={C.muted}>
           {energy.totalCalories != null
-            ? "Total includes activity. Only workouts marked Not captured add to watch totals."
-            : "Active burn is movement only. Total burn also needs resting energy; steps alone do not supply it."}
+            ? "Your total includes movement and the energy your body uses at rest."
+            : "Connect a watch to see total calories burned. Activities you add still count toward your movement."}
         </T>
         {day && (
           <T size={11} color={C.muted}>
@@ -147,14 +147,14 @@ export default function DailyEnergy() {
                   : day.steps >= u.settings.step_goal
                     ? "Hooray! Your chosen step goal is complete 🎉"
                     : `${Math.max(0, u.settings.step_goal - Math.round(day.steps)).toLocaleString()} to your goal`}{" "}
-                · chosen goal {u.settings.step_goal.toLocaleString()}
+                · daily goal {u.settings.step_goal.toLocaleString()}
               </T>
             </>
           ) : (
             <Button
               secondary
               title="Choose my step goal"
-              onPress={() => router.push("/health")}
+              onPress={() => router.push("/movement-goals")}
             />
           )}
         </View>

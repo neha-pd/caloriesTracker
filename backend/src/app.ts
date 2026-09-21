@@ -1,3 +1,4 @@
+import { createReleaseLookup } from "./core/releases.js";
 import { createChatService, chatInput, type ChatService } from "./core/chat.js";
 import Fastify from "fastify";
 import cors from "@fastify/cors";
@@ -43,6 +44,7 @@ export async function createApp({
 }: AppOptions) {
   if (secret.length < 32)
     throw new Error("JWT_SECRET must contain at least 32 characters.");
+  const latestRelease = createReleaseLookup();
   const app = Fastify({ logger: !testing, bodyLimit: 1024 * 256 });
   await app.register(cors, {
     methods: ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -51,6 +53,10 @@ export async function createApp({
       (process.env.NODE_ENV === "production" ? false : true),
   });
   await app.register(jwt, { secret });
+  app.get("/api/app-release", async (_req, reply) => {
+    reply.header("Cache-Control", "public, max-age=60");
+    return { android: await latestRelease() };
+  });
   await app.register(rateLimit, {
     max: 200,
     timeWindow: "1 minute",

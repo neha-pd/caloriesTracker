@@ -51,14 +51,14 @@ with sync_playwright() as p:
   screenshot('07-share-preview');click('Go home')
 
   page.get_by_test_id('tab-profile').click();click('My profile');page.get_by_test_id('profile-name').fill('Neha Spark');page.get_by_test_id('profile-weight').fill('72');page.get_by_test_id('profile-target-weight').fill('68');page.get_by_test_id('profile-save').click();expect(page.get_by_text('Neha Spark',exact=True)).to_be_visible()
-  click('Health & watch sync');expect(page.get_by_text('Apple Health + Health Connect',exact=True)).to_be_visible();screenshot('06-health');click('Go back')
+  click('Health & watch sync');expect(page.get_by_text('Your watch',exact=True)).to_be_visible();screenshot('06-health');click('Go back')
   click('How to use FitLens');expect(page.get_by_text('Start with what you ate.',exact=True)).to_be_visible();click('Skip guide');page.get_by_test_id('tab-profile').click()
   page.get_by_test_id('logout').click();page.get_by_test_id('logout-confirm').click();expect(page.get_by_test_id('start-journey')).to_be_visible()
   click('I already have an account');page.get_by_test_id('auth-email').fill(email);page.get_by_test_id('auth-password').fill(password);page.get_by_test_id('auth-submit').click();expect(page.get_by_test_id('dashboard')).to_be_visible();wait_synced();assert len(api('/api/v2/changes')['entries'])==1
   page.get_by_test_id('tab-add').click();page.get_by_role('button',name='Add food',exact=True).click();click('Create a custom food');page.get_by_test_id('custom-name').fill('Homemade test bowl')
   for key,val in [('calories','320'),('protein','20'),('carbs','40'),('fat','10')]:page.get_by_test_id('custom-'+key).fill(val)
   page.get_by_test_id('custom-save').click();page.get_by_test_id('food-confirm').click();wait_synced();assert len(api('/api/v2/changes')['entries'])==2
-  click('Go home');page.get_by_test_id('home-connect-device').click();expect(page.get_by_text('Apple Health + Health Connect',exact=True)).to_be_visible();click('Go home');page.get_by_test_id('talk-ember').click()
+  click('Go home');page.get_by_test_id('home-connect-device').click();expect(page.get_by_text('Your watch',exact=True)).to_be_visible();click('Go home');page.get_by_test_id('talk-ember').click()
   expect(page.get_by_test_id('chat-input')).to_be_visible()
   expect(page.get_by_role('button',name='Send message',exact=True)).to_be_disabled()
   click('Create reminder manually')
