@@ -49,6 +49,8 @@ The Android APK is a direct download, not a Play Store listing. Install updates 
 | **Track food** | Offline search across 13,681 food records, Indian-food aliases and recipe estimates, portions, custom foods and meal editing. |
 | **Track movement** | Manual activities, weigh-ins, step goals, and food-versus-burn summaries. Missing watch readings stay missing rather than becoming invented numbers. |
 | **See progress** | Day, month and year views, plus shareable PNG stories and coach reports. |
+| **Share your wins** | Export day, month or year cards for Instagram Stories and WhatsApp Status. Save an image or use your phone’s share sheet; nothing posts automatically. |
+| **Check in with your coach** | Share a full daily PNG report with meals, portions, macros, workouts, available burn readings, calorie target, current weight and target weight. |
 | **Build a routine** | Water logs, quests, XP, streaks and achievements that reward participation. |
 | **Connect a watch** | Android Health Connect and Apple Health adapters for supported readings. Watch data reaches Fitkin through the phone’s health service. |
 | **Get a nudge** | Custom reminders and Android smart nudges for meals, water, movement, step milestones and newly synced workouts. |
