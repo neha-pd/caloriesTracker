@@ -1,0 +1,16 @@
+name: Share feedback or an idea
+description: Help make FitLens easier and more useful.
+title: "[Feedback] "
+body:
+  - type: textarea
+    id: experience
+    attributes:
+      label: What would you like to share?
+      description: What worked well? Where did you get stuck? What would make the app easier to use?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Your suggestion or example
+      description: For missing foods or nutrition corrections, include the region, serving size and a source if available. Please don’t share personal health data.

@@ -1,0 +1,26 @@
+name: Report a bug
+description: Something did not work as expected.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "Thanks for trying FitLens! Please remove personal health data, email addresses and credentials from screenshots and logs."
+  - type: input
+    id: version
+    attributes:
+      label: App version and device
+      placeholder: "2.5.0 · Android 15 · phone model, or browser"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can we reproduce it?
+      description: Include the steps, what you expected, and what actually happened.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else that helps?
+      description: For watch or reminder issues, include the watch/companion app and permission state. Sanitized screenshots are welcome.
