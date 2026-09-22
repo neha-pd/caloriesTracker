@@ -31,8 +31,8 @@ const sendRecovery = process.env.RESEND_API_KEY
         body: JSON.stringify({
           from: process.env.EMAIL_FROM,
           to: [email],
-          subject: "Reset your FitLens password",
-          text: `Your FitLens recovery code is:\n\n${token}\n\nEnter it in the app within 30 minutes. If you did not request this, ignore this email.`,
+          subject: "Reset your Fitkin password",
+          text: `Your Fitkin recovery code is:\n\n${token}\n\nEnter it in the app within 30 minutes. If you did not request this, ignore this email.`,
         }),
       });
       if (!response.ok) throw new Error("Recovery email delivery failed.");

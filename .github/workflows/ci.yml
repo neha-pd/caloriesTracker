@@ -1,4 +1,4 @@
-name: FitLens CI
+name: Fitkin CI
 on:
   push:
     branches: [main]

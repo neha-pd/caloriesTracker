@@ -220,7 +220,7 @@ export function Dashboard() {
         </View>
         <View style={{ flex: 1 }}>
           <Button
-            title="Chat with Ember"
+            title="Chat with Kin"
             icon="chatbubble-outline"
             secondary
             onPress={() => router.push("/chat")}
@@ -599,7 +599,7 @@ export function Quests() {
       <Card style={{ backgroundColor: "#30261c", borderColor: "#6a4930" }}>
         <Art size={170} />
         <T bold size={25}>
-          Ember · Level {s.progress.level}
+          Kin · Level {s.progress.level}
         </T>
         <T color={C.orange}>
           {s.progress.xp} lifetime XP · {250 - s.progress.progress} to your next

@@ -38,8 +38,8 @@ export default function Health() {
    </Card>:null}
    <Card>
      <SettingsRow title="Edit goals" detail={u?.settings.step_goal?`${u.settings.step_goal.toLocaleString()} steps a day`:"Set a step or movement goal"} onPress={()=>router.push("/movement-goals")}/>
-     {s.enabled && <SettingsRow title="Watch settings" detail={s.error?"Sync needs attention":s.busy?"Syncing…":"Connected · syncs when you open FitLens"} onPress={()=>router.push("/watch-settings")}/>}
-     <SettingsRow title="Reminders & celebrations" detail="Choose when Ember cheers you on" onPress={()=>router.push("/smart-nudges")}/>
+     {s.enabled && <SettingsRow title="Watch settings" detail={s.error?"Sync needs attention":s.busy?"Syncing…":"Connected · syncs when you open Fitkin"} onPress={()=>router.push("/watch-settings")}/>}
+     <SettingsRow title="Reminders & celebrations" detail="Choose when Kin cheers you on" onPress={()=>router.push("/smart-nudges")}/>
    </Card>
  </Page>;
 }

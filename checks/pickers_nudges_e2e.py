@@ -7,7 +7,7 @@ with sync_playwright() as p:
  page.goto(base);page.get_by_test_id('enter-demo').click();expect(page.get_by_test_id('dashboard')).to_be_visible()
  date=page.get_by_label('Choose diary date',exact=True);expect(date).to_have_attribute('type','date');date.fill('2024-02-29');expect(date).to_have_value('2024-02-29')
  page.get_by_test_id('tab-history').click();expect(page.get_by_label('Jump to date',exact=True)).to_have_value('2024-02-29');page.get_by_label('Jump to date',exact=True).fill('2024-03-12');expect(page.get_by_text('March 2024',exact=True)).to_be_visible()
- page.get_by_test_id('tab-profile').click();page.get_by_role('button',name='Preferences & reminders',exact=True).click();page.get_by_role('button',name='Gentle reminders',exact=True).click();page.get_by_role('button',name='Personalize Ember nudges',exact=True).click()
+ page.get_by_test_id('tab-profile').click();page.get_by_role('button',name='Preferences & reminders',exact=True).click();page.get_by_role('button',name='Gentle reminders',exact=True).click();page.get_by_role('button',name='Personalize Kin nudges',exact=True).click()
  for label in ['Breakfast time','Lunch time','Dinner time','Quiet hours start','Quiet hours end']:expect(page.get_by_label(label,exact=True)).to_have_attribute('type','time')
  page.get_by_label('Breakfast time',exact=True).fill('09:15');expect(page.get_by_label('Breakfast time',exact=True)).to_have_value('09:15')
  page.get_by_role('switch',name='Nudge me about watch workouts',exact=True).click();page.get_by_role('switch',name='Celebrate step milestones',exact=True).click();page.get_by_role('button',name='Two',exact=True).click()

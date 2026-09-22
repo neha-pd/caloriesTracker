@@ -88,12 +88,12 @@ export function Profile() {
           onPress={() => router.push("/widgets")}
         />
         <RowLink
-          title="Chat with Ember"
+          title="Chat with Kin"
           icon="chatbubble-outline"
           onPress={() => router.push("/chat")}
         />
         <RowLink
-          title="How to use FitLens"
+          title="How to use Fitkin"
           icon="help-circle-outline"
           onPress={() => router.push("/guide")}
         />
@@ -165,7 +165,7 @@ export function Profile() {
         />
       )}
       <T color={C.muted} size={12} style={{ textAlign: "center" }}>
-        FitLens · Made for your everyday spark
+        Fitkin · Made for your everyday spark
       </T>
     </Page>
   );
@@ -406,7 +406,7 @@ export function Privacy() {
         <T color={C.muted}>
           {u?.id === "fitlens-offline-demo"
             ? "This demo uses fictional sample data stored only on this device. Food search and logging work offline."
-            : "Food search and logging work offline. AI chat sends messages to an online provider only when you choose to use it. Confirmed food logs, targets, and account details sync to the server. Health history stays on this device. If you enable diary sharing in Ember, the selected day’s activity summary also goes to the online AI provider. Account export includes this device’s saved health history; deleting the account removes it here."}
+            : "Food search and logging work offline. AI chat sends messages to an online provider only when you choose to use it. Confirmed food logs, targets, and account details sync to the server. Health history stays on this device. If you enable diary sharing in Kin, the selected day’s activity summary also goes to the online AI provider. Account export includes this device’s saved health history; deleting the account removes it here."}
         </T>
       </Card>
       <Card>

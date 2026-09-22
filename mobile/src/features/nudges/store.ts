@@ -57,7 +57,7 @@ export const useNudges = create<State>((set, get) => ({
     if (clean.enabled) {
       const N = await import("expo-notifications");
       await N.setNotificationChannelAsync("fitlens-smart", {
-        name: "Ember smart nudges",
+        name: "Kin smart nudges",
         importance: N.AndroidImportance.DEFAULT,
       });
       if (!(await N.requestPermissionsAsync()).granted)

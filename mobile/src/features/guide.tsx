@@ -46,11 +46,11 @@ export default function Guide() {
     ],
     [
       "Connect your device.",
-      "Find Connect device right on Home. Android uses Health Connect; iPhone uses Apple Health. Your watch must first sync with its health app. Review permissions there, then FitLens can read supported activity.",
+      "Find Connect device right on Home. Android uses Health Connect; iPhone uses Apple Health. Your watch must first sync with its health app. Review permissions there, then Fitkin can read supported activity.",
     ],
     [
       "Make a routine that fits.",
-      "Open Reminders for clock pickers and custom schedules. On Android, Personalize Ember nudges adds meal-aware messages, step celebrations and watch alerts. Choose your meal times and quiet hours; allow background watch checks separately. Your phone delivers these without an AI request, though Android can delay background checks.",
+      "Open Reminders for clock pickers and custom schedules. On Android, Personalize Kin nudges adds meal-aware messages, step celebrations and watch alerts. Choose your meal times and quiet hours; allow background watch checks separately. Your phone delivers these without an AI request, though Android can delay background checks.",
     ],
     [
       "Little wins add up.",
@@ -61,8 +61,8 @@ export default function Guide() {
       "Home rings show food, active burn and workout time. Total burn includes resting energy when your device supplies it. Tap + to log a workout or weigh-in. Just enter an activity name, time and duration. Calories are optional. When watch calories are available, we use them to avoid counting the same activity twice. Choose your own step goal to see progress and a little celebration. Tap the date to jump with a calendar picker. Progress opens a month calendar or year view; share either period as a PNG. Missing readings stay unknown.",
     ],
     [
-      "Meet Ember.",
-      "Open Chat with Ember for meal ideas and support. Turn on Use my diary & goals for personal context. Messages go to online AI providers using free capacity. Review any reminder draft before scheduling. Share your day from Home when you want to send a story or a detailed report to your coach.",
+      "Meet Kin.",
+      "Open Chat with Kin for meal ideas and support. Turn on Use my diary & goals for personal context. Messages go to online AI providers using free capacity. Review any reminder draft before scheduling. Share your day from Home when you want to send a story or a detailed report to your coach.",
     ],
   ];
   async function finish() {

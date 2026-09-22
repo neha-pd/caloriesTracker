@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Fitkin | Food, movement, and a little encouragement</title>
+  <meta name="description" content="I'm Neha, and Fitkin is my first app. An open-source home for food, movement and everyday habits. Explore the app and follow the build.">
+  <meta property="og:title" content="Meet Fitkin. Make room for small wins.">
+  <meta property="og:description" content="Neha's first app, built in the open. Food, movement and everyday habits, together.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://neha-pd.github.io/caloriesTracker/assets/kin.png">
+  <link rel="icon" href="assets/favicon.png" type="image/png">
+  <link rel="preload" href="assets/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="header wrap">
+  <a class="brand" href="#" aria-label="Fitkin home"><img src="assets/favicon.png" width="40" height="40" alt="">fitkin<span class="brand-period">.</span></a>
+  <nav aria-label="Main navigation"><a href="#story">My story</a><a href="#build">The build</a><a href="#journey">What’s next</a></nav>
+  <a class="nav-link" href="https://github.com/neha-pd/caloriesTracker">GitHub <span aria-hidden="true">↗</span></a>
+</header>
+<main id="main">
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow">A fitness app with a little heart</p>
+      <h1 id="hero-title">Make room for <span>small wins.</span></h1>
+      <p class="hero-description">Your meals, your movement, your everyday progress. A friendly place to bring it all together.</p>
+      <div class="actions"><a class="button primary" href="https://fitlens-kpph.onrender.com">Try the demo <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/neha-pd/caloriesTracker/releases/latest">Download Android <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <img class="hero-kin" src="assets/kin.png" width="760" height="760" alt="Kin, Fitkin’s cheerful lime-green companion, taking a step with one hand raised" fetchpriority="high">
+  </section>
+
+  <section class="story wrap section" id="story" aria-labelledby="story-title">
+    <div class="story-heading"><h2 id="story-title">Hi, I’m Neha.<br>This is my first app.</h2><p class="signature">Learning by building, in the open.</p></div>
+    <div class="story-copy"><p>I started with a simple calorie tracker. As it grew, so did the idea: what if meals, movement and daily habits could live together in one friendly place?</p><p>That’s becoming Fitkin. You can log the food you actually eat, see your activity, and notice the small things you did for yourself today.</p><p>I’m still learning. Every confusing screen, bug report and suggestion helps me make the next version better. I’d love for you to be part of that.</p></div>
+  </section>
+
+  <section class="product section" aria-labelledby="product-title">
+    <div class="wrap">
+      <h2 id="product-title">A fuller picture of your day.</h2>
+      <p class="section-intro">Food and movement make more sense together. Fitkin gives both a place, without turning every day into a test.</p>
+      <div class="showcase">
+        <figure class="app-shot"><img src="assets/today.png" width="780" height="1688" loading="lazy" alt="Fitkin Today screen showing fictional demo meals, daily energy and activity"><figcaption>Your day, in one place.</figcaption></figure>
+        <div class="feature-notes">
+          <article><h3>From poha to your own recipe.</h3><p>Search an offline food library with Indian foods, choose your portion, or add something of your own.</p></article>
+          <article><h3>Every bit of movement counts.</h3><p>Log a workout, set a step goal, or connect your phone’s health service for supported watch readings.</p></article>
+          <article><h3>Zoom out. See your rhythm.</h3><p>Explore a month, look back over the year, and turn your progress into a shareable image.</p></article>
+          <p class="caption">App previews use fictional demo data. No signup is needed to explore the demo.</p>
+        </div>
+        <figure class="app-shot offset"><img src="assets/progress.png" width="780" height="1688" loading="lazy" alt="Fitkin progress calendar with fictional sample activity across the month"><figcaption>Little habits, over time.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="build wrap section" id="build" aria-labelledby="build-title">
+    <p class="eyebrow">Under the hood</p><h2 id="build-title">Built to learn.<br>Open for you to explore.</h2>
+    <p class="section-intro">The source is open, the app is still growing, and the decisions behind it are there to read.</p>
+    <div class="build-grid">
+      <article class="build-main"><h3>One app, familiar tools.</h3><p>Expo, React Native and TypeScript power the phone and web experience. Fastify and PostgreSQL handle the API and saved data.</p><div class="stack" aria-label="Core technologies"><span>Expo</span><span>React Native</span><span>TypeScript</span><span>Fastify</span><span>PostgreSQL</span></div><a class="text-link" href="https://github.com/neha-pd/caloriesTracker#run-it-locally">Run it locally <span aria-hidden="true">↗</span></a></article>
+      <div class="build-details"><article><h3>Connected, with your permission.</h3><p>Firebase handles sign-in. Health Connect and Apple Health adapters read supported activity through your phone. Android is the current downloadable build.</p></article><article><h3>A companion when you want one.</h3><p>Kin’s optional online chat can use diary context you choose to share and draft reminders for you to review. It uses free provider quotas.</p></article></div>
+    </div>
+    <details class="practical"><summary>What should I know before trying it?</summary><div><p>This is an early community project. Food values are estimates, and physical watch testing is still ongoing. Background health sync depends on your phone, permissions and watch companion app.</p><p>Render, Neon and Firebase support the hosted app. Free hosting can take time to wake up, and chat may be unavailable when its free quota runs out. The core demo works without an account.</p><p>The Android APK is a direct download. Install updates over the existing app to keep local data. Android asks you to approve installation.</p></div></details>
+  </section>
+
+  <section class="journey wrap section" id="journey" aria-labelledby="journey-title">
+    <h2 id="journey-title">It started small.<br>It’s still moving.</h2>
+    <div class="journey-track">
+      <article><span class="journey-label">The beginning</span><h3>A simple calorie tracker.</h3><p>A first app, and a starting point for learning how to turn an idea into something usable.</p></article>
+      <article><span class="journey-label">Today</span><h3>Meet Fitkin.</h3><p>Food, activity, calendars, reminders and share cards. Now with Kin and a name of its own.</p></article>
+      <article><span class="journey-label">Up next</span><h3>Better with your feedback.</h3><p>Real-device testing, clearer screens, food-library improvements and fixes shaped by people trying it.</p></article>
+    </div>
+    <a class="text-link" href="https://github.com/neha-pd/caloriesTracker/releases">Read the releases <span aria-hidden="true">↗</span></a>
+  </section>
+
+  <section class="contribute wrap section" aria-labelledby="contribute-title">
+    <h2 id="contribute-title">A first app.<br><span>A shared journey.</span></h2>
+    <p>You don’t have to write code to help. Try it, tell me where you got stuck, or suggest a food you couldn’t find.</p>
+    <div class="actions"><a class="button primary" href="https://github.com/neha-pd/caloriesTracker/issues/new/choose">Share feedback <span aria-hidden="true">↗</span></a><a class="text-link" href="https://github.com/neha-pd/caloriesTracker/blob/main/CONTRIBUTING.md">Contribute <span aria-hidden="true">↗</span></a></div>
+    <p class="star-note">If you’d like to follow along, a star on <a href="https://github.com/neha-pd/caloriesTracker">GitHub</a> means a lot.</p>
+  </section>
+</main>
+<footer class="footer wrap"><a class="brand" href="#">fitkin<span class="brand-period">.</span></a><p>Made by Neha. Growing with the community.</p><a href="https://github.com/neha-pd/caloriesTracker/blob/main/LICENSE">Open source, MIT licensed <span aria-hidden="true">↗</span></a></footer>
+</body>
+</html>

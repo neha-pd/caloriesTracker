@@ -1,4 +1,4 @@
-# Contributing to FitLens
+# Contributing to Fitkin
 
 Welcome! We welcome practical feedback and contributions from people of any experience level.
 

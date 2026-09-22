@@ -4,7 +4,7 @@ title: "[Bug] "
 body:
   - type: markdown
     attributes:
-      value: "Thanks for trying FitLens! Please remove personal health data, email addresses and credentials from screenshots and logs."
+      value: "Thanks for trying Fitkin! Please remove personal health data, email addresses and credentials from screenshots and logs."
   - type: input
     id: version
     attributes:

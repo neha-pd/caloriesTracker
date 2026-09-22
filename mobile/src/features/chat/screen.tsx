@@ -208,7 +208,7 @@ export default function Chat() {
           <Art size={48} />
           <View style={{ flex: 1 }}>
             <T bold size={23}>
-              Ember
+              Kin
             </T>
             <T color={C.muted} size={12}>
               Your everyday coach · online
@@ -272,7 +272,7 @@ export default function Chat() {
             <Banner
               text={
                 checking
-                  ? "Connecting to Ember…"
+                  ? "Connecting to Kin…"
                   : user?.id === "fitlens-offline-demo"
                     ? "This is an offline demo. Sign in to a real account to use online chat."
                     : "Chat is not connected right now. Food logging and manual reminders still work."
@@ -311,7 +311,7 @@ export default function Chat() {
               }}
             >
               <T bold color={t.role === "user" ? C.lime : C.orange}>
-                {t.role === "user" ? "You" : "Ember"}
+                {t.role === "user" ? "You" : "Kin"}
               </T>
               <T>{t.content}</T>
               {t.reminders && t.reminders.length > 1 && (
@@ -351,11 +351,11 @@ export default function Chat() {
               ))}
             </Card>
           ))}
-          {busy && <T color={C.lime}>Ember is thinking…</T>}
+          {busy && <T color={C.lime}>Kin is thinking…</T>}
           {!!error && <Banner error text={error} />}
         </ScrollView>
         <TextInput
-          accessibilityLabel="Message Ember"
+          accessibilityLabel="Message Kin"
           testID="chat-input"
           value={input}
           onChangeText={setInput}

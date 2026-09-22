@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "FitLens",
+    "name": "Fitkin",
     "slug": "fitlens",
-    "version": "2.5.0",
+    "version": "2.6.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#121212"
+      "backgroundColor": "#101211"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,7 +24,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#121212"
+        "backgroundColor": "#101211"
       },
       "permissions": [
         "android.permission.health.READ_STEPS",
@@ -52,8 +52,8 @@
       [
         "@kingstinct/react-native-healthkit",
         {
-          "NSHealthShareUsageDescription": "FitLens reads your steps, active and resting energy, and workout history to show food eaten and energy burned for each day.",
-          "NSHealthUpdateUsageDescription": "FitLens saves meals, nutrition, and water you confirm to Apple Health."
+          "NSHealthShareUsageDescription": "Fitkin reads your steps, active and resting energy, and workout history to show food eaten and energy burned for each day.",
+          "NSHealthUpdateUsageDescription": "Fitkin saves meals, nutrition, and water you confirm to Apple Health."
         }
       ],
       "react-native-health-connect",

@@ -92,7 +92,7 @@ export default function Widgets() {
       setMessage(
         requested
           ? "Confirm Add on your home screen to place the widget."
-          : "Your launcher does not support in-app pinning. Long-press your home screen, choose Widgets, then FitLens.",
+          : "Your launcher does not support in-app pinning. Long-press your home screen, choose Widgets, then Fitkin.",
       );
     } catch (e) {
       setError(e instanceof Error ? e.message : "Could not add the widget.");
@@ -146,7 +146,7 @@ export default function Widgets() {
         {
           kind: "coach",
           icon: "sparkles-outline" as const,
-          title: "Ember check-in",
+          title: "Kin check-in",
           body: "Your streak and a shortcut to the private daily coach.",
         },
       ].map((w) => (
@@ -182,7 +182,7 @@ export default function Widgets() {
       <T color={C.muted} size={12}>
         Widgets show the last totals saved while the app was open and clear
         account details after logout. Shortcuts open the app; they do not
-        silently add entries. At a new day, open FitLens to refresh. iPhone
+        silently add entries. At a new day, open Fitkin to refresh. iPhone
         widgets are not included in this Android build.
       </T>
     </Page>

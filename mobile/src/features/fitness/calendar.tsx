@@ -240,7 +240,7 @@ export default function Calendar() {
           </T>
         )}
         <T size={12} color={C.muted}>
-          Daily weight fluctuates. Several weeks of records help you and Ember
+          Daily weight fluctuates. Several weeks of records help you and Kin
           assess your direction; a single day cannot predict a goal date.
         </T>
         <Button

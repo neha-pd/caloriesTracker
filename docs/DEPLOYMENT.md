@@ -1,4 +1,4 @@
-# FitLens hosted preview
+# Fitkin hosted preview
 
 - Web app: https://fitlens-kpph.onrender.com
 - API: https://fitlens-api.onrender.com
@@ -9,7 +9,7 @@
 
 ## Authentication
 
-The existing HTTPS signup/login API delegates password authentication to Firebase; Neon stores profiles and Firebase UIDs, never Firebase passwords. FitLens issues its own per-device sessions. Every authenticated request and refresh checks Firebase account status and token-valid-after time, so Firebase password resets and disabled/deleted accounts invalidate FitLens sessions. Logout invalidates the current FitLens session; deleting an account requires password confirmation and removes both the Firebase identity and Neon profile/data.
+The existing HTTPS signup/login API delegates password authentication to Firebase; Neon stores profiles and Firebase UIDs, never Firebase passwords. Fitkin issues its own per-device sessions. Every authenticated request and refresh checks Firebase account status and token-valid-after time, so Firebase password resets and disabled/deleted accounts invalidate Fitkin sessions. Logout invalidates the current Fitkin session; deleting an account requires password confirmation and removes both the Firebase identity and Neon profile/data.
 
 Password recovery sends a Firebase-hosted reset link. The user finishes resetting in the email link, then returns to the app to log in. Local development without Firebase configuration retains the isolated test password backend. Google sign-in is not exposed in this release.
 
@@ -26,10 +26,10 @@ The API build installs only the backend workspace. Static web builds install onl
 For the hosted browser lifecycle:
 
 ```sh
-FITLENS_WEB_URL=https://fitlens-kpph.onrender.com FITLENS_API_URL=https://fitlens-api.onrender.com python checks/e2e.py
+FITKIN_WEB_URL=https://fitlens-kpph.onrender.com FITKIN_API_URL=https://fitlens-api.onrender.com python checks/e2e.py
 ```
 
-Build an Android preview using `EXPO_PUBLIC_API_URL=https://fitlens-api.onrender.com` and `FITLENS_TEST_BUILD=false`; HTTPS is required. Use the current APK rather than the older LAN-only build.
+Build an Android preview using `EXPO_PUBLIC_API_URL=https://fitlens-api.onrender.com` and `FITKIN_TEST_BUILD=false`; HTTPS is required. Use the current APK rather than the older LAN-only build.
 
 Free plans have usage caps and can suspend service when allowances are exhausted. Render's free API sleeps after inactivity and can take time to wake. No paid plan or billing upgrade was enabled. The native LFM model downloads once after consent and then runs on device. Physical-phone health, LFM, notification and widget acceptance tests remain separate from cloud/browser checks.
 
@@ -37,7 +37,7 @@ Free plans have usage caps and can suspend service when allowances are exhausted
 
 The default `main` branch now contains four workflows:
 
-- **FitLens CI:** typechecks, backend/domain tests, web export, isolated browser account lifecycle and offline demo checks. It needs no production credentials.
+- **Fitkin CI:** typechecks, backend/domain tests, web export, isolated browser account lifecycle and offline demo checks. It needs no production credentials.
 - **Deploy tested main:** deploys the exact successful CI commit to both existing Render services, waits for them to become live and checks readiness. Render's own automatic deploy is disabled to avoid deploying before CI.
 - **Build team APK:** manual signed ARM64 build. Keystore/password are GitHub Actions secrets. The artifact is available from the run for 14 days; releases provide the persistent team download.
 - **API uptime check:** best-effort GET `/ping` every ten minutes. The endpoint is silent in application request logging and performs no database query. `/health` is also process-only; `/ready` checks Neon and is used at deployment, not on the frequent uptime schedule.

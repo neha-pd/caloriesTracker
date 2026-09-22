@@ -1,5 +1,5 @@
 name: Share feedback or an idea
-description: Help make FitLens easier and more useful.
+description: Help make Fitkin easier and more useful.
 title: "[Feedback] "
 body:
   - type: textarea

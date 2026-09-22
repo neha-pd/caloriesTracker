@@ -1,7 +1,7 @@
 name: Deploy tested main
 on:
   workflow_run:
-    workflows: ['FitLens CI']
+    workflows: ['Fitkin CI']
     types: [completed]
     branches: [main]
 permissions:

@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {releaseManifest, createReleaseLookup, releaseFromPublicPage} from '../src/core/releases';
-import {validRelease, needsUpdate} from '../../mobile/src/features/updates/domain';
+import {validRelease, needsUpdate, preferredRelease} from '../../mobile/src/features/updates/domain';
 const version='2.5.0', tag='v2.5.0-team.1', name='FitLens-2.5.0-team-arm64.apk';
 const url=`https://github.com/neha-pd/caloriesTracker/releases/download/${tag}/${name}`;
-const release={tag_name:tag,draft:false,prerelease:false,assets:[{name,state:'uploaded',size:123,browser_download_url:url},{name:name+'.sha256',state:'uploaded',size:95}]};
+const release={tag_name:tag,draft:false,prerelease:false,assets:[{name,state:'uploaded',size:123,browser_download_url:url},{name:name+'.sha256',state:'uploaded',size:95,browser_download_url:url+'.sha256'}]};
 test('only published complete team APK releases can require an update',()=>{
  const manifest=releaseManifest(release)!;
  assert.equal(manifest.url,url);assert.equal(validRelease(manifest),true);
@@ -30,12 +30,23 @@ test('public release fallback discovers complete APKs when shared hosting hits t
   calls++;
   if(String(input).includes('api.github.com'))return {ok:false,status:403} as Response;
   if(String(input).endsWith('/latest'))return {ok:true,url:'https://github.com/neha-pd/caloriesTracker/releases/tag/'+tag} as Response;
-  return {ok:true,headers:new Headers({'content-length':'95'})} as Response;
+  return {ok:!String(input).includes('/Fitkin-'),headers:new Headers({'content-length':'95'})} as Response;
  }) as typeof fetch;
- const lookup=createReleaseLookup(fetcher);assert.deepEqual(await lookup(),{version,url,required:true});assert.equal(calls,4);
- await lookup();assert.equal(calls,4);
+ const lookup=createReleaseLookup(fetcher);assert.deepEqual(await lookup(),{version,url,required:true});assert.equal(calls,6);
+ await lookup();assert.equal(calls,6);
  const bad=(async()=>({ok:true,url:'https://evil.example/releases/tag/'+tag})) as typeof fetch;
  assert.equal(await releaseFromPublicPage(bad),null);
  const missing=(async(input:any)=>String(input).endsWith('/latest')?{ok:true,url:'https://github.com/neha-pd/caloriesTracker/releases/tag/'+tag}:{ok:false,headers:new Headers()}) as typeof fetch;
  assert.equal(await releaseFromPublicPage(missing),null);
+});
+
+test('Fitkin rebrand keeps old-client download aliases and accepts a renamed repository',()=>{
+ const old=release.assets.map(a=>({...a,browser_download_url:a.browser_download_url.replace('caloriesTracker','fitkin')}));
+ const modern=old.map(a=>({...a,name:a.name.replace('FitLens','Fitkin'),browser_download_url:a.browser_download_url.replace('FitLens','Fitkin')}));
+ const manifest=releaseManifest({...release,assets:[...old,...modern]})!;
+ assert.equal(manifest.url,url);assert.equal(manifest.brandedUrl,url.replace('caloriesTracker','fitkin').replace('FitLens','Fitkin'));
+ assert.equal(preferredRelease(manifest)?.url,manifest.brandedUrl);
+ assert.equal(preferredRelease({...manifest,brandedUrl:'https://evil.example/app.apk'})?.url,url);
+ assert.equal(releaseManifest({...release,assets:modern}),null);
+ assert.equal(validRelease({...manifest,url:url.replace('neha-pd','other-owner')}),false);
 });

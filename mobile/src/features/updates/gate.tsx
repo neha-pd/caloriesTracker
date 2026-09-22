@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../lib/api";
 import { Banner, Button, C, T } from "../ui";
-import { AppRelease, needsUpdate, validRelease } from "./domain";
+import { AppRelease, needsUpdate, validRelease, preferredRelease } from "./domain";
 const key = "fitlens:required-release:v1";
 export default function UpdateGate() {
   const [release, setRelease] = useState<AppRelease | null>(null);
@@ -17,7 +17,7 @@ export default function UpdateGate() {
     try {
       const response = await fetch(`${BASE_URL}/api/app-release`, {signal: AbortSignal.timeout(12000)});
       if (!response.ok) throw Error();
-      const value = (await response.json()).android;
+      const value = preferredRelease((await response.json()).android);
       if (validRelease(value)) {
         setRelease(value);
         await AsyncStorage.setItem(key, JSON.stringify(value));
@@ -39,10 +39,10 @@ export default function UpdateGate() {
   if (Platform.OS !== "android" || !release || !needsUpdate(installed, release)) return null;
   return <Modal visible animationType="fade" statusBarTranslucent onRequestClose={() => {}}>
     <View style={{flex: 1, backgroundColor: C.bg, justifyContent: "center", padding: 28, gap: 20}} testID="required-update">
-      <T color={C.lime} bold>FITLENS UPDATE</T>
-      <T bold size={30}>A fresh FitLens is ready.</T>
+      <T color={C.lime} bold>FITKIN UPDATE</T>
+      <T bold size={30}>A fresh Fitkin is ready.</T>
       <T>Update to {release.version} to continue. You’re using {installed}.</T>
-      <T color={C.muted}>Download the new version, then tap Install when Android asks. Don’t uninstall FitLens—updating keeps your sign-in and saved logs.</T>
+      <T color={C.muted}>Download the new version, then tap Install when Android asks. Don’t uninstall Fitkin—updating keeps your sign-in and saved logs.</T>
       <Button title="Download update" onPress={() => { void Linking.openURL(release.url).catch(() => setMessage("Couldn’t open the download. Check your internet connection and try again.")); }} />
       <Button secondary title="Check again" loading={checking} onPress={() => void check()} />
       {!!message && <Banner text={message} />}

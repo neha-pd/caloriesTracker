@@ -1,4 +1,4 @@
-# FitLens 2.2 Android team build
+# Fitkin 2.2 Android team build
 
 ARM64, Android 9+, version 2.2.0 / versionCode 6. The dedicated persistent team signing key allows upgrades over team builds 2.1.x. This is an internal test release, not a Play Store release. No AI weights are included or downloaded; the upgrade removes retired model files from the app's private storage.
 
@@ -18,11 +18,11 @@ The APK connects to https://fitlens-api.onrender.com. Free Render may need time 
 
 Connect Health Connect from Home using a real account. Your watch must sync through its companion health app. Test permission denial, actual step/activity imports and confirmed food/water exports on a compatible physical device. Apple Health needs a separately built iPhone app; this APK cannot connect directly to Apple Watch.
 
-Open Chat with Ember, optionally share diary/targets, and ask for a water reminder. Review the draft; only confirmation schedules it. Test notification permission, denied permission recovery, intervals, pause/edit/delete and logout cancellation. Free AI quota is shared and may be exhausted; it never falls back to paid models.
+Open Chat with Kin, optionally share diary/targets, and ask for a water reminder. Review the draft; only confirmation schedules it. Test notification permission, denied permission recovery, intervals, pause/edit/delete and logout cancellation. Free AI quota is shared and may be exhausted; it never falls back to paid models.
 
 ## Rebuild
 
-Set `JAVA_HOME`, `ANDROID_HOME`, `FITLENS_KEYSTORE_PATH` and `FITLENS_KEYSTORE_PASSWORD`, then run `scripts/build-preview-apk.sh`. `FITLENS_TEST_BUILD=false` is the default and uses HTTPS. The GitHub **Build team APK** workflow uses repository signing secrets. Signing keys and service credentials must never be committed.
+Set `JAVA_HOME`, `ANDROID_HOME`, `FITKIN_KEYSTORE_PATH` and `FITKIN_KEYSTORE_PASSWORD`, then run `scripts/build-preview-apk.sh`. `FITKIN_TEST_BUILD=false` is the default and uses HTTPS. The GitHub **Build team APK** workflow uses repository signing secrets. Signing keys and service credentials must never be committed.
 
 ## Automated validation
 

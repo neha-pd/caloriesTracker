@@ -154,11 +154,11 @@ export const nudgeCopy = {
   workout: [
     [
       "Workout spotted 👀",
-      "{workout} · {minutes} minutes, recorded by your watch app. Open FitLens to review it—no need to log it twice.",
+      "{workout} · {minutes} minutes, recorded by your watch app. Open Fitkin to review it—no need to log it twice.",
     ],
     [
       "Your movement made it here 👟",
-      "{workout} · {minutes} minutes. Forgot to open FitLens? Your watch record is ready to review.",
+      "{workout} · {minutes} minutes. Forgot to open Fitkin? Your watch record is ready to review.",
     ],
   ],
 };

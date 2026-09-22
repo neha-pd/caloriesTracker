@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="mobile/assets/design/ember.png" width="110" alt="Ember, the FitLens companion" />
+  <img src="mobile/assets/design/kin.png" width="110" alt="Kin, the Fitkin companion" />
 
-# FitLens
+# Fitkin
 
 **A little more aware. A little more active. One day at a time.**
 
@@ -17,18 +17,18 @@ An open-source app for food, movement and everyday habits.
 
 ## Everyday progress, together
 
-Log a meal, add a walk, notice your progress, and come back tomorrow. FitLens brings food, movement and everyday habits into one place, with quests, streaks and a companion called Ember along the way.
+Log a meal, add a walk, notice your progress, and come back tomorrow. Fitkin brings food, movement and everyday habits into one place, with quests, streaks and a companion called Kin along the way.
 
 This is an early community project, with room to improve. Try it, report a confusing screen, suggest a missing food, or contribute a fix.
 
-**If FitLens is useful or you’d like to follow its progress, a GitHub star is appreciated. Honest feedback is welcome too.**
+**If Fitkin is useful or you’d like to follow its progress, a GitHub star is appreciated. Honest feedback is welcome too.**
 
 ## Take a look
 
 <p align="center">
-  <img src="docs/screenshots/today.png" width="280" alt="FitLens Today screen with fictional demo food and movement summaries" />
+  <img src="docs/screenshots/today.png" width="280" alt="Fitkin Today screen with fictional demo food and movement summaries" />
   &nbsp;
-  <img src="docs/screenshots/progress.png" width="280" alt="FitLens progress calendar with fictional demo activity" />
+  <img src="docs/screenshots/progress.png" width="280" alt="Fitkin progress calendar with fictional demo activity" />
 </p>
 
 *Screenshots use fictional sample data in the web preview. Watch readings require a compatible phone and health connection.*
@@ -44,23 +44,27 @@ The Android APK is a direct download, not a Play Store listing. Install updates 
 
 ## What’s inside
 
-| Everyday task | What FitLens offers |
+| Everyday task | What Fitkin offers |
 | --- | --- |
 | **Track food** | Offline search across 13,681 food records, Indian-food aliases and recipe estimates, portions, custom foods and meal editing. |
 | **Track movement** | Manual activities, weigh-ins, step goals, and food-versus-burn summaries. Missing watch readings stay missing rather than becoming invented numbers. |
 | **See progress** | Day, month and year views, plus shareable PNG stories and coach reports. |
 | **Build a routine** | Water logs, quests, XP, streaks and achievements that reward participation. |
-| **Connect a watch** | Android Health Connect and Apple Health adapters for supported readings. Watch data reaches FitLens through the phone’s health service. |
+| **Connect a watch** | Android Health Connect and Apple Health adapters for supported readings. Watch data reaches Fitkin through the phone’s health service. |
 | **Get a nudge** | Custom reminders and Android smart nudges for meals, water, movement, step milestones and newly synced workouts. |
-| **Talk to Ember** | Optional online chat, optional diary context and reminder drafts you review before scheduling. No local-model downloads. |
+| **Talk to Kin** | Optional online chat, optional diary context and reminder drafts you review before scheduling. No local-model downloads. |
 | **Stay in control** | Account export and deletion, per-account offline queues, and Android home-screen widgets. |
 
 ### A few things to know
 
 - **Food values are estimates.** The library includes 146 Indian recipe estimates; it is not a complete catalogue of every food. See [food sources and assumptions](docs/FOOD_CATALOG.md).
-- **Chat is optional and online.** It uses free-only provider routes, with shared quotas and no paid fallback. Messages go to the provider when you use chat; diary sharing is optional. See [Ember setup and privacy](docs/FREE_CHAT.md).
+- **Chat is optional and online.** It uses free-only provider routes, with shared quotas and no paid fallback. Messages go to the provider when you use chat; diary sharing is optional. See [Kin setup and privacy](docs/FREE_CHAT.md).
 - **Watch sync depends on your device.** Your companion app must share data with Health Connect or Apple Health. Android background checks can be delayed by the OS. Smart background nudges are Android-only; there is no standalone watch app. Physical-device testing is welcome.
 - **The demo stays local.** Its fictional records do not connect to real health services or online chat.
+
+## Project website
+
+The [Fitkin project site](website/README.md) tells the story behind the app and explains how it is built. Its GitHub Pages workflow publishes changes from `main` once Pages is enabled by a repository administrator.
 
 ## Run it locally
 
@@ -91,7 +95,7 @@ npx expo run:android
 
 Custom health and widget modules require a native build; **Expo Go is not supported** for those features. On a physical phone, set `EXPO_PUBLIC_API_URL` to your computer’s reachable LAN address. Production builds use HTTPS. Bring your own signing key for your own APK builds; the project’s team key is private.
 
-Local API data lives in `backend/.data/local`. The local command intentionally ignores the root `.env`. For cloud services, use the [deployment guide](docs/DEPLOYMENT.md); for optional chat, use the [Ember guide](docs/FREE_CHAT.md). Never commit service credentials or signing keys.
+Local API data lives in `backend/.data/local`. The local command intentionally ignores the root `.env`. For cloud services, use the [deployment guide](docs/DEPLOYMENT.md); for optional chat, use the [Kin guide](docs/FREE_CHAT.md). Never commit service credentials or signing keys.
 
 ## Project map
 
@@ -137,6 +141,7 @@ We’d especially appreciate:
 
 ## Release notes and credits
 
+- [2.6.0 — Fitkin and Kin](docs/RELEASE_2.6.0.md)
 - [Latest Android release](https://github.com/neha-pd/caloriesTracker/releases/latest)
 - [2.5.0 — simpler activity and required updates](docs/RELEASE_2.5.0.md)
 - [2.4.0 — personal step goals and smart nudges](docs/RELEASE_2.4.0.md)
@@ -147,4 +152,4 @@ Thanks to everyone who tries a build, reports an issue or contributes an improve
 
 ## License
 
-FitLens’s original code is available under the [MIT License](LICENSE). Dependencies and third-party data retain their own licenses and notices; see the [food-source documentation](docs/FOOD_CATALOG.md) for the bundled catalogue.
+Fitkin’s original code is available under the [MIT License](LICENSE). Dependencies and third-party data retain their own licenses and notices; see the [food-source documentation](docs/FOOD_CATALOG.md) for the bundled catalogue.

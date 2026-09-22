@@ -119,7 +119,7 @@ class NudgeWorker(c:Context,params:WorkerParameters):CoroutineWorker(c,params){
     p.edit().putString("lastCheck",now.toString()).putString("healthStatus",healthStatus).commit()
     if(notice!=null&&NotificationManagerCompat.from(c).areNotificationsEnabled()){
      val manager=c.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-     manager.createNotificationChannel(NotificationChannel(NudgeStorage.CHANNEL,"Ember smart nudges",NotificationManager.IMPORTANCE_DEFAULT))
+     manager.createNotificationChannel(NotificationChannel(NudgeStorage.CHANNEL,"Kin smart nudges",NotificationManager.IMPORTANCE_DEFAULT))
      val intent=Intent(Intent.ACTION_VIEW,Uri.parse("fitlens://${notice.route}")).setPackage(c.packageName).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
      val id=notice.key.hashCode() and Int.MAX_VALUE
      val action=PendingIntent.getActivity(c,id,intent,PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)

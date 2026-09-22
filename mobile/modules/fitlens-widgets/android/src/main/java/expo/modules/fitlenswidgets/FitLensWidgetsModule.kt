@@ -72,9 +72,9 @@ abstract class FitLensWidget : AppWidgetProvider() {
       views.setInt(R.id.widget_root,"setBackgroundResource",if(cream)R.drawable.fitlens_widget_cream else R.drawable.fitlens_widget_dark)
       views.setTextColor(R.id.widget_brand,accent);views.setTextColor(R.id.widget_value,ink);views.setTextColor(R.id.widget_detail,muted)
       views.setTextColor(R.id.widget_action,accent);views.setTextColor(R.id.widget_secondary,accent)
-      views.setTextViewText(R.id.widget_brand,if(data.optBoolean("demo")) "FITLENS · DEMO" else "FITLENS · ${if(kind=="water")"HYDRATION" else if(kind=="coach")"DAILY COACH" else "TODAY"}")
+      views.setTextViewText(R.id.widget_brand,if(data.optBoolean("demo")) "FITKIN · DEMO" else "FITKIN · ${if(kind=="water")"HYDRATION" else if(kind=="coach")"DAILY COACH" else "TODAY"}")
       val value=when { !signedIn -> "Your daily spark"; !fresh -> "A fresh day"; kind=="water" -> "${data.optInt("water")} ml"; kind=="coach" -> "${data.optInt("streak")} day streak"; hidden -> "${data.optInt("foods")} foods logged"; else -> "${data.optInt("calories")} kcal" }
-      val detail=when { !signedIn -> "Open FitLens to get started"; !fresh -> "Open the app to refresh today"; kind=="water" -> "of ${data.optInt("waterGoal",2000)} ml · last app update"; kind=="coach" -> "A private review, one little win at a time"; hidden -> "Your nutrition totals are hidden"; else -> "of ${data.optInt("goal",2000)} kcal · ${data.optInt("water")} ml water" }
+      val detail=when { !signedIn -> "Open Fitkin to get started"; !fresh -> "Open the app to refresh today"; kind=="water" -> "of ${data.optInt("waterGoal",2000)} ml · last app update"; kind=="coach" -> "A private review, one little win at a time"; hidden -> "Your nutrition totals are hidden"; else -> "of ${data.optInt("goal",2000)} kcal · ${data.optInt("water")} ml water" }
       views.setTextViewText(R.id.widget_value,value);views.setTextViewText(R.id.widget_detail,detail)
       views.setTextViewText(R.id.widget_action,if(kind=="water")"LOG WATER  +" else if(kind=="coach")"REVIEW MY DAY  ›" else "LOG FOOD  +")
       views.setTextViewText(R.id.widget_secondary,if(kind=="today")"WATER  +" else "OPEN APP  ›")

@@ -329,7 +329,7 @@ export default function ShareDay() {
               letterSpacing="2"
               fontFamily="sans-serif"
             >
-              FITLENS
+              FITKIN
             </Label>
             <Label
               x="316"
@@ -586,7 +586,7 @@ export default function ShareDay() {
               letterSpacing="1.2"
               fontFamily="sans-serif"
             >
-              MY DAY, WITH FITLENS
+              MY DAY, WITH FITKIN
             </Label>
           </Svg>
         )}

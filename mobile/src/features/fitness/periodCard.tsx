@@ -80,7 +80,7 @@ export default function PeriodCard({
     >
       <Rect width={360} height={640} fill={bg} />
       <Circle cx={350} cy={15} r={180} fill={panel} />
-      {label("FITLENS  /  MY RHYTHM", 28, 46, 11, accent)}
+      {label("FITKIN  /  MY RHYTHM", 28, 46, 11, accent)}
       {label(title, 28, 85, 21)}
       {label("Every little effort adds up.", 28, 111, 13, muted)}
       {style === "mosaic" ? (

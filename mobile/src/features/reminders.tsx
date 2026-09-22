@@ -111,7 +111,7 @@ export default function Reminders() {
                 ? "Enjoyed something good? Make a little note in your diary."
                 : key === "water"
                   ? "Take a moment to pause and sip some water."
-                  : "You made it through today. Check in with Ember when you’re ready.",
+                  : "You made it through today. Check in with Kin when you’re ready.",
             sound: false,
           },
           trigger: {
@@ -151,7 +151,7 @@ export default function Reminders() {
           your times and quiet hours.
         </T>
         <Button
-          title="Personalize Ember nudges"
+          title="Personalize Kin nudges"
           onPress={() => router.push("/smart-nudges")}
         />
       </Card>

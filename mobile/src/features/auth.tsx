@@ -32,14 +32,14 @@ export function Welcome() {
   }
   return (
     <Page
-      eyebrow="FITLENS · LITTLE WINS, EVERY DAY"
+      eyebrow="FITKIN · LITTLE WINS, EVERY DAY"
       title={"Feel good.\nBuild your fire."}
       subtitle="A little awareness. A little consistency. A healthier rhythm that feels like you."
     >
       <Art size={270} />
       <Card>
         <T bold size={20}>
-          Meet Ember. Your everyday spark.
+          Meet Kin. Your everyday fitness buddy.
         </T>
         <T color={C.muted}>
           Log a meal, sip some water, collect little wins. Your companion grows
@@ -366,7 +366,7 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
           onboarding && stage === 0
             ? "Continue"
             : onboarding
-              ? "Let’s meet Ember"
+              ? "Let’s meet Kin"
               : "Save targets"
         }
         testID="goals-submit"

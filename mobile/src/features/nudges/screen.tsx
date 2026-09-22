@@ -46,7 +46,7 @@ export default function SmartNudges() {
       const c = await nudgeNative()?.capabilities();
       if (!c?.background)
         throw Error(
-          "Background health reads are unavailable on this phone. Meals still work; watch data refreshes when you open FitLens.",
+          "Background health reads are unavailable on this phone. Meals still work; watch data refreshes when you open Fitkin.",
         );
       const HC = await import("react-native-health-connect");
       await HC.initialize();
@@ -73,7 +73,7 @@ export default function SmartNudges() {
     <Page
       back
       eyebrow="A LITTLE PERSONALITY"
-      title="Ember, at your pace."
+      title="Kin, at your pace."
       subtitle="Offline nudges that change with your diary, movement and routine."
     >
       <Card>
@@ -148,7 +148,7 @@ export default function SmartNudges() {
         <T color={C.muted}>
           Android checks locally about every 15 minutes when the system allows.
           No internet is needed once your watch app has written data to Health
-          Connect. Battery restrictions and force-stopping FitLens can delay or
+          Connect. Battery restrictions and force-stopping Fitkin can delay or
           stop checks.
         </T>
         {Platform.OS === "android" ? (
@@ -200,7 +200,7 @@ export default function SmartNudges() {
         />
       </Card>
       <Card>
-        <T bold>A taste of Ember</T>
+        <T bold>A taste of Kin</T>
         <T>{nudgeCopy.breakfast[0][0]}</T>
         <T color={C.muted}>{nudgeCopy.breakfast[0][1]}</T>
         <T size={12}>

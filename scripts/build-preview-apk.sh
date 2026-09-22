@@ -12,5 +12,9 @@ export FITLENS_TEST_BUILD="${FITLENS_TEST_BUILD:-false}"
 npx expo prebuild --platform android --no-install
 ./android/gradlew -p android assembleRelease -PreactNativeArchitectures=arm64-v8a --console=plain --max-workers=4 -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=2g"
 mkdir -p "$repo_dir/artifacts"
-cp android/app/build/outputs/apk/release/app-release.apk "$repo_dir/artifacts/FitLens-2.2.0-team-arm64.apk"
-shasum -a 256 "$repo_dir/artifacts/FitLens-2.2.0-team-arm64.apk"
+version=$(node -p "require('./app.json').expo.version")
+for brand in Fitkin FitLens; do
+  filename="$brand-$version-team-arm64.apk"
+  cp android/app/build/outputs/apk/release/app-release.apk "$repo_dir/artifacts/$filename"
+  (cd "$repo_dir/artifacts" && shasum -a 256 "$filename" > "$filename.sha256")
+done

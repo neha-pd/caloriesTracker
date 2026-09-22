@@ -80,5 +80,5 @@ export default function UpgradeSmoke() {
         ),
       );
   }, []);
-  return <Text>Testing FitLens upgrade…</Text>;
+  return <Text>Testing Fitkin upgrade…</Text>;
 }

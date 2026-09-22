@@ -58,8 +58,8 @@ export function NotificationPermissionCard() {
       if (test) {
         await N.scheduleNotificationAsync({
           content: {
-            title: "Ember is here",
-            body: "Your local reminders are ready. Choose a schedule in FitLens.",
+            title: "Kin is here",
+            body: "Your local reminders are ready. Choose a schedule in Fitkin.",
             data: { fitlens: true, route: "/coach" },
             sound: false,
           },
@@ -155,10 +155,10 @@ export default function NotificationSetup() {
       >
         <Card>
           <T bold size={25}>
-            Make FitLens yours.
+            Make Fitkin yours.
           </T>
           <T>
-            Enable reminders so Ember can nudge you even when the app is closed.
+            Enable reminders so Kin can nudge you even when the app is closed.
           </T>
           <T color={C.muted}>
             On the next screen, allow notifications and send a test. Device

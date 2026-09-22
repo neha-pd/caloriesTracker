@@ -1,4 +1,4 @@
-# Ember online chat
+# Kin online chat
 
 Set `OPENROUTER_API_KEY` only on the backend. No provider credential is bundled in the APK or web export. Authentication is required for status and chat endpoints. The client cannot choose a model, endpoint, system role or another user's ID.
 

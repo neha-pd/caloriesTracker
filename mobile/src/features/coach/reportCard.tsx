@@ -69,7 +69,7 @@ export default function ReportCard(p: Props) {
         stroke={accent}
         strokeOpacity=".22"
       />
-      {text("FITLENS / DAILY COACH REPORT", 34, 49, 9, accent, true)}
+      {text("FITKIN / DAILY COACH REPORT", 34, 49, 9, accent, true)}
       {text("The whole picture.", 34, 91, 29, ink, true)}
       {text(p.date, 34, 117, 10, muted)}
       <Rect x="32" y="139" width="296" height="96" rx="16" fill={panel} />

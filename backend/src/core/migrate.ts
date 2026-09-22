@@ -3,7 +3,7 @@ import { openDatabase, migrate } from "./database.js";
 const db = await openDatabase(process.env.DATABASE_URL);
 try {
   await migrate(db);
-  console.log("FitLens schema is up to date.");
+  console.log("Fitkin schema is up to date.");
 } finally {
   await db.close();
 }

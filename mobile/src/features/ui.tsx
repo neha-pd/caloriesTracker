@@ -34,7 +34,7 @@ export const C = {
   danger: "#ffb2a1",
 };
 export const assets = {
-  ember: require("../../assets/design/ember.png"),
+  ember: require("../../assets/design/kin.png"),
   badge: require("../../assets/design/achievement.png"),
 };
 export function T({
@@ -456,7 +456,7 @@ export function Art({
       }}
       accessibilityLabel={
         kind === "ember"
-          ? "Ember, your flame companion"
+          ? "Kin, your fitness companion"
           : "Collectible achievement medallion"
       }
     />
