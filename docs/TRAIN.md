@@ -1,6 +1,6 @@
 # Fitkin Train
 
-Train is a new screen in Fitkin, available from Today or **Build my workout plan** on the welcome screen. Guests can start without an account. It does not require AI credits.
+Train is a new screen in Fitkin, available from Today or **Build my workout plan** on the welcome screen. Guests can start without an account. It does not require AI credits. This release is the web/PWA build; the existing published Android APK predates Train. Native reminder adapters are in source but need a new APK and device validation.
 
 ## What works
 
