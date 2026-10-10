@@ -11,7 +11,7 @@ An open-source app for food, movement and everyday habits.
 [![License: MIT](https://img.shields.io/badge/License-MIT-d1fa70.svg)](LICENSE)
 [![Latest release](https://img.shields.io/github/v/release/neha-pd/caloriesTracker)](https://github.com/neha-pd/caloriesTracker/releases/latest)
 
-[Try the web demo](https://fitlens-kpph.onrender.com) · [Download Android APK](https://github.com/neha-pd/caloriesTracker/releases/latest) · [Share feedback](https://github.com/neha-pd/caloriesTracker/issues/new/choose) · [Contribute](CONTRIBUTING.md)
+[Try Train](https://fitkin-train.netlify.app/train) · [Try the web demo](https://fitlens-kpph.onrender.com) · [Download Android APK](https://github.com/neha-pd/caloriesTracker/releases/latest) · [Share feedback](https://github.com/neha-pd/caloriesTracker/issues/new/choose) · [Contribute](CONTRIBUTING.md)
 
 </div>
 
@@ -47,6 +47,7 @@ The Android APK is a direct download, not a Play Store listing. Install updates 
 | Everyday task | What Fitkin offers |
 | --- | --- |
 | **Track food** | Offline search across 13,681 food records, Indian-food aliases and recipe estimates, portions, custom foods and meal editing. |
+| **Train your way** | Guided workout setup, 1,324 searchable exercises, instructions in 10 languages, editable routines, set logging and offline PWA support. [Train setup and limits](docs/TRAIN.md). |
 | **Track movement** | Manual activities, weigh-ins, step goals, and food-versus-burn summaries. Missing watch readings stay missing rather than becoming invented numbers. |
 | **See progress** | Day, month and year views, plus shareable PNG stories and coach reports. |
 | **Share your wins** | Export day, month or year cards for Instagram Stories and WhatsApp Status. Save an image or use your phone’s share sheet; nothing posts automatically. |

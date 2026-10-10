@@ -11,7 +11,7 @@ import {
 import { demoAdapter } from "./demoApi";
 const host = Constants.expoConfig?.hostUri?.split(":")[0];
 export const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL ??
+  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "") ??
   (Platform.OS === "web"
     ? "http://localhost:3000"
     : host

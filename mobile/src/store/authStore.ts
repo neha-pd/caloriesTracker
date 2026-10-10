@@ -52,7 +52,21 @@ interface AuthState {
   refreshUser: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
 }
+async function pauseTraining(uid: string) {
+  try {
+    const { pauseReminders } = await import("../features/train/notifications");
+    await pauseReminders(uid);
+    const key = "fitkin:train:v1:" + uid,
+      raw = await AsyncStorage.getItem(key);
+    if (raw)
+      await AsyncStorage.setItem(
+        key,
+        JSON.stringify({ ...JSON.parse(raw), reminders: false }),
+      );
+  } catch {}
+}
 async function accept(data: any) {
+  await pauseTraining(useAuthStore.getState().user?.id || "guest");
   setDemoMode(false);
   await AsyncStorage.removeItem("fitlens:demo-active");
   await saveTokens(data);
@@ -124,6 +138,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
   logout: async () => {
     pauseNudgesSession();
+    await pauseTraining(get().user?.id || "guest");
     try {
       const refresh_token = await getSecret("refresh_token");
       if (refresh_token)

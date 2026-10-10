@@ -28,3 +28,5 @@ mobile/modules/*/android/.gradle/
 
 # Original local prototype; published sources live in docs/design-prototype/.
 /design-mockup/
+
+.netlify/

@@ -63,6 +63,7 @@ export function Welcome() {
         loading={busy}
         onPress={() => void demo()}
       />
+      <Button title="Build my workout plan" secondary testID="welcome-train" onPress={() => router.push("/train")} />
       {error && <Banner error text={error} />}
       <T size={12} color={C.muted} style={{ textAlign: "center" }}>
         Food logging works offline. Sync when you’re connected.

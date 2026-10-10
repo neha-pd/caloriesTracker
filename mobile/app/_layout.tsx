@@ -32,7 +32,7 @@ export default function Layout() {
   useEffect(() => {
     if (auth.isLoading) return;
     const group = segments[0];
-    if (!auth.isLoggedIn && group !== "(auth)")
+    if (!auth.isLoggedIn && group !== "(auth)" && group !== "train")
       router.replace("/(auth)/welcome");
     else if (
       auth.isLoggedIn &&

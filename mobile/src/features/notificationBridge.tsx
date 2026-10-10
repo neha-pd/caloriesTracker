@@ -20,14 +20,15 @@ export default function NotificationBridge() {
             shouldSetBadge: false,
           }),
         });
-        if (!user?.onboarding_complete) return;
         const handle = (response: NotificationResponse | null) => {
           if (!active || !response) return;
           const data = response.notification.request.content.data;
           if (data?.fitlens !== true) return;
           const route = data.route;
+          if (route !== "/train" && !user?.onboarding_complete) return;
           N.clearLastNotificationResponse();
           if (
+            route === "/train" ||
             route === "/coach" ||
             route === "/log" ||
             route === "/water" ||

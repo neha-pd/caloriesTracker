@@ -22,6 +22,7 @@ jobs:
       - run: npm ci --workspace backend --workspace mobile --include=dev --ignore-scripts
       - run: npm run typecheck
       - run: npm test
+      - run: npm run test:train
       - run: npm run export:web --workspace mobile
         env:
           EXPO_PUBLIC_API_URL: http://127.0.0.1:3000
@@ -55,6 +56,8 @@ jobs:
         run: python3 checks/pickers_nudges_e2e.py
       - name: Browser simple activity and watch navigation
         run: python3 checks/simple_activity_e2e.py
+      - name: Browser workout planner and offline PWA
+        run: python3 checks/train_e2e.py
       - name: Browser demo without backend access
         run: python3 checks/demo_e2e.py
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

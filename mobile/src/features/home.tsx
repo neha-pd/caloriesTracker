@@ -168,6 +168,7 @@ export function Dashboard() {
       )}
       <DatePicker />
       <DailyEnergy />
+      <Card><T bold size={20}>A workout that fits your day.</T><T color={C.muted}>Build your plan, learn the movements and log every set.</T><Button title="Open Train" icon="barbell-outline" testID="open-train" onPress={() => router.push("/train")} /></Card>
       <Button
         secondary
         title="Log activity"
