@@ -615,7 +615,24 @@ export async function createApp({
     return { user: safeUser(await getUser(userId(req))) };
   });
   app.patch("/api/users/me/goals", auth, async (req) => {
-    const b = z
+    const calculatedGoalsSchema = z
+      .object({
+        goal_type: z.enum(["maintain", "gain_muscle", "lose_weight"]),
+        age: z.number().int().min(18).max(120),
+        gender: z.enum(["male", "female", "other", "prefer_not_to_say"]),
+        height_cm: z.number().min(80).max(250),
+        weight_kg: z.number().min(25).max(400),
+        weight_goal_kg: z.number().min(25).max(400),
+        activity_level: z.enum([
+          "sedentary",
+          "lightly_active",
+          "moderately_active",
+          "very_active",
+          "extra_active",
+        ]),
+      })
+      .strict();
+    const manualGoalsSchema = z
       .object({
         goal_type: z.enum(["maintain", "gain_muscle", "lose_weight"]),
         calorie_goal: z.number().int().min(1200).max(6000),
@@ -623,19 +640,79 @@ export async function createApp({
         carbs_goal_g: z.number().int().min(0).max(1000),
         fat_goal_g: z.number().int().min(0).max(500),
       })
-      .parse(req.body);
+      .strict();
+    const b = z.union([calculatedGoalsSchema, manualGoalsSchema]).parse(req.body);
+    const calculated = "age" in b;
+    const targets = calculated
+      ? (() => {
+          const bmr =
+            10 * b.weight_kg +
+            6.25 * b.height_cm -
+            5 * b.age +
+            (b.gender === "female"
+              ? -161
+              : b.gender === "male"
+                ? 5
+                : -78);
+          const activityMultipliers = {
+            sedentary: 1.2,
+            lightly_active: 1.375,
+            moderately_active: 1.55,
+            very_active: 1.725,
+            extra_active: 1.9,
+          };
+          const tdee = Math.max(
+            1200,
+            Math.min(
+              6000,
+              Math.round(bmr * activityMultipliers[b.activity_level]),
+            ),
+          );
+          const calorie_goal =
+            b.goal_type === "gain_muscle" ||
+            (b.goal_type === "lose_weight" &&
+              b.weight_goal_kg > b.weight_kg)
+              ? Math.min(6000, Math.round(tdee * 1.1))
+              : b.goal_type === "lose_weight" &&
+                  b.weight_goal_kg < b.weight_kg
+                ? Math.max(1200, Math.round(tdee * 0.85))
+                : tdee;
+          return {
+            maintenance_calories: tdee,
+            calorie_goal,
+            protein_goal_g: Math.round((calorie_goal * 0.25) / 4),
+            carbs_goal_g: Math.round((calorie_goal * 0.45) / 4),
+            fat_goal_g: Math.round((calorie_goal * 0.3) / 9),
+          };
+        })()
+      : {
+          maintenance_calories: null,
+          calorie_goal: b.calorie_goal,
+          protein_goal_g: b.protein_goal_g,
+          carbs_goal_g: b.carbs_goal_g,
+          fat_goal_g: b.fat_goal_g,
+        };
     await db.query(
-      "UPDATE users SET goal_type=$1,calorie_goal=$2,protein_goal_g=$3,carbs_goal_g=$4,fat_goal_g=$5,onboarding_complete=TRUE,updated_at=NOW() WHERE id=$6",
+      "UPDATE users SET goal_type=$1,calorie_goal=$2,protein_goal_g=$3,carbs_goal_g=$4,fat_goal_g=$5,age=COALESCE($6,age),gender=COALESCE($7,gender),height_cm=COALESCE($8,height_cm),weight_kg=COALESCE($9,weight_kg),weight_goal_kg=COALESCE($10,weight_goal_kg),activity_level=COALESCE($11,activity_level),onboarding_complete=TRUE,updated_at=NOW() WHERE id=$12",
       [
         b.goal_type,
-        b.calorie_goal,
-        b.protein_goal_g,
-        b.carbs_goal_g,
-        b.fat_goal_g,
+        targets.calorie_goal,
+        targets.protein_goal_g,
+        targets.carbs_goal_g,
+        targets.fat_goal_g,
+        calculated ? b.age : null,
+        calculated ? b.gender : null,
+        calculated ? b.height_cm : null,
+        calculated ? b.weight_kg : null,
+        calculated ? b.weight_goal_kg : null,
+        calculated ? b.activity_level : null,
         userId(req),
       ],
     );
-    return { user: safeUser(await getUser(userId(req))) };
+    return {
+      user: safeUser(await getUser(userId(req))),
+      maintenance_calories: targets.maintenance_calories,
+    };
   });
   app.patch("/api/users/me/settings", auth, async (req) => {
     const b = settingsSchema.parse(req.body);

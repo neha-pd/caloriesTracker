@@ -6,7 +6,8 @@ with sync_playwright() as p:
  browser=p.chromium.launch();context=browser.new_context(viewport={'width':390,'height':844});page=context.new_page();errors=[];sent=[]
  page.on('pageerror',lambda e:errors.append(str(e)))
  page.goto(base);page.get_by_test_id('start-journey').click()
- page.get_by_test_id('auth-name').fill('Chat UI Tester');page.get_by_test_id('auth-email').fill(f'chat-ui-{int(time.time())}@example.com');page.get_by_test_id('auth-password').fill('FitLens-test-123!');page.get_by_test_id('auth-submit').click();page.get_by_test_id('goals-submit').click();page.get_by_test_id('goals-submit').click()
+ page.get_by_test_id('auth-name').fill('Chat UI Tester');page.get_by_test_id('auth-email').fill(f'chat-ui-{int(time.time())}@example.com');page.get_by_test_id('auth-password').fill('FitLens-test-123!');page.get_by_test_id('auth-submit').click();page.get_by_test_id('goals-submit').click()
+ page.get_by_test_id('goal-age').fill('30');page.get_by_test_id('goal-height').fill('170');page.get_by_test_id('goal-current-weight').fill('70');page.get_by_test_id('goal-target-weight').fill('65');page.get_by_role('button',name='Male',exact=True).click();page.get_by_role('button',name='Moderate',exact=True).click();page.get_by_test_id('goals-submit').click();page.get_by_test_id('goals-submit').click()
  expect(page.get_by_test_id('dashboard')).to_be_visible()
  context.route('**/api/v2/chat/status',lambda r:r.fulfill(json={'available':True,'freeOnly':True}))
  def answer(route):

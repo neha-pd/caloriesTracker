@@ -242,48 +242,76 @@ export function Recovery() {
 }
 export function Goals({ onboarding = false }: { onboarding?: boolean }) {
   const user = useAuthStore((s) => s.user);
-  const [stage, setStage] = useState(0),
+  const [stage, setStage] = useState(onboarding ? 0 : 1),
     [goal, setGoal] = useState(user?.goal_type || "maintain"),
-    [cal, setCal] = useState(String(user?.calorie_goal || 2000)),
-    [protein, setProtein] = useState(String(user?.protein_goal_g || 100)),
-    [carbs, setCarbs] = useState(String(user?.carbs_goal_g || 250)),
-    [fat, setFat] = useState(String(user?.fat_goal_g || 67)),
+    [age, setAge] = useState(user?.age ? String(user.age) : ""),
+    [gender, setGender] = useState(user?.gender || ""),
+    [height, setHeight] = useState(user?.height_cm ? String(user.height_cm) : ""),
+    [weight, setWeight] = useState(user?.weight_kg ? String(user.weight_kg) : ""),
+    [targetWeight, setTargetWeight] = useState(
+      user?.weight_goal_kg
+        ? String(user.weight_goal_kg)
+        : user?.weight_kg
+          ? String(user.weight_kg)
+          : "",
+    ),
+    [activity, setActivity] = useState(user?.activity_level || ""),
+    [calculatedUser, setCalculatedUser] = useState<typeof user>(null),
+    [maintenanceCalories, setMaintenanceCalories] = useState<number | null>(
+      null,
+    ),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   async function save() {
     setBusy(true);
     setError("");
     try {
-      const { data } = await api.patch("/api/users/me/goals", {
+      const { data } = await api.patch<{
+        user: NonNullable<typeof user>;
+        maintenance_calories: number;
+      }>("/api/users/me/goals", {
         goal_type: goal,
-        calorie_goal: Number(cal),
-        protein_goal_g: Number(protein),
-        carbs_goal_g: Number(carbs),
-        fat_goal_g: Number(fat),
+        age: Number(age),
+        gender,
+        height_cm: Number(height),
+        weight_kg: Number(weight),
+        weight_goal_kg: Number(targetWeight),
+        activity_level: activity,
       });
       useAuthStore.getState().updateUser(data.user);
-      router.replace("/(tabs)/dashboard");
+      setCalculatedUser(data.user);
+      setMaintenanceCalories(data.maintenance_calories);
+      setStage(2);
     } catch (e) {
       setError(errorMessage(e));
     } finally {
       setBusy(false);
     }
   }
+  const editingDetails = stage < 2;
   return (
     <Page
       back={!onboarding}
       eyebrow={
-        onboarding ? `MAKE IT YOURS · ${stage + 1} OF 2` : "YOUR DAILY TARGETS"
+        onboarding
+          ? `MAKE IT YOURS · ${stage === 0 ? 1 : 2} OF 2`
+          : "YOUR DAILY TARGETS"
       }
       title={
         onboarding && stage === 0
           ? "What feels\nright for you?"
-          : "Find your rhythm."
+          : stage === 2
+            ? "Your starting targets."
+            : "Find your rhythm."
       }
-      subtitle="Your goals can change with you. Choose targets that fit your own needs."
+      subtitle={
+        stage === 2
+          ? "These are estimates to help you get started. You can revisit your details and targets anytime."
+          : "Your goals can change with you. Choose targets that fit your own needs."
+      }
     >
-      {onboarding && <Meter value={(stage + 1) * 50} />}
-      {(!onboarding || stage === 0) && (
+      {onboarding && <Meter value={stage === 0 ? 50 : 100} />}
+      {editingDetails && (!onboarding || stage === 0) && (
         <>
           {[
             {
@@ -299,7 +327,7 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
             {
               key: "lose_weight",
               title: "Manage my weight",
-              body: "Make thoughtful, sustainable choices.",
+              body: "Choose a target weight and build sustainable habits.",
             },
           ].map((g) => (
             <Card
@@ -319,36 +347,77 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
           ))}
         </>
       )}
-      {(!onboarding || stage === 1) && (
+      {editingDetails && (!onboarding || stage === 1) && (
         <>
           <Card>
-            <T bold>Set your daily targets</T>
+            <T bold>Tell us about you</T>
             <T color={C.muted} size={13}>
-              These are editable starting values, not a personalized nutrition
-              prescription.
+              We use these details to estimate your daily energy and macro
+              targets. Your target weight helps guide weight-management goals.
             </T>
             <Field
-              label="Energy · kcal"
-              value={cal}
-              onChange={setCal}
+              label="Age · years (18+)"
+              value={age}
+              onChange={setAge}
               numeric
-              testID="goal-calories"
+              testID="goal-age"
             />
             <View style={S.two}>
               <Field
-                label="Protein · g"
-                value={protein}
-                onChange={setProtein}
+                label="Height · cm"
+                value={height}
+                onChange={setHeight}
                 numeric
+                testID="goal-height"
               />
               <Field
-                label="Carbs · g"
-                value={carbs}
-                onChange={setCarbs}
+                label="Current weight · kg"
+                value={weight}
+                onChange={setWeight}
                 numeric
+                testID="goal-current-weight"
               />
-              <Field label="Fat · g" value={fat} onChange={setFat} numeric />
             </View>
+            <Field
+              label="Target weight · kg"
+              value={targetWeight}
+              onChange={setTargetWeight}
+              numeric
+              testID="goal-target-weight"
+            />
+            <T color={C.muted} size={13}>
+              Gender for the energy estimate
+            </T>
+            <Segments
+              value={gender}
+              onChange={setGender}
+              values={[
+                { key: "female", label: "Female" },
+                { key: "male", label: "Male" },
+                { key: "other", label: "Other" },
+                { key: "prefer_not_to_say", label: "Prefer not" },
+              ]}
+            />
+            <T color={C.muted} size={13}>
+              Usual activity level
+            </T>
+            <Segments
+              value={activity}
+              onChange={setActivity}
+              values={[
+                { key: "sedentary", label: "Sedentary" },
+                { key: "lightly_active", label: "Light" },
+                { key: "moderately_active", label: "Moderate" },
+              ]}
+            />
+            <Segments
+              value={activity}
+              onChange={setActivity}
+              values={[
+                { key: "very_active", label: "Very active" },
+                { key: "extra_active", label: "Extra active" },
+              ]}
+            />
           </Card>
           <Card>
             <T bold color={C.orange}>
@@ -361,18 +430,88 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
           </Card>
         </>
       )}
+      {stage === 2 && calculatedUser && maintenanceCalories !== null && (
+        <>
+          <Card>
+            <T bold>Estimated daily targets</T>
+            <View style={{ gap: 4 }}>
+              <T color={C.muted}>Estimated maintenance · kcal</T>
+              <T bold size={20}>{maintenanceCalories}</T>
+            </View>
+            <View style={{ gap: 4 }}>
+              <T color={C.muted}>
+                {maintenanceCalories > calculatedUser.calorie_goal
+                  ? "Daily calorie deficit"
+                  : maintenanceCalories < calculatedUser.calorie_goal
+                    ? "Daily calorie surplus"
+                    : "Daily calorie adjustment"}
+              </T>
+              <T bold size={18}>
+                {Math.abs(maintenanceCalories - calculatedUser.calorie_goal)}{" "}
+                kcal
+              </T>
+            </View>
+            <View style={{ gap: 4 }}>
+              <T color={C.muted}>Daily calorie target · kcal</T>
+              <T bold size={24}>{calculatedUser.calorie_goal}</T>
+            </View>
+            <View style={[S.row, { justifyContent: "space-between" }]}>
+              {[
+                ["Protein · g", calculatedUser.protein_goal_g],
+                ["Carbs · g", calculatedUser.carbs_goal_g],
+                ["Fat · g", calculatedUser.fat_goal_g],
+              ].map(([label, value]) => (
+                <View key={String(label)} style={{ gap: 4 }}>
+                  <T color={C.muted} size={13}>{label}</T>
+                  <T bold size={18}>{value}</T>
+                </View>
+              ))}
+            </View>
+            <T color={C.muted} size={13}>
+              For weight management, your target weight guides the calorie
+              adjustment and is saved for progress tracking. Estimates use
+              your current weight, age, height, gender, activity, and goal.
+              These are general estimates, not a medical nutrition prescription.
+            </T>
+          </Card>
+          <Card>
+            <T bold color={C.orange}>
+              Consistency earns the rewards.
+            </T>
+            <T color={C.muted}>
+              You earn XP for checking in, logging meals, and drinking water.
+              Eating less never earns extra points.
+            </T>
+          </Card>
+          <Button
+            secondary
+            title="Change my details"
+            onPress={() => {
+              setCalculatedUser(null);
+              setMaintenanceCalories(null);
+              setStage(1);
+            }}
+          />
+        </>
+      )}
       {error && <Banner text={error} error />}
       <Button
         title={
-          onboarding && stage === 0
+          stage === 0
             ? "Continue"
-            : onboarding
-              ? "Let’s meet Kin"
-              : "Save targets"
+            : stage === 1
+              ? "Calculate my targets"
+              : onboarding
+                ? "Let’s meet Kin"
+                : "Save targets"
         }
         testID="goals-submit"
         loading={busy}
-        onPress={() => (onboarding && stage === 0 ? setStage(1) : void save())}
+        onPress={() => {
+          if (stage === 0) setStage(1);
+          else if (stage === 1) void save();
+          else router.replace("/(tabs)/dashboard");
+        }}
       />
       {onboarding && stage === 1 && (
         <Button

@@ -67,7 +67,64 @@ test("complete account lifecycle, isolation, idempotent logs, sync and recovery"
       token,
     );
     assert.equal(goals.status, 200);
+    assert.equal(goals.body.maintenance_calories, null);
     assert.equal(goals.body.user.onboarding_complete, true);
+    const calculatedGoals = await call(
+      "PATCH",
+      "/api/users/me/goals",
+      {
+        goal_type: "lose_weight",
+        age: 30,
+        gender: "female",
+        height_cm: 165,
+        weight_kg: 70,
+        weight_goal_kg: 60,
+        activity_level: "moderately_active",
+      },
+      token,
+    );
+    assert.equal(calculatedGoals.status, 200);
+    assert.equal(calculatedGoals.body.maintenance_calories, 2201);
+    assert.equal(calculatedGoals.body.user.calorie_goal, 1871);
+    assert.equal(calculatedGoals.body.user.protein_goal_g, 117);
+    assert.equal(calculatedGoals.body.user.carbs_goal_g, 210);
+    assert.equal(calculatedGoals.body.user.fat_goal_g, 62);
+    assert.equal(calculatedGoals.body.user.weight_goal_kg, 60);
+    assert.equal(calculatedGoals.body.user.activity_level, "moderately_active");
+    const maintenanceGoals = await call(
+      "PATCH",
+      "/api/users/me/goals",
+      {
+        goal_type: "lose_weight",
+        age: 30,
+        gender: "female",
+        height_cm: 165,
+        weight_kg: 70,
+        weight_goal_kg: 70,
+        activity_level: "moderately_active",
+      },
+      token,
+    );
+    assert.equal(maintenanceGoals.status, 200);
+    assert.equal(maintenanceGoals.body.maintenance_calories, 2201);
+    assert.equal(maintenanceGoals.body.user.calorie_goal, 2201);
+    const higherTargetGoals = await call(
+      "PATCH",
+      "/api/users/me/goals",
+      {
+        goal_type: "lose_weight",
+        age: 30,
+        gender: "female",
+        height_cm: 165,
+        weight_kg: 70,
+        weight_goal_kg: 75,
+        activity_level: "moderately_active",
+      },
+      token,
+    );
+    assert.equal(higherTargetGoals.status, 200);
+    assert.equal(higherTargetGoals.body.maintenance_calories, 2201);
+    assert.equal(higherTargetGoals.body.user.calorie_goal, 2421);
     const profile = await call(
       "PATCH",
       "/api/users/me",
