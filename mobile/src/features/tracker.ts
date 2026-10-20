@@ -16,6 +16,7 @@ import type {
   FitnessRecord,
 } from "./types";
 export type Operation = {
+  requestId?: string;
   method: "put" | "patch" | "delete" | "post";
   url: string;
   body?: any;
@@ -80,6 +81,7 @@ function persist() {
   return disk;
 }
 async function enqueue(op: Operation) {
+  op.requestId = Crypto.randomUUID();
   const state = useTracker.getState(),
     today = localDateKey();
   const keys =
@@ -187,11 +189,16 @@ export const useTracker = create<Tracker>((set, get) => ({
       try {
         while (get().uid === uid && get().queue.length) {
           const op = get().queue[0];
+          if (!op.requestId) {
+            op.requestId = Crypto.randomUUID();
+            await persist();
+          }
           try {
             const { data } = await api.request({
               method: op.method,
               url: op.url,
               data: op.body,
+              headers: { "X-Fitkin-Request-Id": op.requestId },
             });
             if (get().uid !== uid) return;
             if (
@@ -255,12 +262,11 @@ export const useTracker = create<Tracker>((set, get) => ({
           set((s) => ({ queue: s.queue.slice(1) }));
           await persist();
         }
-        const [changes, progress, custom, fitness] = await Promise.all([
-          api.get("/api/v2/changes"),
-          api.get("/api/v2/progress"),
-          api.get("/api/v2/foods/custom"),
-          api.get("/api/v2/fitness"),
-        ]);
+        const { data: snapshot } = await api.get("/api/v3/snapshot");
+        const changes = { data: snapshot },
+          progress = { data: snapshot.progress },
+          custom = { data: snapshot },
+          fitness = { data: { records: snapshot.fitness } };
         if (get().uid !== uid) return;
         // Preserve mutations queued during the pull; the next sync reconciles them.
         if (get().queue.length === 0)

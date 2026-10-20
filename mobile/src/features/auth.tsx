@@ -1,3 +1,4 @@
+import { calculateGoals, goalsSchema } from "../../../shared/nutrition";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { router } from "expo-router";
@@ -63,7 +64,12 @@ export function Welcome() {
         loading={busy}
         onPress={() => void demo()}
       />
-      <Button title="Build my workout plan" secondary testID="welcome-train" onPress={() => router.push("/train")} />
+      <Button
+        title="Build my workout plan"
+        secondary
+        testID="welcome-train"
+        onPress={() => router.push("/train")}
+      />
       {error && <Banner error text={error} />}
       <T size={12} color={C.muted} style={{ textAlign: "center" }}>
         Food logging works offline. Sync when you’re connected.
@@ -246,8 +252,12 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
     [goal, setGoal] = useState(user?.goal_type || "maintain"),
     [age, setAge] = useState(user?.age ? String(user.age) : ""),
     [gender, setGender] = useState(user?.gender || ""),
-    [height, setHeight] = useState(user?.height_cm ? String(user.height_cm) : ""),
-    [weight, setWeight] = useState(user?.weight_kg ? String(user.weight_kg) : ""),
+    [height, setHeight] = useState(
+      user?.height_cm ? String(user.height_cm) : "",
+    ),
+    [weight, setWeight] = useState(
+      user?.weight_kg ? String(user.weight_kg) : "",
+    ),
     [targetWeight, setTargetWeight] = useState(
       user?.weight_goal_kg
         ? String(user.weight_goal_kg)
@@ -266,10 +276,30 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
     setBusy(true);
     setError("");
     try {
-      const { data } = await api.patch<{
-        user: NonNullable<typeof user>;
-        maintenance_calories: number;
-      }>("/api/users/me/goals", {
+      const input = goalsSchema.parse({
+        goal_type: goal,
+        age: Number(age),
+        gender,
+        height_cm: Number(height),
+        weight_kg: Number(weight),
+        weight_goal_kg: Number(targetWeight),
+        activity_level: activity,
+      });
+      const targets = calculateGoals(input);
+      setCalculatedUser({ ...user!, ...input, ...targets });
+      setMaintenanceCalories(targets.maintenance_calories);
+      setStage(2);
+    } catch (e) {
+      setError(errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function confirmTargets() {
+    setBusy(true);
+    setError("");
+    try {
+      const { data } = await api.patch("/api/users/me/goals", {
         goal_type: goal,
         age: Number(age),
         gender,
@@ -279,9 +309,7 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
         activity_level: activity,
       });
       useAuthStore.getState().updateUser(data.user);
-      setCalculatedUser(data.user);
-      setMaintenanceCalories(data.maintenance_calories);
-      setStage(2);
+      router.replace("/(tabs)/dashboard");
     } catch (e) {
       setError(errorMessage(e));
     } finally {
@@ -436,7 +464,9 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
             <T bold>Estimated daily targets</T>
             <View style={{ gap: 4 }}>
               <T color={C.muted}>Estimated maintenance · kcal</T>
-              <T bold size={20}>{maintenanceCalories}</T>
+              <T bold size={20}>
+                {maintenanceCalories}
+              </T>
             </View>
             <View style={{ gap: 4 }}>
               <T color={C.muted}>
@@ -453,7 +483,9 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
             </View>
             <View style={{ gap: 4 }}>
               <T color={C.muted}>Daily calorie target · kcal</T>
-              <T bold size={24}>{calculatedUser.calorie_goal}</T>
+              <T bold size={24}>
+                {calculatedUser.calorie_goal}
+              </T>
             </View>
             <View style={[S.row, { justifyContent: "space-between" }]}>
               {[
@@ -462,16 +494,20 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
                 ["Fat · g", calculatedUser.fat_goal_g],
               ].map(([label, value]) => (
                 <View key={String(label)} style={{ gap: 4 }}>
-                  <T color={C.muted} size={13}>{label}</T>
-                  <T bold size={18}>{value}</T>
+                  <T color={C.muted} size={13}>
+                    {label}
+                  </T>
+                  <T bold size={18}>
+                    {value}
+                  </T>
                 </View>
               ))}
             </View>
             <T color={C.muted} size={13}>
               For weight management, your target weight guides the calorie
-              adjustment and is saved for progress tracking. Estimates use
-              your current weight, age, height, gender, activity, and goal.
-              These are general estimates, not a medical nutrition prescription.
+              adjustment and is saved for progress tracking. Estimates use your
+              current weight, age, height, gender, activity, and goal. These are
+              general estimates, not a medical nutrition prescription.
             </T>
           </Card>
           <Card>
@@ -510,7 +546,7 @@ export function Goals({ onboarding = false }: { onboarding?: boolean }) {
         onPress={() => {
           if (stage === 0) setStage(1);
           else if (stage === 1) void save();
-          else router.replace("/(tabs)/dashboard");
+          else void confirmTargets();
         }}
       />
       {onboarding && stage === 1 && (

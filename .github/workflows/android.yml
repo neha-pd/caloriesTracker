@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      EXPO_PUBLIC_API_URL: https://fitlens-api.onrender.com
+      EXPO_PUBLIC_APPS_SCRIPT_URL: ${{ vars.FITKIN_APPS_SCRIPT_URL }}
       FITLENS_TEST_BUILD: 'false'
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -23,6 +23,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - run: node scripts/check-backend.mjs
       - run: npm ci --workspace mobile --include=dev
       - name: Build signed ARM64 APK
         working-directory: mobile

@@ -11,7 +11,7 @@ An open-source app for food, movement and everyday habits.
 [![License: MIT](https://img.shields.io/badge/License-MIT-d1fa70.svg)](LICENSE)
 [![Latest release](https://img.shields.io/github/v/release/neha-pd/caloriesTracker)](https://github.com/neha-pd/caloriesTracker/releases/latest)
 
-[Try Train](https://fitkin-train.netlify.app/train) · [Try the web demo](https://fitlens-kpph.onrender.com) · [Download Android APK](https://github.com/neha-pd/caloriesTracker/releases/latest) · [Share feedback](https://github.com/neha-pd/caloriesTracker/issues/new/choose) · [Contribute](CONTRIBUTING.md)
+[Download Android APK](https://github.com/neha-pd/caloriesTracker/releases/latest) · [Share feedback](https://github.com/neha-pd/caloriesTracker/issues/new/choose) · [Contribute](CONTRIBUTING.md)
 
 </div>
 
@@ -31,23 +31,23 @@ This is an early community project, with room to improve. Try it, report a confu
   <img src="docs/screenshots/progress.png" width="280" alt="Fitkin progress calendar with fictional demo activity" />
 </p>
 
-*Screenshots use fictional sample data in the web preview. Watch readings require a compatible phone and health connection.*
+*Screenshots use fictional sample data in a development preview. Watch readings require a compatible phone and health connection.*
 
 ## Try it in a minute
 
-1. Open the **[web app](https://fitlens-kpph.onrender.com)** or install the ARM64 APK from **[Releases](https://github.com/neha-pd/caloriesTracker/releases/latest)**.
+1. Install the ARM64 APK from **[Releases](https://github.com/neha-pd/caloriesTracker/releases/latest)**.
 2. Choose **Explore 45-day demo** on the welcome screen. No signup needed: it contains fictional meals, water logs and progress.
 3. Search for a food, log an activity, explore the calendar, or create a share card.
 4. [Tell us what felt useful — or confusing](https://github.com/neha-pd/caloriesTracker/issues/new/choose).
 
-The Android APK is a direct download, not a Play Store listing. Install updates over the existing app to keep local data. Version 2.5.0 introduced required-update prompts for later releases; Android still asks you to approve installation. Real-account services use free hosting and may take a moment to wake up.
+The Android APK is a direct download, not a Play Store listing. Install updates over the existing app to keep local data. Version 2.5.0 introduced required-update prompts for later releases; Android still asks you to approve installation. Version 2.7.0 uses one Apps Script backend and a private Google Sheet. Existing users can install the update and sign in with their usual email and password. See the setup guide to host your own instance.
 
 ## What’s inside
 
 | Everyday task | What Fitkin offers |
 | --- | --- |
 | **Track food** | Offline search across 13,681 food records, Indian-food aliases and recipe estimates, portions, custom foods and meal editing. |
-| **Train your way** | Guided workout setup, 1,324 searchable exercises, instructions in 10 languages, editable routines, set logging and offline PWA support. [Train setup and limits](docs/TRAIN.md). |
+| **Train your way** | Guided workout setup, 1,324 searchable exercises, instructions in 10 languages, editable routines, set logging and offline Android access. [Train setup and limits](docs/TRAIN.md). |
 | **Track movement** | Manual activities, weigh-ins, step goals, and food-versus-burn summaries. Missing watch readings stay missing rather than becoming invented numbers. |
 | **See progress** | Day, month and year views, plus shareable PNG stories and coach reports. |
 | **Share your wins** | Export day, month or year cards for Instagram Stories and WhatsApp Status. Save an image or use your phone’s share sheet; nothing posts automatically. |
@@ -71,65 +71,45 @@ The [Fitkin project site](website/README.md) tells the story behind the app and 
 
 ## Run it locally
 
-Use **Node.js 22.22+ and npm**. The default local API uses embedded PostgreSQL: no Docker, cloud account or AI key is needed for the core tracker.
+Use **Node.js 22.22+ and npm**. Fitkin now targets Android APKs. App data is stored in a private Google Sheet through a single Apps Script deployment. Firebase provides sign-in and password-reset emails; optional Kin chat uses free-only OpenRouter routes.
 
 ```sh
-git clone https://github.com/neha-pd/caloriesTracker.git
-cd caloriesTracker
 npm ci
-npm run dev:api:local
+npm run build:backend
+npm run typecheck
+npm test
 ```
 
-In a second terminal, start the browser app:
-
-```sh
-npm run web --workspace mobile
-```
-
-For native development:
+Follow [Google setup and migration](docs/DEPLOYMENT.md), then put the deployed `/exec` URL in `mobile/.env.local` using `mobile/.env.example`.
 
 ```sh
 cd mobile
-npx expo prebuild
+npx expo prebuild --platform android
 npx expo run:android
-# On macOS with Xcode, for iOS:
-# npx expo run:ios
 ```
 
-Custom health and widget modules require a native build; **Expo Go is not supported** for those features. On a physical phone, set `EXPO_PUBLIC_API_URL` to your computer’s reachable LAN address. Production builds use HTTPS. Bring your own signing key for your own APK builds; the project’s team key is private.
+Custom health and widget modules require a native build; **Expo Go is not supported**. The welcome-screen demo works offline. Real accounts require your configured Apps Script deployment. Keep the spreadsheet private: app users authenticate through Firebase and can access only their own records.
 
-Local API data lives in `backend/.data/local`. The local command intentionally ignores the root `.env`. For cloud services, use the [deployment guide](docs/DEPLOYMENT.md); for optional chat, use the [Kin guide](docs/FREE_CHAT.md). Never commit service credentials or signing keys.
+For a signed team APK, use `scripts/build-preview-apk.sh` with the existing signing key, Android SDK, JDK and `EXPO_PUBLIC_APPS_SCRIPT_URL`. The script refuses to build a release against a backend whose migration is not activated. GitHub Actions reads the endpoint from the repository variable `FITKIN_APPS_SCRIPT_URL`.
 
 ## Project map
 
 ```text
-mobile/       Expo + React Native app, screens and native modules
-backend/      Fastify + TypeScript API and PostgreSQL storage
+mobile/       Android app, screens and native health/notification modules
+apps-script/  One Apps Script backend, owner-only importer and migration tools
+shared/       Validation, nutrition calculations, chat parsing and release lookup
 data/         Food recipe specifications and source material
-checks/       Browser and native smoke checks
-scripts/      Build, import and deployment helpers
-docs/         Release notes, setup guides and design prototype
+checks/       Feature regression tests and native smoke checks
+scripts/      APK build and data import helpers
+docs/         Setup guides, release notes and design prototype
+website/      Static project story on GitHub Pages
 ```
 
 ## Check your changes
 
-```sh
-npm run typecheck
-npm test
-npm run export:web --workspace mobile
-```
+`npm run typecheck` checks app and backend types. `npm test` builds the paste-ready Apps Script bundle and runs regression tests for accounts, isolated records, retries, migration integrity, chat, food, exercise plans, reminders and updates. Native builds and physical devices are still required to validate Android permissions, background delivery and watch interoperability.
 
-Browser checks use Playwright. With the local API on port 3000 and the exported app served on port 8084:
-
-```sh
-python3 -m pip install -r checks/requirements.txt
-python3 -m playwright install chromium
-python3 checks/serve_spa.py
-# In another terminal:
-python3 checks/e2e.py
-```
-
-Run browser tests against your local services, not production: some create test accounts. The [CI workflow](.github/workflows/ci.yml) shows the complete suite. Android background delivery and watch interoperability also need physical-device checks.
+No Render, Neon, Netlify Functions or browser push service is required by the new APK source. PostgreSQL and Firebase Admin packages are development-only export tools for the one-time migration; they are not part of the APK or Apps Script runtime.
 
 ## Help shape the next version
 
@@ -144,6 +124,7 @@ We’d especially appreciate:
 
 ## Release notes and credits
 
+- [2.7.0 — Android and Google Sheets](docs/RELEASE_2.7.0.md)
 - [2.6.0 — Fitkin and Kin](docs/RELEASE_2.6.0.md)
 - [Latest Android release](https://github.com/neha-pd/caloriesTracker/releases/latest)
 - [2.5.0 — simpler activity and required updates](docs/RELEASE_2.5.0.md)

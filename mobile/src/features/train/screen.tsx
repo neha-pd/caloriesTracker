@@ -45,7 +45,6 @@ import {
   disableReminders,
   restAlert,
   syncCompletion,
-  installApp,
   downloadFile,
 } from "./notifications";
 import { localDateKey } from "../../lib/dates";
@@ -1325,20 +1324,12 @@ export default function Train() {
                       }
                     />
                     <T size={12} color={C.muted}>
-                      Browser-closed push needs the Netlify Functions deployment
-                      and internet. Mobile delivery is best-effort. Calendar
-                      reminders are an alternative on any host.
+                      Reminders are saved on this phone and can arrive offline.
+                      Allow notifications in Android settings. Delivery may be
+                      delayed by battery-saving settings.
                     </T>
                   </Card>
-                  {Platform.OS === "web" && (
-                    <Button
-                      secondary
-                      title="Install Fitkin on this device"
-                      onPress={() =>
-                        void task(async () => setMessage(await installApp()))
-                      }
-                    />
-                  )}
+
                   <Button
                     secondary
                     title="Change my training answers"
@@ -1364,10 +1355,9 @@ export default function Train() {
                   <Card>
                     <T bold>Saved on this device</T>
                     <T color={C.muted}>
-                      Plans and detailed set logs are stored in this browser or
-                      app, separately for each account. Export a backup before
-                      clearing browser data. They do not yet sync across
-                      devices.
+                      Plans and detailed set logs stay on this phone, separately
+                      for each account. Export a backup before clearing app data
+                      or changing phones.
                     </T>
                     <Button
                       secondary

@@ -6,8 +6,8 @@ cd "$repo_dir/mobile"
 : "${JAVA_HOME:?Set JAVA_HOME to a compatible JDK}"
 : "${FITLENS_KEYSTORE_PATH:?Set the persistent team signing key path}"
 : "${FITLENS_KEYSTORE_PASSWORD:?Set the team signing key password}"
-# Demo works without the API. For real-account LAN testing, set this explicitly.
-export EXPO_PUBLIC_API_URL="${EXPO_PUBLIC_API_URL:-https://fitlens-api.onrender.com}"
+: "${EXPO_PUBLIC_APPS_SCRIPT_URL:?Set the deployed Apps Script /exec URL}"
+node "$repo_dir/scripts/check-backend.mjs"
 export FITLENS_TEST_BUILD="${FITLENS_TEST_BUILD:-false}"
 npx expo prebuild --platform android --no-install
 ./android/gradlew -p android assembleRelease -PreactNativeArchitectures=arm64-v8a --console=plain --max-workers=4 -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=2g"

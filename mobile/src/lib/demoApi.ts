@@ -1,3 +1,4 @@
+import { calculateGoals, goalsSchema } from "../../../shared/nutrition";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import type { AxiosAdapter } from "axios";
 import { DEMO_ID } from "../features/demo/data";
@@ -29,10 +30,15 @@ export const demoAdapter: AxiosAdapter = async (config) => {
     if (method === "patch") {
       if (url.endsWith("/settings"))
         user.settings = { ...user.settings, ...body };
-      else user = { ...user, ...body };
+      else if (url.endsWith("/goals")) {
+        const targets = calculateGoals(goalsSchema.parse(body));
+        user = { ...user, ...body, ...targets, onboarding_complete: true };
+        delete user.maintenance_calories;
+        data = { user, maintenance_calories: targets.maintenance_calories };
+      } else user = { ...user, ...body };
       await AsyncStorage.setItem("fitlens:demo-profile", JSON.stringify(user));
     }
-    data = { user };
+    data = data || { user };
   } else
     throw new Error(
       "This action needs a real account. Exit the offline demo to continue.",

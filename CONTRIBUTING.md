@@ -12,9 +12,9 @@ For nutrition corrections, include a reliable source, units and serving size. Ke
 
 1. Check existing issues and pull requests. For a large feature, open an issue first so we can discuss the user need and scope.
 2. Fork the repository and create a branch for one focused change.
-3. Follow the [README setup](README.md#run-it-locally). Use local services and fictional data for tests.
+3. Follow the [README setup](README.md#run-it-locally). Use a separate Apps Script spreadsheet and fictional data for tests.
 4. Make the smallest complete change that solves the problem. Keep labels plain, make the next action obvious, and avoid adding settings people don’t need.
-5. Run `npm run typecheck` and `npm test`. For UI changes, export the web app and run the relevant browser checks from `checks/`; include a screenshot with sample data. Native changes need a native build and relevant device testing.
+5. Run `npm run typecheck` and `npm test`. For UI changes, build Android and include a screenshot with sample data. Verify permissions and background features on a device.
 6. Open a pull request explaining the problem, resulting behavior, checks performed and anything still unverified.
 
 ## Things we take care with
@@ -27,6 +27,6 @@ For nutrition corrections, include a reliable source, units and serving size. Ke
 
 ## Reporting a problem
 
-Include the app version, phone/OS or browser, steps to reproduce, expected behavior and what happened. Screenshots help, but remove names, email addresses and health details first. Never post credentials or sensitive security details in a public issue; use GitHub private vulnerability reporting if it is enabled.
+Include the app version, phone/OS, steps to reproduce, expected behavior and what happened. Screenshots help, but remove names, email addresses and health details first. Never post credentials or sensitive security details in a public issue; use GitHub private vulnerability reporting if it is enabled.
 
 Be kind and specific. This is a learning project, and everyone should feel comfortable asking a question or suggesting a better way.

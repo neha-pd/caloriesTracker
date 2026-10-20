@@ -1,6 +1,6 @@
 import axios from "axios";
-import Constants from "expo-constants";
-import { Platform } from "react-native";
+import * as Crypto from "expo-crypto";
+import { sheetsAdapter, refreshFirebase } from "./sheets";
 import {
   isDemoMode,
   getSecret,
@@ -9,18 +9,8 @@ import {
   sessionGeneration,
 } from "./session";
 import { demoAdapter } from "./demoApi";
-const host = Constants.expoConfig?.hostUri?.split(":")[0];
-export const BASE_URL =
-  process.env.EXPO_PUBLIC_API_URL?.replace(/\/$/, "") ??
-  (Platform.OS === "web"
-    ? "http://localhost:3000"
-    : host
-      ? `http://${host}:3000`
-      : Platform.OS === "android"
-        ? "http://10.0.2.2:3000"
-        : "http://localhost:3000");
 export const api = axios.create({
-  baseURL: BASE_URL,
+  adapter: sheetsAdapter,
   timeout: 70000,
   headers: { "Content-Type": "application/json" },
 });
@@ -29,6 +19,8 @@ api.interceptors.request.use(async (config) => {
     config.adapter = demoAdapter;
     return config;
   }
+  if (!config.headers.has("X-Fitkin-Request-Id"))
+    config.headers.set("X-Fitkin-Request-Id", Crypto.randomUUID());
   const token = await getSecret("access_token");
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
@@ -51,11 +43,7 @@ api.interceptors.response.use(
       refresh = (async () => {
         const token = await getSecret("refresh_token");
         if (!token) throw error;
-        const { data } = await axios.post(
-          `${BASE_URL}/api/auth/refresh`,
-          { refresh_token: token },
-          { timeout: 70000 },
-        );
+        const data = await refreshFirebase(token, original);
         if (generation !== sessionGeneration())
           throw new Error("Session ended");
         await saveTokens(data);
@@ -65,7 +53,7 @@ api.interceptors.response.use(
     try {
       await refresh;
       if (generation !== sessionGeneration()) throw new Error("Session ended");
-      return api(original);
+      return await api(original);
     } catch (e: any) {
       if (e?.response?.status === 401 || !(await getSecret("refresh_token")))
         await clearSession();

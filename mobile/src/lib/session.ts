@@ -36,11 +36,13 @@ export async function clearSession() {
     if (typeof sessionStorage !== "undefined") {
       sessionStorage.removeItem("access_token");
       sessionStorage.removeItem("refresh_token");
+      sessionStorage.removeItem("sheet_session");
+      sessionStorage.removeItem("backend_version");
     }
   } else
     await Promise.all(
-      ["access_token", "refresh_token"].map((key) =>
-        SecureStore.deleteItemAsync(key),
+      ["access_token", "refresh_token", "sheet_session", "backend_version"].map(
+        (key) => SecureStore.deleteItemAsync(key),
       ),
     );
   listeners.forEach((fn) => fn());
@@ -48,7 +50,12 @@ export async function clearSession() {
 export async function saveTokens(data: {
   token: string;
   refresh_token: string;
+  sheet_session?: string;
 }) {
+  if (data.sheet_session) {
+    await setSecret("sheet_session", data.sheet_session);
+    await setSecret("backend_version", "sheets-v1");
+  }
   await setSecret("access_token", data.token);
   await setSecret("refresh_token", data.refresh_token);
 }

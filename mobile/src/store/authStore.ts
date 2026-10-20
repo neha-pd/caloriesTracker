@@ -106,6 +106,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           return;
         }
       }
+      if ((await getSecret("backend_version")) !== "sheets-v1") {
+        await clearSession();
+        set({ isLoading: false });
+        return;
+      }
       if (!(await getSecret("access_token"))) {
         set({ isLoading: false });
         return;
