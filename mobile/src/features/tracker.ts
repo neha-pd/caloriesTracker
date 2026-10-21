@@ -187,19 +187,62 @@ export const useTracker = create<Tracker>((set, get) => ({
     flight = (async () => {
       set({ syncing: true, error: null });
       try {
+        let batchSupported = true,
+          snapshotFromBatch: any = null;
+        const batchResults = new Map<string, any>();
         while (get().uid === uid && get().queue.length) {
+          if (batchSupported && !batchResults.size) {
+            const pending = get().queue.slice(0, 20);
+            for (const item of pending) item.requestId ||= Crypto.randomUUID();
+            await persist();
+            try {
+              const { data } = await api.post("/api/v3/batch", {
+                operations: pending.map((item) => ({
+                  method: item.method.toUpperCase(),
+                  path: item.url,
+                  body: item.body,
+                  requestId: item.requestId,
+                })),
+              });
+              if (get().uid !== uid) return;
+              if (
+                !Array.isArray(data.results) ||
+                data.results.length !== pending.length ||
+                data.results.some(
+                  (r: any, i: number) =>
+                    r.requestId !== pending[i].requestId ||
+                    ![200, 400, 404, 409].includes(r.status),
+                )
+              )
+                throw Error(
+                  "Sync returned an incomplete batch. Your device will retry safely.",
+                );
+              for (const result of data.results)
+                batchResults.set(result.requestId, result);
+              snapshotFromBatch = data.snapshot;
+            } catch (error: any) {
+              // Older deployed scripts remain usable during a rolling update.
+              if (error?.response?.status !== 404) throw error;
+              batchSupported = false;
+            }
+          }
           const op = get().queue[0];
           if (!op.requestId) {
             op.requestId = Crypto.randomUUID();
             await persist();
           }
           try {
-            const { data } = await api.request({
-              method: op.method,
-              url: op.url,
-              data: op.body,
-              headers: { "X-Fitkin-Request-Id": op.requestId },
-            });
+            const batched = batchResults.get(op.requestId);
+            batchResults.delete(op.requestId);
+            if (batched && batched.status !== 200) throw { response: batched };
+            const { data } =
+              batched ||
+              (await api.request({
+                method: op.method,
+                url: op.url,
+                data: op.body,
+                headers: { "X-Fitkin-Request-Id": op.requestId },
+              }));
             if (get().uid !== uid) return;
             if (
               data.entry &&
@@ -262,7 +305,8 @@ export const useTracker = create<Tracker>((set, get) => ({
           set((s) => ({ queue: s.queue.slice(1) }));
           await persist();
         }
-        const { data: snapshot } = await api.get("/api/v3/snapshot");
+        const snapshot =
+          snapshotFromBatch || (await api.get("/api/v3/snapshot")).data;
         const changes = { data: snapshot },
           progress = { data: snapshot.progress },
           custom = { data: snapshot },

@@ -1,4 +1,4 @@
-import { Switch, View } from "react-native";
+import { Platform, Switch, View } from "react-native";
 import { useHealth } from "../health/store";
 import { DateTimeField } from "../pickers";
 import React, { useState } from "react";
@@ -110,7 +110,7 @@ export default function ActivityEditor() {
     <Page
       back
       title={existing ? "Edit your record" : kind === "weight" ? "Log your weight" : "Log your activity"}
-      subtitle={kind === "weight" ? "A small check-in on your progress." : "Add an activity you did. Watch workouts sync separately."}
+      subtitle={kind === "weight" ? "A small check-in on your progress." : Platform.OS === "web" ? "Add an activity you did and its calories, if you know them." : "Add an activity you did. Watch workouts sync separately."}
     >
       {!existing && (
         <Segments

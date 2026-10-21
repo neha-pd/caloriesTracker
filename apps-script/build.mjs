@@ -13,6 +13,8 @@ const wrappers = {
   showFitkinStatus: "showStatus",
   activateFitkin: "activate",
   onOpen: "menu",
+  setupFitkinDashboard: "setupDashboard",
+  refreshFitkinDashboard: "refreshDashboard",
   resetFitkinImport: "resetStaged",
 };
 fs.mkdirSync(root + "apps-script/dist", { recursive: true });

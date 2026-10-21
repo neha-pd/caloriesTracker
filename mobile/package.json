@@ -6,7 +6,9 @@
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "web": "expo start --web",
+    "export:web": "expo export --platform web && node ../scripts/prepare-pwa.mjs"
   },
   "dependencies": {
     "@expo-google-fonts/dm-sans": "^0.4.1",

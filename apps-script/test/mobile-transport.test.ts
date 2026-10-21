@@ -51,10 +51,10 @@ function adapter(handler: (url: string, body: any) => any) {
       generation: 0,
       fetch: async (url: string, options: any) => {
         const body =
-          options.headers["Content-Type"] === "application/json"
+          options.headers["Content-Type"] !== "application/x-www-form-urlencoded"
             ? JSON.parse(options.body)
             : options.body;
-        calls.push({ url, body });
+        calls.push({ url, body, contentType: options.headers["Content-Type"] });
         return { status: 200, json: async () => handler(url, body) };
       },
     };
@@ -92,6 +92,8 @@ test("mobile signs in directly with Firebase and never sends passwords to Sheets
   assert.equal(r.data.user.id, "existing-app-id");
   assert.equal(r.data.token, "new-id-token");
   assert.equal(a.calls.length, 2);
+  assert.equal(a.calls[0].contentType, "application/json");
+  assert.equal(a.calls[1].contentType, "text/plain;charset=UTF-8");
   assert.equal(a.calls[1].body.token, "new-id-token");
   assert.equal(a.calls[1].body.path, "/api/auth/session");
   assert.equal(JSON.stringify(a.calls[1]).includes("private-password"), false);

@@ -11,7 +11,7 @@ An open-source app for food, movement and everyday habits.
 [![License: MIT](https://img.shields.io/badge/License-MIT-d1fa70.svg)](LICENSE)
 [![Latest release](https://img.shields.io/github/v/release/neha-pd/caloriesTracker)](https://github.com/neha-pd/caloriesTracker/releases/latest)
 
-[Download Android APK](https://github.com/neha-pd/caloriesTracker/releases/latest) · [Share feedback](https://github.com/neha-pd/caloriesTracker/issues/new/choose) · [Contribute](CONTRIBUTING.md)
+[Open on iPhone / web](https://fitkin-train.netlify.app) · [Download Android APK](https://github.com/neha-pd/caloriesTracker/releases/latest) · [Share feedback](https://github.com/neha-pd/caloriesTracker/issues/new/choose) · [Contribute](CONTRIBUTING.md)
 
 </div>
 
@@ -35,7 +35,7 @@ This is an early community project, with room to improve. Try it, report a confu
 
 ## Try it in a minute
 
-1. Install the ARM64 APK from **[Releases](https://github.com/neha-pd/caloriesTracker/releases/latest)**.
+1. Install the ARM64 APK from **[Releases](https://github.com/neha-pd/caloriesTracker/releases/latest)**, or open **[Fitkin in Safari](https://fitkin-train.netlify.app)** on iPhone and choose **Share → Add to Home Screen**.
 2. Choose **Explore 45-day demo** on the welcome screen. No signup needed: it contains fictional meals, water logs and progress.
 3. Search for a food, log an activity, explore the calendar, or create a share card.
 4. [Tell us what felt useful — or confusing](https://github.com/neha-pd/caloriesTracker/issues/new/choose).
@@ -47,14 +47,14 @@ The Android APK is a direct download, not a Play Store listing. Install updates 
 | Everyday task | What Fitkin offers |
 | --- | --- |
 | **Track food** | Offline search across 13,681 food records, Indian-food aliases and recipe estimates, portions, custom foods and meal editing. |
-| **Train your way** | Guided workout setup, 1,324 searchable exercises, instructions in 10 languages, editable routines, set logging and offline Android access. [Train setup and limits](docs/TRAIN.md). |
+| **Train your way** | Guided workout setup, 1,324 searchable exercises, instructions in 10 languages, editable routines, set logging and offline Android and PWA access. [Train setup and limits](docs/TRAIN.md). |
 | **Track movement** | Manual activities, weigh-ins, step goals, and food-versus-burn summaries. Missing watch readings stay missing rather than becoming invented numbers. |
 | **See progress** | Day, month and year views, plus shareable PNG stories and coach reports. |
 | **Share your wins** | Export day, month or year cards for Instagram Stories and WhatsApp Status. Save an image or use your phone’s share sheet; nothing posts automatically. |
 | **Check in with your coach** | Share a full daily PNG report with meals, portions, macros, workouts, available burn readings, calorie target, current weight and target weight. |
 | **Build a routine** | Water logs, quests, XP, streaks and achievements that reward participation. |
-| **Connect a watch** | Android Health Connect and Apple Health adapters for supported readings. Watch data reaches Fitkin through the phone’s health service. |
-| **Get a nudge** | Custom reminders and Android smart nudges for meals, water, movement, step milestones and newly synced workouts. |
+| **Connect a watch** | Android Health Connect for supported readings. The iPhone PWA uses manually logged activity; it cannot read Apple Health or Apple Watch. |
+| **Get a nudge** | Android local reminders and smart nudges; iPhone PWA calendar exports for meal, water and workout alerts. |
 | **Talk to Kin** | Optional online chat, optional diary context and reminder drafts you review before scheduling. No local-model downloads. |
 | **Stay in control** | Account export and deletion, per-account offline queues, and Android home-screen widgets. |
 
@@ -62,7 +62,7 @@ The Android APK is a direct download, not a Play Store listing. Install updates 
 
 - **Food values are estimates.** The library includes 146 Indian recipe estimates; it is not a complete catalogue of every food. See [food sources and assumptions](docs/FOOD_CATALOG.md).
 - **Chat is optional and online.** It uses free-only provider routes, with shared quotas and no paid fallback. Messages go to the provider when you use chat; diary sharing is optional. See [Kin setup and privacy](docs/FREE_CHAT.md).
-- **Watch sync depends on your device.** Your companion app must share data with Health Connect or Apple Health. Android background checks can be delayed by the OS. Smart background nudges are Android-only; there is no standalone watch app. Physical-device testing is welcome.
+- **Watch sync depends on your device.** On Android, your companion app must share data with Health Connect. Android background checks can be delayed by the OS. Smart background nudges are Android-only; there is no standalone watch app. Physical-device testing is welcome.
 - **The demo stays local.** Its fictional records do not connect to real health services or online chat.
 
 ## Project website
@@ -71,7 +71,7 @@ The [Fitkin project site](website/README.md) tells the story behind the app and 
 
 ## Run it locally
 
-Use **Node.js 22.22+ and npm**. Fitkin now targets Android APKs. App data is stored in a private Google Sheet through a single Apps Script deployment. Firebase provides sign-in and password-reset emails; optional Kin chat uses free-only OpenRouter routes.
+Use **Node.js 22.22+ and npm**. Fitkin targets Android APKs and an installable iPhone PWA. App data is stored in a private Google Sheet through a single Apps Script deployment. Firebase provides sign-in and password-reset emails; optional Kin chat uses free-only OpenRouter routes.
 
 ```sh
 npm ci
@@ -92,15 +92,19 @@ Custom health and widget modules require a native build; **Expo Go is not suppor
 
 For a signed team APK, use `scripts/build-preview-apk.sh` with the existing signing key, Android SDK, JDK and `EXPO_PUBLIC_APPS_SCRIPT_URL`. The script refuses to build a release against a backend whose migration is not activated. GitHub Actions reads the endpoint from the repository variable `FITKIN_APPS_SCRIPT_URL`.
 
+For the iPhone PWA, run `npm run build:pwa` and deploy `mobile/dist` to a static HTTPS host. [PWA installation and hosting](docs/PWA.md) covers Netlify, offline use and platform limits. The same backend serves Android and web.
+
+The private Sheet can include a polished **Admin** dashboard plus **Daily Usage**, **API Requests**, **Storage** and **Read Me** tabs. [Admin setup](docs/ADMIN_DASHBOARD.md) enables five-minute refreshes and explains the metrics. Queued changes sync in groups of up to 20, while the UI saves immediately on the device.
+
 ## Project map
 
 ```text
-mobile/       Android app, screens and native health/notification modules
+mobile/       Shared Android/PWA app and native health/notification modules
 apps-script/  One Apps Script backend, owner-only importer and migration tools
 shared/       Validation, nutrition calculations, chat parsing and release lookup
 data/         Food recipe specifications and source material
 checks/       Feature regression tests and native smoke checks
-scripts/      APK build and data import helpers
+scripts/      APK/PWA build and data import helpers
 docs/         Setup guides, release notes and design prototype
 website/      Static project story on GitHub Pages
 ```
@@ -124,6 +128,7 @@ We’d especially appreciate:
 
 ## Release notes and credits
 
+- [2.7.1 — iPhone PWA, batched sync and admin dashboard](docs/RELEASE_2.7.1.md)
 - [2.7.0 — Android and Google Sheets](docs/RELEASE_2.7.0.md)
 - [2.6.0 — Fitkin and Kin](docs/RELEASE_2.6.0.md)
 - [Latest Android release](https://github.com/neha-pd/caloriesTracker/releases/latest)

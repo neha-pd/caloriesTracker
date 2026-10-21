@@ -23,3 +23,6 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build:backend
+      - run: npm run build:pwa
+        env:
+          EXPO_PUBLIC_APPS_SCRIPT_URL: ${{ vars.FITKIN_APPS_SCRIPT_URL }}

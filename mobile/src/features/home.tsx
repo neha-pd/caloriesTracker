@@ -1,3 +1,4 @@
+import { InstallCard } from "./pwa";
 import { DateTimeField } from "./pickers";
 import DailyEnergy from "./health/energy";
 import { GuidePrompt } from "./guide";
@@ -166,50 +167,65 @@ export function Dashboard() {
       {u?.id === "fitlens-offline-demo" && (
         <Banner text="DEMO · 45 days of fictional sample data, stored only on this device." />
       )}
+      <InstallCard />
       <DatePicker />
       <DailyEnergy />
-      <Card><T bold size={20}>A workout that fits your day.</T><T color={C.muted}>Build your plan, learn the movements and log every set.</T><Button title="Open Train" icon="barbell-outline" testID="open-train" onPress={() => router.push("/train")} /></Card>
+      <Card>
+        <T bold size={20}>
+          A workout that fits your day.
+        </T>
+        <T color={C.muted}>
+          Build your plan, learn the movements and log every set.
+        </T>
+        <Button
+          title="Open Train"
+          icon="barbell-outline"
+          testID="open-train"
+          onPress={() => router.push("/train")}
+        />
+      </Card>
       <Button
         secondary
         title="Log activity"
         icon="fitness-outline"
         onPress={() => router.push("/activity")}
       />
-      <Card style={{ backgroundColor: C.elevated }}>
-        <View style={S.row}>
-          <Icon name="watch-outline" color={C.lime} />
-          <View style={{ flex: 1 }}>
-            <T bold>
-              {health.enabled
-                ? "Health connection enabled"
-                : "Connect your device"}
-            </T>
-            <T size={12} color={C.muted}>
-              {Platform.OS === "ios" ? "Apple Health" : "Health Connect"} ·
-              steps and activity in one place
-            </T>
+      {Platform.OS !== "web" && (
+        <Card style={{ backgroundColor: C.elevated }}>
+          <View style={S.row}>
+            <Icon name="watch-outline" color={C.lime} />
+            <View style={{ flex: 1 }}>
+              <T bold>
+                {health.enabled
+                  ? "Health connection enabled"
+                  : "Connect your device"}
+              </T>
+              <T size={12} color={C.muted}>
+                {Platform.OS === "ios" ? "Apple Health" : "Health Connect"} ·
+                steps and activity in one place
+              </T>
+            </View>
           </View>
-        </View>
-        <Button
-          title={
-            health.enabled
-              ? health.permissionVersion < 2
-                ? "Enable burn & workout access"
-                : "Device & sync settings"
-              : "Connect device"
-          }
-          secondary
-          loading={health.busy}
-          onPress={() =>
-            (health.enabled && health.permissionVersion >= 2) ||
-            Platform.OS === "web"
-              ? router.push("/watch-settings")
-              : void health.connect()
-          }
-          testID="home-connect-device"
-        />
-        {health.error && <Banner error text={health.error} />}
-      </Card>
+          <Button
+            title={
+              health.enabled
+                ? health.permissionVersion < 2
+                  ? "Enable burn & workout access"
+                  : "Device & sync settings"
+                : "Connect device"
+            }
+            secondary
+            loading={health.busy}
+            onPress={() =>
+              health.enabled && health.permissionVersion >= 2
+                ? router.push("/watch-settings")
+                : void health.connect()
+            }
+            testID="home-connect-device"
+          />
+          {health.error && <Banner error text={health.error} />}
+        </Card>
+      )}
       <GuidePrompt />
       <View style={S.two}>
         <View style={{ flex: 1 }}>

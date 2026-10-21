@@ -380,3 +380,37 @@ test("chat finalizes and replays its receipt even with stale SpreadsheetApp read
   assert.deepEqual(r.post(req), reply);
   assert.equal(r.urls.filter((url) => url.includes("openrouter.ai")).length, 1);
 });
+
+test("batch uses one verified request and atomic write, and a failed commit safely replays", () => {
+  const r = runtime();
+  const login = r.post({ method: "POST", path: "/api/auth/session" });
+  const req = {
+    session: login.data.sheet_session,
+    method: "POST",
+    path: "/api/v3/batch",
+    body: {
+      operations: Array.from({ length: 3 }, () => ({
+        method: "PUT",
+        path: "/api/v2/water/" + randomUUID(),
+        requestId: randomUUID(),
+        body: { log_date: "2026-10-21", amount_ml: 250 },
+      })),
+    },
+  };
+  const before = JSON.stringify(r.rows());
+  r.fail(true);
+  assert.equal(r.post(req).status, 503);
+  assert.equal(JSON.stringify(r.rows()), before);
+  r.fail(false);
+  const writes = r.batches.length,
+    auth = r.urls.length;
+  const response = r.post(req);
+  assert.equal(response.status, 200, JSON.stringify(response.data));
+  assert.equal(response.data.results.length, 3);
+  assert.equal(response.data.snapshot.water.length, 3);
+  assert.equal(r.batches.length - writes, 1);
+  assert.equal(r.urls.length - auth, 1);
+  const saved = JSON.stringify(r.rows());
+  assert.equal(r.post(req).status, 200);
+  assert.equal(JSON.stringify(r.rows()), saved);
+});

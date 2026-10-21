@@ -4,7 +4,7 @@ import { removeRetiredModels } from "../src/features/retiredModels";
 import React, { useEffect } from "react";
 import { Stack, router, useSegments } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { AppState, View, ActivityIndicator } from "react-native";
+import { AppState, View, ActivityIndicator, Platform } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useFonts } from "expo-font";
@@ -32,7 +32,12 @@ export default function Layout() {
   useEffect(() => {
     if (auth.isLoading) return;
     const group = segments[0];
-    if (!auth.isLoggedIn && group !== "(auth)" && group !== "train")
+    if (
+      !auth.isLoggedIn &&
+      group !== "(auth)" &&
+      group !== "train" &&
+      group !== "install"
+    )
       router.replace("/(auth)/welcome");
     else if (
       auth.isLoggedIn &&
@@ -66,14 +71,17 @@ export default function Layout() {
           .sync()
           .then(() => useHealth.getState().sync());
     });
-    const timer = setInterval(
-      () =>
-        void useTracker
-          .getState()
-          .sync()
-          .then(() => useHealth.getState().sync()),
-      30000,
-    );
+    const timer = setInterval(() => {
+      if (
+        Platform.OS === "web" &&
+        (document.visibilityState !== "visible" || !navigator.onLine)
+      )
+        return;
+      void useTracker
+        .getState()
+        .sync()
+        .then(() => useHealth.getState().sync());
+    }, 30000);
     return () => {
       sub.remove();
       clearInterval(timer);

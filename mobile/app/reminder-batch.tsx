@@ -1,4 +1,5 @@
 import { DateTimeField } from "../src/features/pickers";
+import { Platform } from "react-native";
 import React, { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Page, Card, T, Field, Button, Banner, C } from "../src/features/ui";
@@ -73,7 +74,13 @@ export default function Batch() {
       {!!error && <Banner error text={error} />}{" "}
       {done ? (
         <>
-          <Banner text="Your reminders are scheduled on this device." />
+          <Banner
+            text={
+              Platform.OS === "web"
+                ? "Calendar file ready. Import it and enable alerts in Calendar. Manage events there; re-importing can duplicate them."
+                : "Your reminders are scheduled on this device."
+            }
+          />
           <Button
             title="View reminders"
             onPress={() => router.replace("/reminders")}
@@ -81,12 +88,33 @@ export default function Batch() {
         </>
       ) : (
         <Button
-          title="Confirm & schedule all"
+          title={
+            Platform.OS === "web"
+              ? "Export reminder calendar"
+              : "Confirm & schedule all"
+          }
           disabled={!uid || !drafts.length}
           loading={busy}
           onPress={() => {
             setBusy(true);
             setError("");
+            if (Platform.OS === "web") {
+              void Promise.all([
+                import("../src/features/reminderCalendar"),
+                import("../src/features/train/notifications"),
+              ])
+                .then(([calendar, files]) =>
+                  files.downloadFile(
+                    "fitkin-reminders.ics",
+                    calendar.reminderCalendar(drafts),
+                    "text/calendar",
+                  ),
+                )
+                .then(() => setDone(true))
+                .catch((e) => setError(e.message))
+                .finally(() => setBusy(false));
+              return;
+            }
             void saveReminderBatch(
               uid!,
               drafts.map((draft, i) => ({ id: p.batchId + ":" + i, draft })),

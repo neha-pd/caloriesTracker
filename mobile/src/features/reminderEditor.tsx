@@ -1,6 +1,6 @@
 import { DateTimeField } from "./pickers";
 import React, { useEffect, useState, useRef } from "react";
-import { Switch, View } from "react-native";
+import { Platform, Switch, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { useIsFocused } from "expo-router";
 import { Banner, Button, C, Card, Field, Page, S, Segments, T } from "./ui";
@@ -117,6 +117,19 @@ export default function ReminderEditor() {
         quietHours: quiet,
         intervalHours: interval ? Number(interval) : undefined,
       });
+      if (Platform.OS === "web") {
+        const { reminderCalendar } = await import("./reminderCalendar");
+        const { downloadFile } = await import("./train/notifications");
+        await downloadFile(
+          "fitkin-reminder.ics",
+          reminderCalendar([d]),
+          "text/calendar",
+        );
+        setMessage(
+          "Calendar file ready. Import it and enable alerts in Calendar. Manage or remove the event there; exporting again can create duplicates.",
+        );
+        return;
+      }
       await saveCustomReminder(uid, d, existing);
       router.replace("/reminders");
     } catch (e) {
@@ -272,15 +285,20 @@ export default function ReminderEditor() {
       {error && <Banner error text={error} />}
       {message && <Banner text={message} />}
       <Button
-        title="Confirm & schedule reminder"
+        title={
+          Platform.OS === "web"
+            ? "Export calendar reminder"
+            : "Confirm & schedule reminder"
+        }
         testID="reminder-save"
         disabled={needsDraft || busy}
         loading={busy}
         onPress={() => void save()}
       />
       <T color={C.muted} size={12}>
-        Once saved, your phone schedules the reminder in the background.
-        Delivery timing can vary with device settings. Reminders stop on logout.
+        {Platform.OS === "web"
+          ? "Calendar manages imported reminders, including their alerts. Signing out of Fitkin does not remove them from Calendar."
+          : "Once saved, your phone schedules the reminder in the background. Delivery timing can vary with device settings. Reminders stop on logout."}
       </T>
     </Page>
   );

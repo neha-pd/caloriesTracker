@@ -3,7 +3,7 @@ import { localDateKey } from "../../lib/dates";
 import type { Entry, Water } from "../types";
 export async function authorize() {
   throw new Error(
-    "Health sync is available in the native iPhone and Android app.",
+    "This PWA cannot read Apple Health or watch data. You can log activity manually.",
   );
 }
 export async function authorizeHistory() {

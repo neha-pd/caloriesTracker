@@ -2,7 +2,7 @@
   "name": "fitkin",
   "version": "1.0.0",
   "private": true,
-  "description": "Fitkin \u2014 Android fitness companion with a private Apps Script backend",
+  "description": "Fitkin \u2014 Android and iPhone PWA fitness companion with a private Apps Script backend",
   "workspaces": [
     "mobile",
     "apps-script",
@@ -16,7 +16,8 @@
     "typecheck": "npm run typecheck --workspace mobile && tsc -p apps-script/tsconfig.json",
     "test:train": "tsx --test checks/train.test.ts",
     "video:studio": "npm run studio --workspace video",
-    "video:render": "npm run render --workspace video"
+    "video:render": "npm run render --workspace video",
+    "build:pwa": "npm run export:web --workspace mobile"
   },
   "overrides": {
     "react": "19.2.3",

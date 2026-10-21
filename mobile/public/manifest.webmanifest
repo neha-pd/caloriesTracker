@@ -1,0 +1,26 @@
+{
+  "id": "/",
+  "name": "Fitkin",
+  "short_name": "Fitkin",
+  "description": "Food, movement and everyday habits.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101211",
+  "theme_color": "#101211",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

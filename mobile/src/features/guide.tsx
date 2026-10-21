@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import React, { useState, useEffect } from "react";
 import { router, useIsFocused } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -45,12 +46,16 @@ export default function Guide() {
       "Library nutrition starts at 100 g. Pick a common portion or adjust the quantity before adding it to a meal. Home-style recipes are estimates; ingredients, oil and cooking change the numbers.",
     ],
     [
-      "Connect your device.",
-      "Find Connect device right on Home. Android uses Health Connect; iPhone uses Apple Health. Your watch must first sync with its health app. Review permissions there, then Fitkin can read supported activity.",
+      Platform.OS === "web" ? "Log your movement." : "Connect your device.",
+      Platform.OS === "web"
+        ? "Use Log activity to add your workout time and optional active calories from your watch. This PWA cannot access Apple Health or Apple Watch readings automatically."
+        : "Find Connect device right on Home. Android uses Health Connect; iPhone uses Apple Health. Your watch must first sync with its health app. Review permissions there, then Fitkin can read supported activity.",
     ],
     [
       "Make a routine that fits.",
-      "Open Reminders for clock pickers and custom schedules. On Android, Personalize Kin nudges adds meal-aware messages, step celebrations and watch alerts. Choose your meal times and quiet hours; allow background watch checks separately. Your phone delivers these without an AI request, though Android can delay background checks.",
+      Platform.OS === "web"
+        ? "Open Reminders to export a custom calendar event. Import it and choose an alert in Calendar. Workout schedules can be exported from Train Settings. This PWA does not send push alerts while closed."
+        : "Open Reminders for clock pickers and custom schedules. On Android, Personalize Kin nudges adds meal-aware messages, step celebrations and watch alerts. Choose your meal times and quiet hours; allow background watch checks separately. Your phone delivers these without an AI request, though Android can delay background checks.",
     ],
     [
       "Little wins add up.",
@@ -83,14 +88,24 @@ export default function Guide() {
       {step === 2 && (
         <Button
           secondary
-          title="Device connection settings"
-          onPress={() => router.push("/health")}
+          title={
+            Platform.OS === "web"
+              ? "Log activity"
+              : "Device connection settings"
+          }
+          onPress={() =>
+            router.push(Platform.OS === "web" ? "/activity" : "/health")
+          }
         />
       )}{" "}
       {step === 3 && (
         <Button
           secondary
-          title="Set up notifications"
+          title={
+            Platform.OS === "web"
+              ? "Calendar reminders"
+              : "Set up notifications"
+          }
           onPress={() => router.push("/reminders")}
         />
       )}

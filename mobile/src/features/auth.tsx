@@ -1,3 +1,4 @@
+import { InstallCard } from "./pwa";
 import { calculateGoals, goalsSchema } from "../../../shared/nutrition";
 import React, { useState } from "react";
 import { View } from "react-native";
@@ -37,6 +38,7 @@ export function Welcome() {
       title={"Feel good.\nBuild your fire."}
       subtitle="A little awareness. A little consistency. A healthier rhythm that feels like you."
     >
+      <InstallCard />
       <Art size={270} />
       <Card>
         <T bold size={20}>

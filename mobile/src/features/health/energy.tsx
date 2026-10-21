@@ -1,6 +1,6 @@
 import { energyForDay } from "../fitness/domain";
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { router } from "expo-router";
 import { useHealth } from "./store";
@@ -118,7 +118,9 @@ export default function DailyEnergy() {
         <T size={12} color={C.muted}>
           {energy.totalCalories != null
             ? "Your total includes movement and the energy your body uses at rest."
-            : "Connect a watch to see total calories burned. Activities you add still count toward your movement."}
+            : Platform.OS === "web"
+              ? "Active burn comes from workouts you log. Total daily burn needs health readings, which this PWA cannot access."
+              : "Connect a watch to see total calories burned. Activities you add still count toward your movement."}
         </T>
         {day && (
           <T size={11} color={C.muted}>
@@ -126,38 +128,40 @@ export default function DailyEnergy() {
             estimates may be incomplete.
           </T>
         )}
-        <View style={{ gap: 8 }} testID="step-progress">
-          <T bold>
-            {day?.steps == null
-              ? "Your step story starts here"
-              : `${Math.round(day.steps).toLocaleString()} steps`}
-          </T>
-          {u?.settings.step_goal ? (
-            <>
-              <Meter
-                value={
-                  day?.steps == null
-                    ? 0
-                    : Math.min(100, (day.steps / u.settings.step_goal) * 100)
-                }
+        {Platform.OS !== "web" && (
+          <View style={{ gap: 8 }} testID="step-progress">
+            <T bold>
+              {day?.steps == null
+                ? "Your step story starts here"
+                : `${Math.round(day.steps).toLocaleString()} steps`}
+            </T>
+            {u?.settings.step_goal ? (
+              <>
+                <Meter
+                  value={
+                    day?.steps == null
+                      ? 0
+                      : Math.min(100, (day.steps / u.settings.step_goal) * 100)
+                  }
+                />
+                <T size={12} color={C.blue}>
+                  {day?.steps == null
+                    ? "Waiting for a device reading"
+                    : day.steps >= u.settings.step_goal
+                      ? "Hooray! Your chosen step goal is complete 🎉"
+                      : `${Math.max(0, u.settings.step_goal - Math.round(day.steps)).toLocaleString()} to your goal`}{" "}
+                  · daily goal {u.settings.step_goal.toLocaleString()}
+                </T>
+              </>
+            ) : (
+              <Button
+                secondary
+                title="Choose my step goal"
+                onPress={() => router.push("/movement-goals")}
               />
-              <T size={12} color={C.blue}>
-                {day?.steps == null
-                  ? "Waiting for a device reading"
-                  : day.steps >= u.settings.step_goal
-                    ? "Hooray! Your chosen step goal is complete 🎉"
-                    : `${Math.max(0, u.settings.step_goal - Math.round(day.steps)).toLocaleString()} to your goal`}{" "}
-                · daily goal {u.settings.step_goal.toLocaleString()}
-              </T>
-            </>
-          ) : (
-            <Button
-              secondary
-              title="Choose my step goal"
-              onPress={() => router.push("/movement-goals")}
-            />
-          )}
-        </View>
+            )}
+          </View>
+        )}
         <Button
           secondary
           title="Activity & burn details"

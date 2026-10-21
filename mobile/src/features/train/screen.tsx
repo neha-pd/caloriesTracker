@@ -1271,42 +1271,43 @@ export default function Train() {
                       {data.profile!.time}. Quiet hours: 22:00–08:00.
                     </T>
                     <T size={13}>
-                      Enable sends your notification subscription, schedule and
-                      timezone to this site’s reminder service. Workout details
-                      stay on this device.{" "}
                       {Platform.OS === "web"
-                        ? "One reminder per training day; completed days can be skipped after online sync."
-                        : "Weekly reminders follow your chosen schedule, including days you have already trained."}
+                        ? "Export your schedule to Calendar and enable its alerts. This PWA does not send background push notifications."
+                        : "Weekly reminders are scheduled on this device, including days you have already trained."}
                     </T>
-                    <Button
-                      title={
-                        data.reminders
-                          ? "Turn off workout reminders"
-                          : "Enable workout reminders"
-                      }
-                      loading={busy}
-                      onPress={() =>
-                        void task(async () => {
-                          if (data.reminders) {
-                            await disableReminders(uid);
-                            update((s) => ({ ...s, reminders: false }));
-                            setMessage("Workout reminders turned off.");
-                          } else {
-                            if (
-                              +data.profile!.time.slice(0, 2) < 8 ||
-                              +data.profile!.time.slice(0, 2) >= 22
-                            )
-                              throw Error(
-                                "Choose a reminder time between 08:00 and 21:59 to respect quiet hours.",
-                              );
-                            setMessage(
-                              await enableReminders(data.profile!, uid),
-                            );
-                            update((s) => ({ ...s, reminders: true }));
+                    {Platform.OS !== "web" && (
+                      <>
+                        <Button
+                          title={
+                            data.reminders
+                              ? "Turn off workout reminders"
+                              : "Enable workout reminders"
                           }
-                        })
-                      }
-                    />
+                          loading={busy}
+                          onPress={() =>
+                            void task(async () => {
+                              if (data.reminders) {
+                                await disableReminders(uid);
+                                update((s) => ({ ...s, reminders: false }));
+                                setMessage("Workout reminders turned off.");
+                              } else {
+                                if (
+                                  +data.profile!.time.slice(0, 2) < 8 ||
+                                  +data.profile!.time.slice(0, 2) >= 22
+                                )
+                                  throw Error(
+                                    "Choose a reminder time between 08:00 and 21:59 to respect quiet hours.",
+                                  );
+                                setMessage(
+                                  await enableReminders(data.profile!, uid),
+                                );
+                                update((s) => ({ ...s, reminders: true }));
+                              }
+                            })
+                          }
+                        />
+                      </>
+                    )}
                     <Button
                       secondary
                       title="Export calendar reminders"
@@ -1324,9 +1325,9 @@ export default function Train() {
                       }
                     />
                     <T size={12} color={C.muted}>
-                      Reminders are saved on this phone and can arrive offline.
-                      Allow notifications in Android settings. Delivery may be
-                      delayed by battery-saving settings.
+                      {Platform.OS === "web"
+                        ? "Calendar controls imported events and alerts. Changes in Fitkin or logging out do not update or remove those events."
+                        : "Reminders are saved on this phone and can arrive offline. Allow notifications in Android settings. Delivery may be delayed by battery-saving settings."}
                     </T>
                   </Card>
 

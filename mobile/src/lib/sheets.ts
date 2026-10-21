@@ -44,9 +44,13 @@ async function request(
     const response = await fetch(url, {
       method: "POST",
       headers: {
+        // Apps Script has no OPTIONS handler. A CORS-simple POST carries
+        // the same authenticated JSON envelope without browser preflight.
         "Content-Type": form
           ? "application/x-www-form-urlencoded"
-          : "application/json",
+          : validEndpoint.test(url)
+            ? "text/plain;charset=UTF-8"
+            : "application/json",
       },
       body: form ? String(body) : JSON.stringify(body),
       signal: controller.signal,

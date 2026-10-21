@@ -1,6 +1,6 @@
-# Fitkin: Android + one Apps Script backend
+# Fitkin: Android, iPhone PWA + one Apps Script backend
 
-The release source uses one Apps Script web app and one private spreadsheet for profiles, food, water, fitness records, custom foods, XP, sync and Kin chat. Firebase remains the existing sign-in/password-reset service, so passwords and Firebase UIDs stay in place. There is no new Render server, Neon database, Netlify function, browser app or keep-alive job.
+The release source uses one Apps Script web app and one private spreadsheet for profiles, food, water, fitness records, custom foods, XP, sync and Kin chat. Firebase remains the existing sign-in/password-reset service, so passwords and Firebase UIDs stay in place. There is no new Render server, Neon database, Netlify function or keep-alive job. The iPhone PWA is a static build that calls the same Apps Script endpoint.
 
 **Follow the steps below to set up your own deployment or migrate an existing installation.** Do not delete the old database or uninstall the existing APK.
 
@@ -47,7 +47,7 @@ The public app endpoint stays unavailable while migration is waiting, importing 
 
 1. Apps Script → **Deploy → New deployment → Web app**.
 2. Execute as **Me** (the configured owner).
-3. Who has access: **Anyone**. Android cannot use an interactive Google editor session; every private API request is instead verified with a Firebase ID token and a revocable app session. The spreadsheet remains Restricted.
+3. Who has access: **Anyone**. App users do not need an interactive Google editor session; every private API request is instead verified with a Firebase ID token and a revocable app session. The spreadsheet remains Restricted.
 4. Deploy and copy the URL ending in **`/exec`**, not `/dev` or an editor URL.
 5. Send that URL back so it can be embedded in the final APK. The read-only URL reports protocol/setup readiness and never exposes records.
 
@@ -60,9 +60,9 @@ For later code updates, edit the existing deployment and select a **new version*
 3. Compare the final export digest with the verified import. If they match, no re-import is needed. Otherwise, package the new export; reset the staged import and import this **final** file. Wait for verified counts/digest again. If export/import fails, keep the old data intact; resume the old API only while the new backend is not activated.
 4. Run **activateFitkin** in the Apps Script editor after the final import is verified. Its read-only endpoint should now report `ready: true`.
 5. Set `EXPO_PUBLIC_APPS_SCRIPT_URL` in the build environment and `FITKIN_APPS_SCRIPT_URL` in GitHub repository **Variables**. The build checks the real endpoint and refuses to produce a release against an unfinished migration.
-6. Build with the existing signing key and Android package (`com.fitlens.app`). Version 2.7.0 uses versionCode 11. Keep both Fitkin and legacy FitLens APK aliases/checksums in the GitHub release so old update links remain compatible.
+6. Build with the existing signing key and Android package (`com.fitlens.app`). Version 2.7.1 uses versionCode 12. Keep both Fitkin and legacy FitLens APK aliases/checksums in the GitHub release so old update links remain compatible.
 7. Install over the existing APK. Sign in once with the existing email/password; the migration preserves the old app UUID so queued edits and local history reconnect to the same account. Verify the checks below before sharing broadly.
-8. Keep Render suspended and retire the old Render web/Netlify deployments and schedules after verification. Keep Neon as a private rollback backup until the team accepts the migration; do not delete it prematurely. Once new writes reach Sheets, resuming the old API would split the data and requires a deliberate reconciliation.
+8. Keep Render suspended and retire the old Render web deployments and schedules after verification. Keep Neon as a private rollback backup until the team accepts the migration; do not delete it prematurely. Once new writes reach Sheets, resuming the old API would split the data and requires a deliberate reconciliation.
 
 There is a short maintenance window during steps 1–7. An old APK whose update check still points at Render may need the new APK link shared manually during that window. Android requires the user's installation approval; this is not a silent OS update.
 
@@ -91,6 +91,10 @@ Watch histories, scheduled local reminders, training plans/detailed sets and uns
 - Requests are validated and account-scoped. Mutations, XP and retry receipts commit in one atomic Sheets batch under a script lock.
 - An extra per-device session is hashed in the sheet; logout revokes it. Google verifies ID tokens; decoded JWT text is never trusted by itself.
 - Kin uses only the free model allowlist and zero maximum provider prices. Free model availability is not guaranteed. Keys stay in Script properties, never in the APK.
-- Notifications and watch checks run on Android; no Apps Script timer or paid push service is needed. Delivery can be delayed by Android battery/permission policies.
+- Notifications and watch checks run on Android; no paid push service is needed. The optional admin dashboard uses one five-minute Apps Script trigger; it does not deliver notifications. Delivery can be delayed by Android battery/permission policies.
 - This is designed for a small private community. Apps Script and Google Sheets have execution, concurrency, request and storage limits; there is no unlimited-service promise. Check [current Google quotas](https://developers.google.com/apps-script/guides/services/quotas) before increasing usage. The app keeps queued offline changes when sync is unavailable.
 - Back up the private spreadsheet regularly. Do not manually edit `Records` cells; use the app or a reviewed migration.
+
+## iPhone and admin dashboard
+
+Use [PWA setup](PWA.md) for the static iPhone build and [admin dashboard setup](ADMIN_DASHBOARD.md) for operational tabs. Existing installations only update Code.gs and appsscript.json, run setupFitkinDashboard, then publish a new version of the same deployment. Do not re-import or reactivate existing data.

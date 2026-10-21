@@ -15,17 +15,16 @@ export const onSessionExpired = (fn: () => void) => {
     listeners.delete(fn);
   };
 };
+const webKey = (key: string) => "fitkin:session:v1:" + key;
 export async function getSecret(key: string) {
-  return Platform.OS === "web"
-    ? typeof sessionStorage === "undefined"
-      ? null
-      : sessionStorage.getItem(key)
-    : SecureStore.getItemAsync(key);
+  if (Platform.OS !== "web") return SecureStore.getItemAsync(key);
+  if (typeof localStorage === "undefined") return null;
+  return localStorage.getItem(webKey(key));
 }
 export async function setSecret(key: string, value: string) {
   if (Platform.OS === "web") {
-    if (typeof sessionStorage !== "undefined")
-      sessionStorage.setItem(key, value);
+    if (typeof localStorage !== "undefined")
+      localStorage.setItem(webKey(key), value);
   } else await SecureStore.setItemAsync(key, value);
 }
 export async function clearSession() {
@@ -33,11 +32,15 @@ export async function clearSession() {
   demoMode = false;
   await AsyncStorage.removeItem("fitlens:demo-active");
   if (Platform.OS === "web") {
-    if (typeof sessionStorage !== "undefined") {
-      sessionStorage.removeItem("access_token");
-      sessionStorage.removeItem("refresh_token");
-      sessionStorage.removeItem("sheet_session");
-      sessionStorage.removeItem("backend_version");
+    for (const key of [
+      "access_token",
+      "refresh_token",
+      "sheet_session",
+      "backend_version",
+    ]) {
+      if (typeof localStorage !== "undefined")
+        localStorage.removeItem(webKey(key));
+      if (typeof sessionStorage !== "undefined") sessionStorage.removeItem(key);
     }
   } else
     await Promise.all(
@@ -58,4 +61,19 @@ export async function saveTokens(data: {
   }
   await setSecret("access_token", data.token);
   await setSecret("refresh_token", data.refresh_token);
+}
+
+// A sign-in/logout in another tab must not leave a different account's diary
+// mounted against the new credentials. Reload into the current session.
+if (Platform.OS === "web" && typeof window !== "undefined") {
+  window.addEventListener("storage", (event) => {
+    if (
+      event.key === webKey("sheet_session") &&
+      event.newValue !== event.oldValue
+    ) {
+      generation++;
+      listeners.forEach((fn) => fn());
+      window.location.reload();
+    }
+  });
 }

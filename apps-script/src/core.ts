@@ -248,6 +248,73 @@ export function execute(
     });
     return { ok: true, deleteFirebase: true };
   }
+  if (path === "/api/v3/batch" && method === "POST") {
+    const input = z
+      .object({
+        operations: z
+          .array(
+            z
+              .object({
+                method: z.enum(["POST", "PUT", "PATCH", "DELETE"]),
+                path: z
+                  .string()
+                  .regex(
+                    /^\/api\/v2\/(?:check-in|(?:entries|water|fitness|foods\/custom)\/[0-9a-f-]{36})$/i,
+                  ),
+                body: z.any().optional(),
+                requestId: uuid,
+              })
+              .strict(),
+          )
+          .min(1)
+          .max(20),
+      })
+      .strict()
+      .parse(b);
+    const results = input.operations.map((op) => {
+      // Isolate validation failures so a partially changed record is never
+      // committed; accepted operations share one atomic storage write.
+      const candidate = new Store([...store.rows.values()]);
+      try {
+        const data = execute(
+          candidate,
+          identity,
+          { ...op, session: req.session },
+          env,
+        );
+        for (const [key, row] of candidate.dirty) {
+          if (row) store.put(row.kind, row.id, row.owner, row.value);
+          else {
+            store.rows.delete(key);
+            store.dirty.set(key, null);
+          }
+        }
+        return { requestId: op.requestId, status: 200, data };
+      } catch (error: any) {
+        const status = error.name === "ZodError" ? 400 : error.status;
+        if (![400, 404, 409].includes(status)) throw error;
+        return {
+          requestId: op.requestId,
+          status,
+          data: {
+            error:
+              error.name === "ZodError"
+                ? "Please check this record’s details."
+                : error.message,
+          },
+        };
+      }
+    });
+    return {
+      results,
+      snapshot: execute(
+        store,
+        identity,
+        { method: "GET", path: "/api/v3/snapshot", session: req.session },
+        env,
+      ),
+    };
+  }
   const write = ["POST", "PUT", "PATCH", "DELETE"].includes(method);
   let receiptId = "",
     fingerprint = "";

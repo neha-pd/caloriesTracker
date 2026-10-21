@@ -316,3 +316,50 @@ test("migration hash is order-independent, detects changed records and validates
   copy.find((r: any) => r.kind === "entry").owner = "other";
   assert.throws(() => validateRecords(copy), /owner/);
 });
+
+test("batch sync commits accepted items once and isolates rejected or foreign records", () => {
+  const f = setup(),
+    a = f.user(),
+    b = f.user(),
+    food = meal(),
+    foreign = meal();
+  b.call("PUT", "/api/v2/entries/" + foreign.id, foreign);
+  const operations = [
+    {
+      method: "PUT",
+      path: "/api/v2/entries/" + food.id,
+      body: food,
+      requestId: randomUUID(),
+    },
+    {
+      method: "DELETE",
+      path: "/api/v2/entries/" + foreign.id,
+      requestId: randomUUID(),
+    },
+    {
+      method: "PUT",
+      path: "/api/v2/water/" + randomUUID(),
+      body: { log_date: "2026-10-21", amount_ml: 250 },
+      requestId: randomUUID(),
+    },
+  ];
+  const first = a.call("POST", "/api/v3/batch", { operations });
+  assert.deepEqual(
+    first.results.map((r: any) => r.status),
+    [200, 409, 200],
+  );
+  assert.equal(first.snapshot.entries.length, 1);
+  assert.equal(first.snapshot.water.length, 1);
+  const replay = a.call("POST", "/api/v3/batch", { operations });
+  assert.equal(replay.snapshot.progress.xp, first.snapshot.progress.xp);
+  assert.equal(replay.snapshot.entries.length, 1);
+  assert.equal(replay.snapshot.water.length, 1);
+  assert.equal(b.call("GET", "/api/v3/snapshot").entries[0].deleted_at, null);
+  assert.throws(() =>
+    a.call("POST", "/api/v3/batch", {
+      operations: [
+        { method: "DELETE", path: "/api/users/me", requestId: randomUUID() },
+      ],
+    }),
+  );
+});

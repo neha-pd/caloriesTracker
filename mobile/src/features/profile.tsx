@@ -78,14 +78,22 @@ export function Profile() {
           onPress={() => router.push("/edit-goals")}
         />
         <RowLink
-          title="Health & watch sync"
+          title={
+            Platform.OS === "web" ? "Movement on iPhone" : "Health & watch sync"
+          }
           icon="heart-outline"
           onPress={() => router.push("/watch-settings")}
         />
         <RowLink
-          title="Home-screen widgets"
+          title={
+            Platform.OS === "web"
+              ? "Install & offline help"
+              : "Home-screen widgets"
+          }
           icon="grid-outline"
-          onPress={() => router.push("/widgets")}
+          onPress={() =>
+            router.push(Platform.OS === "web" ? "/install" : "/widgets")
+          }
         />
         <RowLink
           title="Chat with Kin"
@@ -296,25 +304,33 @@ export function Preferences() {
           onPress={() => void update({ water_goal_ml: Number(water) })}
         />
       </Card>
-      <Card>
-        <View style={S.row}>
-          <View style={{ flex: 1 }}>
-            <T bold>Haptic feedback</T>
-            <T color={C.muted} size={13}>
-              A gentle tap for little actions.
-            </T>
+      {Platform.OS !== "web" && (
+        <Card>
+          <View style={S.row}>
+            <View style={{ flex: 1 }}>
+              <T bold>Haptic feedback</T>
+              <T color={C.muted} size={13}>
+                A gentle tap for little actions.
+              </T>
+            </View>
+            <Switch
+              accessibilityLabel="Haptic feedback"
+              value={u?.settings.haptics ?? true}
+              onValueChange={(v) => void update({ haptics: v })}
+              trackColor={{ true: C.lime, false: C.border }}
+            />
           </View>
-          <Switch
-            accessibilityLabel="Haptic feedback"
-            value={u?.settings.haptics ?? true}
-            onValueChange={(v) => void update({ haptics: v })}
-            trackColor={{ true: C.lime, false: C.border }}
-          />
-        </View>
-      </Card>
+        </Card>
+      )}
       <RowLink
-        title="Gentle reminders"
-        subtitle="Choose local notifications on this device"
+        title={
+          Platform.OS === "web" ? "Calendar reminders" : "Gentle reminders"
+        }
+        subtitle={
+          Platform.OS === "web"
+            ? "Export events and choose alerts in Calendar"
+            : "Choose local notifications on this device"
+        }
         icon="notifications-outline"
         onPress={() => router.push("/reminders")}
       />

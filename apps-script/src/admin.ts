@@ -8,7 +8,7 @@ declare const PropertiesService: any,
   Utilities: any,
   LockService: any;
 const props = () => PropertiesService.getScriptProperties();
-function owner() {
+export function owner() {
   const expected = props().getProperty("OWNER_EMAIL");
   if (
     !expected ||

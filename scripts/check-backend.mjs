@@ -14,9 +14,13 @@ if (
   response.data?.service !== "Fitkin" ||
   response.data?.protocol !== 1 ||
   !response.data?.ready ||
-  response.data?.revision !== "2.7.0-sheets.2"
+  !["2.7.0-sheets.2", "2.7.1-sheets.3"].includes(response.data?.revision)
 )
   throw Error(
     "The Apps Script backend needs activation or the current Code.gs deployment. Finish setup before building a release APK.",
   );
 console.log("Fitkin Apps Script endpoint is ready.");
+if (response.data.revision === "2.7.0-sheets.2")
+  console.warn(
+    "Compatible previous backend: individual sync remains active until the owner deploys 2.7.1-sheets.3. Admin metrics and batch sync need that deployment.",
+  );

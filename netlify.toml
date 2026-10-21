@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build:pwa"
+  publish = "mobile/dist"
+
+[build.environment]
+  NODE_VERSION = "22.22.0"
+
+# Set EXPO_PUBLIC_APPS_SCRIPT_URL in Netlify's build environment.
+# Static hosting only: authentication and data requests go directly to Google.

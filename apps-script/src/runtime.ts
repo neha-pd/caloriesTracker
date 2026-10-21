@@ -1,3 +1,4 @@
+import { bufferMetric, routeLabel } from "./observability";
 import { Store, fail, type Row } from "./store";
 import { execute, type Identity, type Request } from "./core";
 import { FREE_MODELS, parseChatAnswer, chatSystem } from "../../shared/chat";
@@ -10,6 +11,7 @@ declare const PropertiesService: any,
   ContentService: any,
   Sheets: any,
   Session: any;
+let timing = { lockMs: 0, readMs: 0, writeMs: 0 };
 const properties = () => PropertiesService.getScriptProperties();
 const property = (key: string) => {
   const value = properties().getProperty(key);
@@ -177,13 +179,19 @@ function commit(state: ReturnType<typeof load>) {
 }
 
 export function locked<T>(fn: (state: ReturnType<typeof load>) => T) {
-  const lock = LockService.getScriptLock();
+  const lock = LockService.getScriptLock(),
+    waiting = Date.now();
   if (!lock.tryLock(20000))
     fail(503, "Sync is busy. Your saved changes will retry.");
+  timing.lockMs += Date.now() - waiting;
   try {
-    const state = load(),
-      result = fn(state);
+    const reading = Date.now(),
+      state = load();
+    timing.readMs += Date.now() - reading;
+    const result = fn(state),
+      writing = Date.now();
     commit(state);
+    timing.writeMs += Date.now() - writing;
     return result;
   } finally {
     lock.releaseLock();
@@ -249,6 +257,13 @@ function response(status: number, data: any) {
   ).setMimeType(ContentService.MimeType.JSON);
 }
 export function post(e: any) {
+  const started = Date.now();
+  timing = { lockMs: 0, readMs: 0, writeMs: 0 };
+  let observedStatus = 500,
+    route = "invalid",
+    actor = "",
+    operations = 0,
+    rejected = 0;
   try {
     const text = e?.postData?.contents;
     if (typeof text !== "string" || text.length > 96000)
@@ -268,6 +283,7 @@ export function post(e: any) {
       fail(400, "Unsupported request.");
     if (properties().getProperty("MIGRATION_STATUS") !== "ready")
       fail(503, "Fitkin is being prepared. Please try again shortly.");
+    route = routeLabel(body.path);
     const who = identity(body.token),
       req: Request = {
         method: body.method,
@@ -276,7 +292,16 @@ export function post(e: any) {
         session: body.session,
         requestId: body.requestId,
       };
+    actor = hash(who.uid).slice(0, 16);
     let result = locked((state) => execute(state.store, who, req, services()));
+    operations = Array.isArray(result.results)
+      ? result.results.length
+      : ["POST", "PUT", "PATCH", "DELETE"].includes(body.method)
+        ? 1
+        : 0;
+    rejected = Array.isArray(result.results)
+      ? result.results.filter((r: any) => r.status >= 400).length
+      : 0;
     if (result.pendingChat) {
       // Do not hold the spreadsheet lock while waiting for inference.
       try {
@@ -330,9 +355,11 @@ export function post(e: any) {
       });
       result = { ok: true, accountDeleted: true };
     }
+    observedStatus = 200;
     return response(200, result);
   } catch (e: any) {
     const status = e.name === "ZodError" ? 400 : e.status || 500;
+    observedStatus = status;
     return response(status, {
       error:
         status === 500
@@ -344,15 +371,27 @@ export function post(e: any) {
                 .join("; ")
             : e.message,
     });
+  } finally {
+    bufferMetric({
+      at: new Date().toISOString(),
+      route,
+      status: observedStatus,
+      ms: Date.now() - started,
+      ...timing,
+      operations,
+      rejected,
+      actor,
+    });
   }
 }
 export function get() {
   return response(200, {
     service: "Fitkin",
     backend: "google-sheets",
-    revision: "2.7.0-sheets.2",
+    revision: "2.7.1-sheets.3",
     protocol: 1,
-    apkOnly: true,
+    apkOnly: false,
+    capabilities: ["batch-sync", "admin-metrics", "web-client"],
     ready: properties().getProperty("MIGRATION_STATUS") === "ready",
   });
 }
@@ -369,3 +408,5 @@ export {
   resetStaged,
   importSnapshot,
 } from "./admin";
+
+export { setupDashboard, refreshDashboard } from "./observability";
