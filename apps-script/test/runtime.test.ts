@@ -414,3 +414,23 @@ test("batch uses one verified request and atomic write, and a failed commit safe
   assert.equal(r.post(req).status, 200);
   assert.equal(JSON.stringify(r.rows()), saved);
 });
+
+test("admin HTML is bundled into Code.gs while normal GET stays compatible JSON", () => {
+  const r = runtime();
+  r.context.HtmlService = {
+    createHtmlOutput: (html: string) => {
+      const page = { html, setTitle: () => page, addMetaTag: () => page };
+      return page;
+    },
+  };
+  const page = r.context.doGet({ parameter: { view: "admin" } });
+  assert.match(page.html, /getFitkinDashboardData/);
+  assert.match(page.html, /How fast is the API/);
+  assert(!page.html.includes("private-sheet"));
+  assert.equal(r.context.doGet().data.backend, "google-sheets");
+  r.active("stranger@example.com");
+  assert.throws(
+    () => r.context.getFitkinDashboardData({ refresh: true }),
+    /Only the configured owner/,
+  );
+});

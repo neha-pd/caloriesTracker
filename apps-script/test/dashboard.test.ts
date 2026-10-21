@@ -116,6 +116,9 @@ test("dashboard setup is repeatable, owner-only and never writes application rec
       }),
     },
     ScriptApp: {
+      getService: () => ({
+        getUrl: () => "https://script.google.com/macros/s/test/exec",
+      }),
       getProjectTriggers: () => triggers,
       newTrigger: (name: string) => ({
         timeBased: () => ({
@@ -136,6 +139,37 @@ test("dashboard setup is repeatable, owner-only and never writes application rec
     Sheets: {
       Spreadsheets: {
         Values: {
+          batchGet: (_id: string, args: any) => {
+            assert.equal(active, "owner@example.com");
+            assert.equal(args.ranges.length, 4);
+            return {
+              valueRanges: [
+                {
+                  values: [
+                    [
+                      new Date().toISOString(),
+                      "/api/v2/water/:id",
+                      200,
+                      120,
+                      3,
+                      20,
+                      30,
+                      1,
+                      0,
+                      "private-account-hash",
+                    ],
+                  ],
+                },
+                { values: [[3, "", 6, "", 2, "", 4]] },
+                {
+                  values: [
+                    ["Last refreshed: " + new Date().toISOString() + " · UTC"],
+                  ],
+                },
+                { values: [["user", 3, "App records"]] },
+              ],
+            };
+          },
           get: (_id: string, range: string) => ({
             values:
               range === "Records!A2:D"
@@ -175,7 +209,25 @@ test("dashboard setup is repeatable, owner-only and never writes application rec
   assert.equal(find("Admin!A6"), 1);
   assert.equal(find("Admin!E6"), 1);
   assert.equal(find("Admin!E11"), "No samples yet");
+  const dashboard = context.getFitkinDashboardData({ days: 7 });
+  assert.equal(dashboard.counts.accounts, 3);
+  assert.equal(dashboard.requests, 1);
+  assert.equal(dashboard.routes[0].route, "/api/v2/water/:id");
+  assert.equal(dashboard.recent[0].actor, undefined);
+  assert.equal(
+    JSON.stringify(dashboard).includes("private-account-hash"),
+    false,
+  );
+  assert.match(context.openFitkinDashboard(), /exec\?view=admin$/);
   active = "";
+  assert.throws(
+    () => context.getFitkinDashboardData({ refresh: true }),
+    /Only the configured owner/,
+  );
+  assert.throws(
+    () => context.openFitkinDashboard(),
+    /Only the configured owner/,
+  );
   assert.throws(
     () => context.setupFitkinDashboard(),
     /Only the configured owner/,

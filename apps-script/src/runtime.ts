@@ -1,4 +1,5 @@
 import { bufferMetric, routeLabel } from "./observability";
+import { dashboardPage } from "./dashboard";
 import { Store, fail, type Row } from "./store";
 import { execute, type Identity, type Request } from "./core";
 import { FREE_MODELS, parseChatAnswer, chatSystem } from "../../shared/chat";
@@ -384,7 +385,8 @@ export function post(e: any) {
     });
   }
 }
-export function get() {
+export function get(e?: { parameter?: { view?: string } }) {
+  if (e?.parameter?.view === "admin") return dashboardPage();
   return response(200, {
     service: "Fitkin",
     backend: "google-sheets",
@@ -410,3 +412,4 @@ export {
 } from "./admin";
 
 export { setupDashboard, refreshDashboard } from "./observability";
+export { dashboardData, openDashboard } from "./dashboard";

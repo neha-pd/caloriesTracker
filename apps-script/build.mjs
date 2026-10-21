@@ -15,6 +15,8 @@ const wrappers = {
   onOpen: "menu",
   setupFitkinDashboard: "setupDashboard",
   refreshFitkinDashboard: "refreshDashboard",
+  getFitkinDashboardData: "dashboardData",
+  openFitkinDashboard: "openDashboard",
   resetFitkinImport: "resetStaged",
 };
 fs.mkdirSync(root + "apps-script/dist", { recursive: true });
@@ -26,6 +28,11 @@ await build({
   globalName: "Fitkin",
   platform: "neutral",
   target: "es2020",
+  define: {
+    __FITKIN_DASHBOARD_HTML__: JSON.stringify(
+      fs.readFileSync(root + "apps-script/src/dashboard.html", "utf8"),
+    ),
+  },
   minify: false,
   footer: {
     js: Object.entries(wrappers)

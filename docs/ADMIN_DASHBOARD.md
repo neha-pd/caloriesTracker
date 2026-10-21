@@ -2,6 +2,20 @@
 
 The existing spreadsheet remains the sole data store. New operational tabs sit beside **Records**; no migration or second spreadsheet is needed.
 
+## Open the visual HTML dashboard
+
+The visual dashboard is bundled directly into **Code.gs / Code.js**. No separate `dashboard.html` file needs to be added in the Apps Script editor. The source HTML stays in `apps-script/src/dashboard.html` for maintenance; the build embeds it into the single paste-ready script.
+
+After replacing Code.gs and publishing a **new version of the existing web app deployment**, open your usual `/exec` URL with **`?view=admin`** appended. Alternatively, select **openFitkinDashboard** in the editor and run it to print the link.
+
+Open the page in a browser profile signed in as the configured Google owner. Every data call checks both the active and effective Google account on the server. Anonymous visitors and other accounts can see only the empty page shell and an access error. If Google does not expose the active account (for example, the wrong account in a multi-account browser), access stays blocked; use the owner's browser profile. The page does not use or expose Firebase, chat or spreadsheet credentials.
+
+The page includes account/record totals, a request chart, median/p95 server latency, lock/read/write timing, routes, recent requests with error filtering, and storage counts. Choose 24 hours, 7 days or 14 days. It reads four reporting ranges in a single Sheets request, checks for fresh data once a minute while visible, and can collect buffered samples with **Refresh data**. It never returns user diaries, emails or account hashes to the browser.
+
+If reporting has not been configured, click **Enable dashboard**. If Google asks for additional authorization, run **setupFitkinDashboard** once in the editor, approve it, then refresh the page. If setup already ran, no additional function or data import is required.
+
+No new manifest scopes or app/APK update are needed for this HTML addition. The normal endpoint without `?view=admin` continues returning API readiness JSON, and app POST requests are unchanged.
+
 ## Update an existing deployment
 
 1. Run `npm run build:backend` locally.

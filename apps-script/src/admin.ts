@@ -18,7 +18,7 @@ export function owner() {
       expected.toLowerCase()
   )
     throw Error(
-      "Only the configured owner can run migration tools. Run this script as its configured owner.",
+      "Only the configured owner can use this admin tool. Open it with that Google account.",
     );
 }
 const hash = (s: string) =>

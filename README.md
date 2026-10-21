@@ -94,7 +94,7 @@ For a signed team APK, use `scripts/build-preview-apk.sh` with the existing sign
 
 For the iPhone PWA, run `npm run build:pwa` and deploy `mobile/dist` to a static HTTPS host. [PWA installation and hosting](docs/PWA.md) covers Netlify, offline use and platform limits. The same backend serves Android and web.
 
-The private Sheet can include a polished **Admin** dashboard plus **Daily Usage**, **API Requests**, **Storage** and **Read Me** tabs. [Admin setup](docs/ADMIN_DASHBOARD.md) enables five-minute refreshes and explains the metrics. Queued changes sync in groups of up to 20, while the UI saves immediately on the device.
+A private HTML dashboard is bundled into the same Apps Script (`/exec?view=admin`), with usage charts, response timings and error filtering for the Google owner. The private Sheet can also include an **Admin** dashboard plus **Daily Usage**, **API Requests**, **Storage** and **Read Me** tabs. [Admin setup](docs/ADMIN_DASHBOARD.md) enables five-minute refreshes and explains the metrics. Queued changes sync in groups of up to 20, while the UI saves immediately on the device.
 
 ## Project map
 
