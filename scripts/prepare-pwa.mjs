@@ -17,7 +17,7 @@ let html = fs
   .replace("shrink-to-fit=no", "shrink-to-fit=no, viewport-fit=cover");
 html = html.replace(
   "</head>",
-  '<style>html,body{background:#101211}#root{min-height:100dvh}input,textarea{font-size:16px!important}</style><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#101211"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Fitkin"><link rel="apple-touch-icon" href="/icon-192.png"><script src="/pwa-register.js" defer></script></head>',
+  '<style>html,body{background:#101211}#root{min-height:100dvh}input,textarea{font-size:16px!important}#nl-badge-frame{display:none!important}</style><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#101211"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Fitkin"><link rel="apple-touch-icon" href="/icon-192.png"><script src="/pwa-register.js" defer></script></head>',
 );
 fs.writeFileSync(index, html);
 const files = [];
